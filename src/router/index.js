@@ -21,39 +21,52 @@ export const constantRoutes = [
         redirect: '/dashboard',
         children: [{
             path: '/dashboard',
-            component: () => import('@/views/HelloWorld'),
+            component: () => import('@/views/dashboard'),
             name: 'home',
             meta: {
-                title: '仪表盘',
+                title: '概况',
                 icon: 'dashboard',
                 affix: true
             }
         }]
     },
     {
-        path: '/pan',
+        path: '/course',
         component: Layout,
-        redirect: '/pan/dashboard1',
+        redirect: '/course/index',
         meta: {
-            title: '分类信息管理',
+            title: '课程管理',
             icon: 'example'
         },
         children: [{
-            path: 'dashboard1',
-            component: () => import('@/views/HelloWorld'),
-            name: 'Dashboard1',
+            path: 'index',
+            component: () => import('@/views/course/index'),
+            name: 'alone',
             meta: {
-                title: '仪表盘1',
-                icon: 'password',
+                title: '单课',
+                icon: 'education',
             }
         },{
-            path: 'video',
-            component: () => import('@/views/video'),
-            name: 'video',
+            path: 'many_index', // 系列课列表
+            component: () => import('@/views/course/many_index'),
+            name: 'many_index',
             meta: {
-                title: 'H5视频',
-                icon: 'video'
+                title: '系列课',
+                icon: 'component',
             }
+        },{
+            path: 'many_detail', // 系列课详情
+            component: () => import('@/views/course/index'),
+            name: 'manyDetail',
+            hidden: true
+        },{
+            path: 'add',
+            component: () => import('@/views/course/add'),
+            name: 'courseAdd',
+            meta: {
+                title: '新建单课'
+            },
+            hidden: true
         }]
     },
     {
@@ -61,7 +74,7 @@ export const constantRoutes = [
         component: Layout,
         children: [{
             path: 'index',
-            component: () => import('@/views/HelloWorld'),
+            component: () => import('@/views/dashboard'),
             name: 'Documentation',
             meta: {
                 title: '文章中心',
@@ -75,7 +88,7 @@ export const constantRoutes = [
         redirect: '/guide/index',
         children: [{
             path: 'index',
-            component: () => import('@/views/HelloWorld'),
+            component: () => import('@/views/dashboard'),
             name: 'Guide',
             meta: {
                 title: '权威指南',
@@ -91,7 +104,7 @@ export const constantRoutes = [
         hidden: true,
         children: [{
             path: 'index',
-            component: () => import('@/views/HelloWorld'),
+            component: () => import('@/views/dashboard'),
             name: 'Profile',
             meta: {
                 title: 'Profile',
@@ -121,7 +134,7 @@ export const asyncRoutes = [
             }
         },{
             path: 'index2',
-            component: () => import('@/views/HelloWorld'),
+            component: () => import('@/views/dashboard'),
             name: 'video',
             meta: {
                 title: '图标02',
@@ -141,7 +154,7 @@ export const asyncRoutes = [
         },
         children: [{
                 path: 'list',
-                component: () => import('@/views/HelloWorld'),
+                component: () => import('@/views/dashboard'),
                 name: 'ListArticle',
                 meta: {
                     title: '文章列表',
@@ -149,7 +162,7 @@ export const asyncRoutes = [
                 }
             },{
                 path: 'create',
-                component: () => import('@/views/HelloWorld'),
+                component: () => import('@/views/dashboard'),
                 name: 'CreateArticle',
                 meta: {
                     title: '创建文章',
@@ -158,7 +171,7 @@ export const asyncRoutes = [
             },
             {
                 path: 'edit/:id(\\d+)',
-                component: () => import('@/views/HelloWorld'),
+                component: () => import('@/views/dashboard'),
                 name: 'EditArticle',
                 meta: {
                     title: '编辑文章',
@@ -174,7 +187,7 @@ export const asyncRoutes = [
         component: Layout,
         children: [{
             path: 'index',
-            component: () => import('@/views/HelloWorld'),
+            component: () => import('@/views/dashboard'),
             name: 'Tab',
             meta: {
                 title: '标签页面',

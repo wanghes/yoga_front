@@ -41,7 +41,7 @@ router.beforeEach(async (to, from, next) => {
                     const {
                         roles
                     } = await store.dispatch('user/getInfo');
-                   console.log(roles);
+                    // console.log(roles);
                     // 创建基于角色信息映射的可访问路由
                     const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
 
@@ -57,7 +57,6 @@ router.beforeEach(async (to, from, next) => {
                     // 清除token信息，跳转登录页面重新登录
                     console.log(error)
                     await store.dispatch('user/resetToken')
-                    
                     Message.error(error || 'Has Error')
                     next(`/login?redirect=${to.path}`)
                     NProgress.done()

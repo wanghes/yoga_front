@@ -73,11 +73,11 @@
 
         .el-menu-item:hover{
             background: #fff !important;
-            color:rgb(24, 144, 255) !important;
+            color: #eb5f28 !important;
         }
         .el-menu-item.is-active {
-            background-color: #e6f7ff !important;
-            border-right: 3px solid #1890ff !important;
+            background-color: #f8eddf !important;
+            border-right: 3px solid #eb5f28 !important;
         }
         
         // menu hover
@@ -86,7 +86,7 @@
             font-weight: 600;
             &:hover {
                 background-color: #fff !important;
-                color:rgb(24, 144, 255) !important;
+                color:#eb5f28 !important;
             }
         }
 

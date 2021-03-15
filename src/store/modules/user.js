@@ -79,23 +79,17 @@ const actions = {
     },
 
     // 获取用户信息
-    getInfo({
-        commit,
-        state
-    }) {
+    getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
             let admin_user_id = getAdminUserId();
-            console.log(state);
             getInfo(admin_user_id).then(response => {
-                const {
-                    data
-                } = response
-                
+                const { data } = response
+
                 if (!data) {
                     reject('Verification failed, please Login again.')
                 }
 
-                const roles = state.isAdmin ? ["admin"]: ["thirdUser"];
+                const roles = state.isAdmin ? ["admin"] : ["thirdUser"];
                 const {
                     nickname,
                     avatar,
@@ -118,10 +112,7 @@ const actions = {
     },
 
     // user logout
-    logout({
-        commit,
-        state
-    }) {
+    logout({ commit, state }) {
         return new Promise((resolve, reject) => {
             logout().then((data) => {
                 commit('SET_TOKEN', '')

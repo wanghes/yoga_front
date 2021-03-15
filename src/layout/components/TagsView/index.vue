@@ -9,10 +9,10 @@
             </router-link>
         </scroll-pane>
         <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-            <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
-            <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">Close</li>
-            <li @click="closeOthersTags">Close Others</li>
-            <li @click="closeAllTags(selectedTag)">Close All</li>
+            <li @click="refreshSelectedTag(selectedTag)">刷新</li>
+            <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">关闭</li>
+            <li @click="closeOthersTags">关闭其他</li>
+            <li @click="closeAllTags(selectedTag)">关闭所有</li>
         </ul>
     </div>
 </template>
@@ -200,24 +200,24 @@
 
 <style lang="scss" scoped>
     .tags-view-container {
-        height: 40px;
+        height: 44px;
         width: 100%;
         background: #fff;
         border-top: 1px solid #f0f2f5;
         border-left: 1px solid #f0f2f5;
-        border-bottom: 1px solid #dcdcdc;
+        border-bottom: 1px solid #eaeaea;
         .tags-view-wrapper {
             .tags-view-item {
                 display: inline-block;
                 position: relative;
                 cursor: pointer;
-                height: 26px;
-                line-height: 26px;
+                height: 30px;
+                line-height: 30px;
                 border: 1px solid #d8dce5;
                 color: #495060;
                 background: #fff;
                 padding: 0 8px;
-                font-size: 12px;
+                font-size: 14px;
                 margin-left: 5px;
                 margin-top: 6px;
 
@@ -230,9 +230,9 @@
                 }
 
                 &.active {
-                    background-color: #1890ff;
+                    background-color: #eb5f28;
                     color: #fff;
-                    border-color: #1890ff;
+                    border-color: #eb5f28;
 
                     &::before {
                         content: '';
@@ -280,9 +280,9 @@
     .tags-view-wrapper {
         .tags-view-item {
             .el-icon-close {
-                width: 17px;
-                height: 17px;
-                vertical-align: 3px;
+                width: 18px;
+                height: 18px;
+                vertical-align:2px;
                 border-radius: 50%;
                 text-align: center;
                 transform-origin: 50% 50%;
@@ -290,7 +290,7 @@
                 right: -5px;
                 &:before {
                     display: inline-block;
-                    vertical-align: -3px;
+                    vertical-align: -2px;
                 }
 
                 &:hover {
@@ -302,7 +302,7 @@
                 .el-icon-close {
                     &:hover {
                         background-color: #fff;
-                        color: #1890ff;
+                        color: #eb5f28;
                     }
                 } 
             }

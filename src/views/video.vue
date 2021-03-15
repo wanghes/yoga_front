@@ -24,7 +24,7 @@
             <video id='video4' class='video-js' controls width='300' height='180' data-setup='{}'>
                 <source src='https://movies-ds.jiaffei.com/movies/20190710/f0e8023223e39bfb3534217b950ac020?sign=c3f68c7cfccb148b7a44114dfffc3102&t=5d26f23b' type='video/mp4'>
             </video>
-        </div>
+        </div>xxxw
     </div>
 </template>
 

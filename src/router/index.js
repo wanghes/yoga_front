@@ -11,11 +11,6 @@ export const constantRoutes = [
         hidden: true
     },
     {
-        path: '/test',
-        component: () => import('@/views/temp/index'),
-        hidden: true
-    },
-    {
         path: '/',
         component: Layout,
         redirect: '/dashboard',
@@ -34,6 +29,7 @@ export const constantRoutes = [
         path: '/course',
         component: Layout,
         redirect: '/course/index',
+        alwaysShow: false,
         meta: {
             title: '课程管理',
             icon: 'example'
@@ -44,8 +40,18 @@ export const constantRoutes = [
             name: 'alone',
             meta: {
                 title: '单课',
+                noCache: false,
                 icon: 'education',
             }
+        },{
+            path: 'detail/:id', // 单课详情
+            component: () => import('@/views/course/detail'),
+            name: 'aloneDetail',
+            meta: {
+                title: '课程优化',
+                icon: 'component'
+            },
+            hidden: true
         },{
             path: 'many_index', // 系列课列表
             component: () => import('@/views/course/many_index'),

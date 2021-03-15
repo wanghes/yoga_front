@@ -16,6 +16,35 @@ export function add(data) {
     })
 }
 
+export function get_config(params) {
+    return request({
+        url: '/admin/upload/ue_config',
+        method: 'get',
+        params
+    })
+}
+
+
+export function get_course(params) {
+    return request({
+        url: '/admin/course/get_course',
+        method: 'get',
+        params
+    })
+}
+
+export function uploadVideo(formData) {
+    return request.post('/admin/course/upload_video', formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    })
+}
+
+export function uploadAloneCover(formData) {
+    return request.post('/admin/course/upload', formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    })
+}
+
 export function done(data) {
     return request({
         url: '/admin/course/done',
@@ -35,6 +64,14 @@ export function getMainCourseStyle(params={}) {
 export function getSubCourseStyle(params={}) {
     return request({
         url: '/admin/course/sub_course_style',
+        method: 'get',
+        params
+    })
+}
+
+export function getAllCourseStyle(params={}) {
+    return request({
+        url: '/admin/course/course_styles',
         method: 'get',
         params
     })

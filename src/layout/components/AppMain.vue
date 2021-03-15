@@ -45,7 +45,9 @@
         width: 100%;
         background: #fff;
         min-height: calc(100vh - 170px);
-        padding: 15px;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0,0,0, 0.06%);
         box-sizing: border-box;
     }
 

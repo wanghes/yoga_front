@@ -14,7 +14,7 @@
                     <div class="text item">5、支持单课、系列课、打卡</div>
                 </el-card>
                 <el-radio-group class="group" v-model="sub_course_style" @change="changeRadio">
-                    <el-radio v-for="(item, index) in sub_course_styles" :key="index" :label="item.name" border></el-radio>
+                    <el-radio v-for="(item, index) in sub_course_styles" :key="index" :label="item.name" :disabled="item.name=='互动模式'" border></el-radio>
                 </el-radio-group>
                 <div class="btn_wrap">
                     <el-button type="primary" @click="openCreateBox">创建课程</el-button>
@@ -31,7 +31,7 @@
                     <div class="text item">4、支持单课、系列课、打卡课程</div>
                 </el-card>
                 <el-radio-group class="group" v-model="sub_course_style" @change="changeRadio">
-                    <el-radio v-for="(item, index) in sub_course_styles" :key="index" :label="item.name" border></el-radio>
+                    <el-radio v-for="(item, index) in sub_course_styles" :key="index" :label="item.name" :disabled="item.name=='互动模式'" border></el-radio>
                 </el-radio-group>
                 <div class="btn_wrap">
                     <el-button type="primary" @click="openCreateBox">创建课程</el-button>
@@ -46,12 +46,23 @@
                 </el-form-item>
                 <el-form-item required label="收费类型" :label-width="formLabelWidth">
                     <el-radio-group v-model="form.pay_type" @change="changePayType">
-                        <el-radio label="0" border>免费</el-radio>
-                        <el-radio label="1" border>付费</el-radio>
+                        <el-radio :label="0" :disabled="pid!=0" border>免费</el-radio>
+                        <el-radio :label="1" :disabled="pid!=0" border>付费</el-radio>
+                        <el-radio :label="2" border>系列课</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item v-if="showMoney" required label="金额" :label-width="formLabelWidth">
-                    <el-input v-model="form.pay_money" autocomplete="off"></el-input>
+                    <el-input v-model="form.pay_money"></el-input>
+                </el-form-item>
+                <el-form-item v-if="showXilie" required label="选择系列课" :label-width="formLabelWidth">
+                    <el-select :disabled="pid != 0" v-model="form.pid" placeholder="请选择系列课">
+                        <el-option
+                            v-for="item in seriesCourses"
+                            :key="item.course_id"
+                            :label="item.course_name"
+                            :value="item.course_id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -81,15 +92,26 @@
                 visible: false,
                 formLabelWidth: '120px',
                 showMoney: false,
+                pid: 0,
+                showXilie: false,
+                seriesCourses:[],
                 form: {
                     course_name: "",
                     pay_type: "0",
-                    pay_money: ""
+                    pay_money: "",
+                    pid: ""
                 }
             }
         },
         mounted() {
             this.getMCStyle();
+            if (this.$route.query.pid) {
+                this.pid = this.$route.query.pid;
+                this.form.pid = parseInt(this.pid);
+                this.form.pay_type = 2;
+                this.getSeriesCourses();
+                this.showXilie = true;
+            }
         },
         methods:{
             async getMCStyle() {
@@ -105,6 +127,10 @@
                 
                 this.sub_course_styles = res.data;
                 this.sub_course_style = null;
+            },
+            async getSeriesCourses() {
+                let res = await course.getSeriesCourses({});
+                this.seriesCourses = res.data;
             },
             handleClick(tab, event){
                 this.main_course_style_id = this.activeName;
@@ -122,7 +148,8 @@
                 let {
                     pay_type,
                     course_name,
-                    pay_money
+                    pay_money,
+                    pid
                 } = this.form;
 
                 let config = {
@@ -131,22 +158,28 @@
                     pay_money,
                     course_type: 1,
                     course_style: parseInt(this.main_course_style_id),
-                    course_style_check: parseInt(this.sub_course_style_id)
+                    course_style_check: parseInt(this.sub_course_style_id),
+                    pid
                 }
 
+                // 免费的
                 if (pay_type == 0) {
                     config.pay_money = 0
                 }
 
+                if (this.pid) {
+                    config.pid = this.pid;
+                }
             
                 let res = await course.add(config);
                 let id = res.data.insertId;
                 this.$alert('新建单课成功', {
                     confirmButtonText: '去优化',
                     callback: action => {
+                       this.$store.dispatch('tagsView/delView', this.$route)
                        this.$router.push({
                            path: '/course/detail/' + id
-                       })
+                       });
                     }
                 });
 
@@ -162,12 +195,31 @@
             },
             changePayType(val) {
                 var val = parseInt(val)
+                this.showMoney = false;
+                this.showXilie = false;
                 if (val == 1){
                     this.showMoney = true;
-                } else {
-                    this.showMoney = false;
+                } else if (val == 2) {
+                    this.showXilie = true;
+                    this.getSeriesCourses();
                 }
               
+            },
+            changePayTypeByTime(val) {
+                 
+                switch(val) {
+                    case "1":
+                        console.log(val)
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    default: 
+                        break;
+                }
             }
         }
     };
@@ -186,5 +238,12 @@
 .btn_wrap{
     padding-top: 120px;
     text-align: center;
+}
+.money_box{
+    width:300px;
+    padding: 20px 0;
+}
+.money_box .inner_box{
+     width:300px;
 }
 </style>

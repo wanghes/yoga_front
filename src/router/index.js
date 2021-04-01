@@ -2,6 +2,13 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Layout from '@/layout';
 
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location, onResolve, onReject) {
+    if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+    return originalPush.call(this, location).catch(err => err)
+}
+
+
 Vue.use(Router);
 
 export const constantRoutes = [
@@ -31,74 +38,194 @@ export const constantRoutes = [
         redirect: '/course/index',
         alwaysShow: false,
         meta: {
-            title: '课程管理',
+            title: '线上课程',
             icon: 'example'
         },
         children: [{
+            path: 'cate', // 系列课添加
+            component: () => import('@/views/online_course/cate'),
+            name: 'course_cate',
+            meta: {
+                title: '课程分类',
+                icon: 'list',
+            }
+        }, {
             path: 'index',
-            component: () => import('@/views/course/index'),
+            component: () => import('@/views/online_course/index'),
             name: 'alone',
             meta: {
                 title: '单课',
                 noCache: false,
                 icon: 'education',
             }
-        },{
-            path: 'detail/:id', // 单课详情
-            component: () => import('@/views/course/detail'),
-            name: 'aloneDetail',
-            meta: {
-                title: '课程优化',
-                icon: 'component'
-            },
-            hidden: true
-        },{
-            path: 'many_index', // 系列课列表
-            component: () => import('@/views/course/many_index'),
-            name: 'many_index',
-            meta: {
-                title: '系列课',
-                icon: 'component',
-            }
-        },{
-            path: 'many_detail', // 系列课详情
-            component: () => import('@/views/course/index'),
-            name: 'manyDetail',
-            hidden: true
-        },{
+        }, {
             path: 'add',
-            component: () => import('@/views/course/add'),
+            component: () => import('@/views/online_course/add'),
             name: 'courseAdd',
             meta: {
                 title: '新建单课'
             },
             hidden: true
-        }]
-    },
-    {
-        path: '/documentation',
-        component: Layout,
-        children: [{
-            path: 'index',
-            component: () => import('@/views/dashboard'),
-            name: 'Documentation',
+        }, {
+            path: 'detail/:id', // 单课详情
+            component: () => import('@/views/online_course/detail'),
+            name: 'detail',
             meta: {
-                title: '文章中心',
-                icon: 'documentation'   
+                title: '课程优化',
+                icon: 'component'
+            },
+            hidden: true
+        }, {
+            path: 'many_index', // 系列课列表
+            component: () => import('@/views/online_course/many_index'),
+            name: 'many_index',
+            meta: {
+                title: '系列课',
+                icon: 'component',
             }
+        }, {
+            path: 'many_detail/:id', // 系列课详情
+            component: () => import('@/views/online_course/many_detail'),
+            name: 'many_detail',
+            meta: {
+                title: '编辑课程',
+                icon: 'component'
+            },
+            hidden: true
+        }, {
+            path: 'many_panel', // 系列课详情
+            component: () => import('@/views/online_course/many_panel'),
+            name: 'many_panel',
+            meta: {
+                title: '系列课详情',
+                icon: 'component'
+            },
+            hidden: true
         }]
     },
     {
-        path: '/guide',
+        path: '/offline',
         component: Layout,
-        redirect: '/guide/index',
+        redirect: '/offline/index',
+        alwaysShow: false,
+        meta: {
+            title: '线下课程',
+            icon: 'example'
+        },
         children: [{
             path: 'index',
-            component: () => import('@/views/dashboard'),
-            name: 'Guide',
+            component: () => import('@/views/offline_course/index'),
+            name: "offline_course_index",
             meta: {
-                title: '权威指南',
-                icon: 'guide',
+                title: '课程管理',
+                icon: 'list'
+            }
+        },{
+            path: 'tuanke/add',
+            component: () => import('@/views/offline_course/tuanke/add'),
+            name: "offline_tuanke_add",
+            meta: {
+                title: '新建团课',
+                icon: 'form',
+                noCache: true
+            },
+            hidden: true
+        },{
+            path: 'tuanke/edit/:id',
+            component: () => import('@/views/offline_course/tuanke/edit'),
+            name: "offline_tuanke_edit",
+            meta: {
+                title: '编辑团课',
+                icon: 'edit',
+                noCache: true
+            },
+            hidden: true
+        },{
+            path: 'banke/add',
+            component: () => import('@/views/offline_course/banke/add'),
+            name: "offline_banke_add",
+            meta: {
+                title: '新建班课',
+                icon: 'form',
+                noCache: true
+            },
+            hidden: true
+        },{
+            path: 'banke/edit/:id',
+            component: () => import('@/views/offline_course/banke/edit'),
+            name: "offline_banke_edit",
+            meta: {
+                title: '编辑班课',
+                icon: 'edit',
+                noCache: true
+            },
+            hidden: true
+        },{
+            path: 'teacher',
+            component: () => import('@/views/offline_course/teachers/index'),
+            name: "offline_course_teacher",
+            meta: {
+                title: '员工管理',
+                icon: 'peoples',
+                noCache: true
+            }
+        },{
+            path: 'teacher/detail/:id',
+            component: () => import('@/views/offline_course/teachers/detail'),
+            name: "offline_course_teacher_detail",
+            meta: {
+                title: '老师管理',
+                icon: 'peoples',
+                noCache: true
+            },
+            hidden: true
+        },{
+            path: 'teacher/add',
+            component: () => import('@/views/offline_course/teachers/add'),
+            name: "offline_course_teacher_add",
+            meta: {
+                title: '老师添加',
+                icon: 'peoples',
+                noCache: true
+            },
+            hidden: true
+        },{
+            path: 'teacher/edit',
+            component: () => import('@/views/offline_course/teachers/add'),
+            name: "offline_course_teacher_edit",
+            meta: {
+                title: '老师编辑',
+                icon: 'peoples',
+                noCache: true
+            },
+            hidden: true
+        }]
+    },
+    {
+        path: '/subscribe',
+        component: Layout,
+        redirect: '/subscribe/index',
+        meta: {
+            title: '课程预约管理',
+            icon: 'example'
+        },
+        alwaysShow: false,
+        children: [{
+            path: 'index',
+            component: () => import('@/views/subscribe/index'),
+            name: '排课管理首页',
+            meta: {
+                title: '排课管理',
+                icon: 'list',
+                noCache: true
+            }
+        },{
+            path: 'room',
+            component: () => import('@/views/room/index'),
+            name: '教室',
+            meta: {
+                title: '教室管理',
+                icon: 'list',
                 noCache: true
             }
         }]
@@ -138,7 +265,7 @@ export const asyncRoutes = [
                 icon: 'video',
                 noCache: true
             }
-        },{
+        }, {
             path: 'index2',
             component: () => import('@/views/dashboard'),
             name: 'video',
@@ -159,46 +286,32 @@ export const asyncRoutes = [
             icon: 'example'
         },
         children: [{
-                path: 'list',
-                component: () => import('@/views/dashboard'),
-                name: 'ListArticle',
-                meta: {
-                    title: '文章列表',
-                    icon: 'list'
-                }
-            },{
-                path: 'create',
-                component: () => import('@/views/dashboard'),
-                name: 'CreateArticle',
-                meta: {
-                    title: '创建文章',
-                    icon: 'edit'
-                }
-            },
-            {
-                path: 'edit/:id(\\d+)',
-                component: () => import('@/views/dashboard'),
-                name: 'EditArticle',
-                meta: {
-                    title: '编辑文章',
-                    noCache: true,
-                    activeMenu: '/example/list'
-                },
-                hidden: true
-            }
-        ]
-    },
-    {
-        path: '/tab',
-        component: Layout,
-        children: [{
-            path: 'index',
+            path: 'list',
             component: () => import('@/views/dashboard'),
-            name: 'Tab',
+            name: 'ListArticle',
             meta: {
-                title: '标签页面',
-                icon: 'tab'
+                title: '文章列表',
+                icon: 'list'
             }
+        }, {
+            path: 'create',
+            component: () => import('@/views/dashboard'),
+            name: 'CreateArticle',
+            meta: {
+                title: '创建文章',
+                icon: 'edit'
+            }
+        },
+        {
+            path: 'edit/:id(\\d+)',
+            component: () => import('@/views/dashboard'),
+            name: 'EditArticle',
+            meta: {
+                title: '编辑文章',
+                noCache: true,
+                activeMenu: '/example/list'
+            },
+            hidden: true
         }]
     }
 ]

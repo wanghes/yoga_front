@@ -18,4 +18,9 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+1.按时收费
+创建一个按时收费的表， 有3种 按天, 按月, 按年
+
+2.添加单课 系列课，设置免费试听功能
+
+3.没有开播时间（因为是针对直播的目前不做直播），设置成创建时间就行了

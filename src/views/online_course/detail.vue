@@ -7,6 +7,9 @@
                     <el-form-item required label="课程主题" :label-width="formLabelWidth">
                         <el-input v-model="form.course_name" autocomplete="off"></el-input>
                     </el-form-item>
+                    <el-form-item required label="可播放时间" :label-width="formLabelWidth">
+                        <el-date-picker v-model="form.play_time" type="datetime" placeholder="选择开播时间" :picker-options="pickerOptions"></el-date-picker>
+                    </el-form-item>
                     <!--  课程封面 -->
                     <el-form-item required label="课程封面" :label-width="formLabelWidth">
                         <img v-if="form.course_cover" :src="form.course_cover" />
@@ -16,8 +19,7 @@
                             action="fakeaction"
                             :show-file-list="false"
                             :auto-upload="true"
-                            :http-request="uploadSectionFile"
-                            :on-success="handleUploadSuccess">
+                            :http-request="uploadSectionFile">
                             <el-button type="danger">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">建议尺寸800*500px，JPG、PNG、webp格式，图片小于5M。</div>
                         </el-upload>
@@ -30,12 +32,23 @@
                     <el-form-item required label="收费类型" :label-width="formLabelWidth">
                         <el-radio-group v-model="form.pay_type">
                             <div v-if="form.pay_type == 0">
-                                <el-radio :label="1" disabled>付费</el-radio>
                                 <el-radio :label="0">免费</el-radio>
+                                <el-radio :label="1" disabled>付费</el-radio>
+                                <el-radio :label="2" disabled>系列课</el-radio>
+                            </div>
+                            <div v-else-if="form.pay_type == 1">
+                                <el-radio :label="0" disabled>免费</el-radio>
+                                <el-radio :label="1">付费</el-radio>
+                                <el-radio :label="2" disabled>系列课</el-radio>
                             </div>
                             <div v-else>
-                                <el-radio :label="1">付费</el-radio>
                                 <el-radio :label="0" disabled>免费</el-radio>
+                                <el-radio :label="1" disabled>付费</el-radio>
+                                <el-radio :label="2">系列课</el-radio>
+                            </div>
+                            <div v-if="form.pay_type == 1" class="pay_money_input">
+                                <el-input v-model="form.pay_money"></el-input>
+                                <span>元</span>
                             </div>
                         </el-radio-group>
                     </el-form-item>
@@ -58,12 +71,12 @@
                                 type="line"
                                 :stroke-width="12" 
                                 :percentage="videoUploadPercent" 
-                                style="margin-top:10px; width: 500px"></el-progress>
+                                style="margin-top:10px; width: 500px">
+                            </el-progress>
                         </el-upload>
                         <div class="show_video" v-if="form.course_video">
                             <div class="v_inner" @click="lookVideo">
-                                <i class="el-icon-caret-right icon" />
-                                <!-- <svg-icon class="icon" icon-class="video"></svg-icon> -->
+                                <i class="el-icon-caret-right icon"/>
                             </div>
                             <div class="s_right">
                                 <span>{{videoName}}</span>
@@ -73,12 +86,12 @@
 
                     </el-form-item>
                     <!--  主讲人 -->
-                    <el-form-item required label="主讲人" :label-width="formLabelWidth">
-                        <el-input v-model="form.course_leader" autocomplete="off"></el-input>
+                    <el-form-item label="主讲人" :label-width="formLabelWidth">
+                        <el-input v-model="form.course_leader" placeholder="填写主讲人" autocomplete="off"></el-input>
                     </el-form-item>
                     <!--  主讲人介绍 -->
-                    <el-form-item required label="主讲人介绍" :label-width="formLabelWidth">
-                        <el-input v-model="form.leader_intro" autocomplete="off"></el-input>
+                    <el-form-item label="主讲人介绍" :label-width="formLabelWidth">
+                        <el-input v-model="form.leader_intro" placeholder="填写主讲人介绍" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item class="UEditor" required label="课程内容" :label-width="formLabelWidth">
                         <!-- <VueUeditorWrap v-model="form.course_content" :config="ueConfig" @before-init="addCustomUpload" /> -->
@@ -108,7 +121,8 @@
     const course = require('@/api/course');
     const course_cover = require('@/assets/cover.png');
     import VueUeditorWrap from 'vue-ueditor-wrap';
-    import {BASEURL, UEDITOR_DOMAIN} from "@/utils/config"
+    import {UPLOADBASEURL, UEDITOR_DOMAIN} from "@/utils/config"
+    import {dateFormat} from "@/utils/index"
     import {
         getToken
     } from '@/utils/auth'
@@ -132,7 +146,7 @@
                 videoUploadPercent: 0,
                 videoList:[],
                 videoFlag: false,
-                videoUpApi: BASEURL+"/admin/course/upload_video",
+                videoUpApi: UPLOADBASEURL+"/course/upload_video",
                 videoExtraData: {
                     Authorization: `bearer ${getToken()}`
                 },
@@ -147,7 +161,7 @@
                     initialFrameWidth: '100%',
                     autoFloatEnabled: false,
                     // 上传文件接口
-                    serverUrl: `${UEDITOR_DOMAIN}/admin/upload/ue_upload`,
+                    serverUrl: `${UEDITOR_DOMAIN}/upload/ue_upload`,
                     // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项
                     UEDITOR_HOME_URL: '/static/UEditor/'
                 },
@@ -157,11 +171,18 @@
                     leader_intro: "",
                     course_cover: '',
                     pay_type:"",
+                    pay_money: "",
                     course_type:"",
                     course_style: "",
                     course_style_check:"",
                     course_video: "",
-                    course_content: ""
+                    course_content: "",
+                    play_time: ""
+                },
+                pickerOptions: {
+                   disabledDate(time) {
+                       return time.getTime() < Date.now() - 3600 * 1000 * 24;
+                   }
                 }
             }
         },
@@ -178,6 +199,7 @@
                 let courseStyles = styles.data;
             
                 this.form = result.data;
+               
                 if (this.form.course_video) {
                     let arr = this.form.course_video.split('/');
                     this.videoName= arr[arr.length- 1];
@@ -186,51 +208,70 @@
             },
             async saveData() {
                 const id = this.$route.params.id;
-                const {
+                let {
                     course_name,
                     course_leader,
                     leader_intro,
                     course_cover,
                     course_video,
-                    course_content
+                    course_content,
+                    play_time,
+                    pay_type,
+                    pay_money
                 } = this.form;
+
                 if (!course_name) {
                     Message.error("课程主题不能为空");
+                } else if (!play_time) {
+                    Message.error("选择开播时间");
                 } else if (!course_cover) {
                     Message.error("请上传课程封面");
                 } else if (!course_video) {
                     Message.error("请上传课程视频");
-                } else if (!course_leader) {
-                    Message.error("请填写主讲人");
-                } else if (!leader_intro) {
-                    Message.error("请填写主讲人介绍");
                 } else if (!course_content) {
                     Message.error("请填写课程内容");
+                } else if (pay_type == 1 && !pay_money) {
+                    Message.error("请填写付费金额");
                 } else {
-                   let res = await course.done({
+                    play_time = dateFormat("YYYY-mm-dd HH:MM:SS",new Date(play_time));
+                    let res = await course.done({
                         id,
                         course_name,
                         course_leader,
                         leader_intro,
                         course_cover,
                         course_video,
-                        course_content
+                        course_content,
+                        play_time,
+                        pay_type,
+                        pay_money: parseFloat(pay_money)
                     });
 
                     if (res.code == 200) {
-                        this.$router.replace({
-                            path: "/course/index"
-                        });
+                        this.$store.dispatch('tagsView/delView', this.$route)
+                        if (this.form.pid) {
+                            this.$router.replace({
+                                path: "/course/many_panel",
+                                query: {
+                                    id: this.form.pid
+                                }
+                            });
+                        } else {
+                            
+                            this.$router.replace({
+                                path: "/course/index"
+                            });
+                        }
+                        
                     } else {
                         Message.error("数据保存失败");
                     }
-                    
                 }
             },
             setStyleCheck(courseStyles) {
                 let course_style_name = '';
                 let course_style_check_name = '';
-           
+                 
                 courseStyles.forEach((it) => {
                     if (it.id == this.form.course_style) {
                         course_style_name = it.name
@@ -243,17 +284,12 @@
             },
             async uploadSectionFile(param) {
                 var fileObj = param.file;
-                // FormData 对象
                 var form = new FormData();
-                // 文件对象
                 form.append("file", fileObj);
                 let res = await course.uploadAloneCover(form)
-                // console.log( res.data.imagePath);
-                this.form.course_cover = res.data.imagePath;
+                this.form.course_cover = res.data.data.imagePath;
             },
-            handleUploadSuccess(res, file){
-               //  this.form.course_cover = URL.createObjectURL(file.raw);
-            },
+            
             //上传前回调
             beforeUploadVideo(file) {
                 var fileSize = file.size / 1024 / 1024 < 2048;
@@ -303,10 +339,11 @@
             addCustomUpload() {
                 window.UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
                 window.UE.Editor.prototype.getActionUrl = function(action) {
+                    console.log(action)
                     if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-                        return `${UEDITOR_DOMAIN}/admin/upload/ue_upload`;
+                        return `${UEDITOR_DOMAIN}/upload/ue_upload`;
                     } else if (action == 'uploadvideo') {
-                        return `${UEDITOR_DOMAIN}/admin/upload/ue_upload`;
+                        return `${UEDITOR_DOMAIN}/upload/ue_upload`;
                     } else {
                         return this._bkGetActionUrl.call(this, action);
                     }
@@ -360,5 +397,15 @@
     .UEditor{
         position: relative;
         z-index: 1;
+    }
+    .pay_money_input{
+        display: flex;
+
+        padding-top: 20px;
+        width: 150px;
+    }
+    .pay_money_input span{
+        display: block;
+        flex: 1;
     }
 </style>

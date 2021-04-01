@@ -53,18 +53,25 @@ service.interceptors.response.use(
         // 如果自定义状态不是20000，它会被判定为一个错误。
         if (res.code !== 200) {
             Message({
-                message: res.message || 'Error',
+                message: res.msg || 'Error',
                 type: 'error',
                 duration: 5 * 1000
             });
+            return Promise.reject(new Error(res.message || 'Error'))
+        } else {
+            return res;
+        }
+    },
+    error => {
+        console.log(error.response);
+        if (error.response.status == 500) {
+            let res = error.response.data;
             /* 
              * res.code
-             * 50008: 无效的token;
-             * 50012: 其客户端登录; 
-             * 50014: Token 过期;
+             * 401: 无效的token， 其客户端登录 ， Token 过期;
              * 需要重新登录
              */
-            if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+            if (res.code === 401) {
                 MessageBox.confirm('你已经退出, 你不能停留在这个页面，或者再次登录', '确认退出', {
                     confirmButtonText: '重新登录',
                     cancelButtonText: '取消',
@@ -75,19 +82,14 @@ service.interceptors.response.use(
                     });
                 });
             }
-            return Promise.reject(new Error(res.message || 'Error'))
         } else {
-            return res;
+            Message({
+                message: error.message,
+                type: 'error',
+                duration: 5 * 1000
+            });
+            return Promise.reject(error);
         }
-    },
-    error => {
-        console.log('err' + error);
-        Message({
-            message: error.message,
-            type: 'error',
-            duration: 5 * 1000
-        });
-        return Promise.reject(error);
     }
 )
 

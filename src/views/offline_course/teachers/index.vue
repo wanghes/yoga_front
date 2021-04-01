@@ -89,7 +89,7 @@
 </template>
     
 <script>
- const teacher = require('@/api/teacher');
+const teacher = require('@/api/teacher');
 
 export default {
     inject:['reload'], 

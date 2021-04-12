@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="top_box">
-            <el-button type="primary" @click="showPaike">添加班课</el-button>
+            <el-button type="primary" @click="showPaike">添加班课排课</el-button>
         </div>
         <el-divider></el-divider>
         <div class="main_box">

@@ -6,7 +6,7 @@
             </el-button-group>
             <div class="right_search">
                 <label class="label">选择课程状态：</label>
-                <el-select v-model="status_selected" placeholder="请选择" @change="statusChange" clearable>
+                <el-select v-model="status_selected" placeholder="请选择" @change="statusChange">
                     <el-option
                         v-for="item in status"
                         :key="item.value"
@@ -31,19 +31,34 @@
             element-loading-background = "rgba(255, 255, 255, 0.8)"
             element-loading-text = "加载中，请稍后..."
             element-loading-spinner = "el-icon-loading"
-            :header-cell-style="{'background-color': '#f9fbff', 'height': '80px','color': 'rgba(43,57,64,.85)','border-bottom': '1px #f0f0f0 solid', 'border-top': '1px #f0f0f0 solid'}">   
+            :header-cell-style="{'background-color': '#f9fbff', 'height': '60px','color': 'rgba(43,57,64,.85)'}">   
             <el-table-column label="课程名称" fit prop="name"></el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status==1">正常</span>
-                    <span v-else>禁用中</span>
+                    <el-tag type="success" v-if="scope.row.status==1">启用中</el-tag>
+                    <el-tag type="danger" v-else>禁用中</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="是否支持体验课">
+                <template slot-scope="scope">
+                    <el-tag type="success" v-if="scope.row.tiyan==1">支持</el-tag>
+                    <el-tag type="danger" v-else>不支持</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="限制规则">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.date_time_limit && scope.row.order_limit_type == 1">提前{{scope.row.date_time_limit_arr[0]}}天，{{scope.row.date_time_limit_arr[1]}}-{{scope.row.date_time_limit_arr[2]}}点接受预约</div>
+                    <div v-else-if="scope.row.date_time_limit && scope.row.order_limit_type == 2">提前{{scope.row.date_time_limit_arr[0]}}天，{{scope.row.date_time_limit_arr[1]}}后点接受预约</div>
+                    <div v-else-if="scope.row.date_time_limit && scope.row.order_limit_type == 3">提前{{scope.row.date_time_limit_arr[0]}}天，开课前{{scope.row.date_time_limit_arr[1]}}小时接受预约</div>
+                    <div v-if="scope.row.cancle_limit_hour">提前{{scope.row.cancle_limit_hour}}小时取消</div>
+                    <div v-if="scope.row.order_limit_hour">开课前{{scope.row.order_limit_hour}}小时预约截止</div>
                 </template>
             </el-table-column>
             <el-table-column prop="update_time" width="240" label="更新时间"></el-table-column>
-            <el-table-column label="操作" width="340" fixed="right">
+            <el-table-column label="操作" width="140" fixed="right">
                 <template slot-scope="scope">
-                    <el-link class="editbtn" type="success" @click="intoEdit(scope.row.id)">编辑</el-link>
-                    <el-link type="success" v-if="scope.row.status==1" @click="toggleStatus(scope.row.id, false)">禁用</el-link>
+                    <el-button size="mini" class="editbtn" type="success" @click="intoEdit(scope.row.id)">编辑</el-button>
+                    <el-link type="danger" v-if="scope.row.status==1" @click="toggleStatus(scope.row.id, false)">禁用</el-link>
                     <el-link type="success" v-else @click="toggleStatus(scope.row.id, true)">启用</el-link>
                 </template>
             </el-table-column>
@@ -84,7 +99,7 @@ export default {
             ],
             tableData: [],
             searchName: "",
-            pageSize:5,
+            pageSize:10,
             currentPage:1,
             total: 0,
             visible: false,
@@ -105,6 +120,13 @@ export default {
             });
             this.isLoading = false
             let {list, total} = res.data;
+            list.forEach(item => {
+                console.log(item)
+                if (item.date_time_limit) {
+                    
+                    item['date_time_limit_arr'] = item.date_time_limit.split(':');
+                }
+            })
             this.tableData = list;
             this.total = total;
         },
@@ -126,7 +148,6 @@ export default {
         },
         handleCurrentChange(currentPage){
             this.currentPage = currentPage;
-            console.log(currentPage)
             this.fetchData();
         },
         async toggleStatus(id, status) {
@@ -141,6 +162,7 @@ export default {
                         item.status = status;
                     }
                 });
+                this.fetchData()
             }
         }
     }

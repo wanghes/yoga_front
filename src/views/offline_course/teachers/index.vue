@@ -27,13 +27,14 @@
         </div>
 
         <el-table :data="tableData" :header-cell-style="{'background-color': '#f9fbff', 'height': '80px','color': 'rgba(43,57,64,.85)','border-bottom': '1px #f0f0f0 solid', 'border-top': '1px #f0f0f0 solid'}">   
-            <el-table-column prop="head" width="150" label="封面">
+            <el-table-column prop="head" width="150" label="头像">
                 <template slot-scope="scope">
                     <img class="head" v-if="!scope.row.head" :src="head" />
                     <img class="head" v-else :src="scope.row.head" />
                 </template>
             </el-table-column>
             <el-table-column label="老师姓名" fit prop="name"></el-table-column>
+            <el-table-column label="老师昵称" fit prop="nickname"></el-table-column>
             <el-table-column label="电话" fit prop="phone"></el-table-column>
             <el-table-column label="生日" width="130" prop="birthday">
                 <template slot-scope="scope">
@@ -60,7 +61,7 @@
                         trigger="click"
                         :width="160">
                         <div style="margin-bottom: 10px;">
-                            <span>你确定要删除老师吗？删除了就会彻底删除了。</span>
+                            <span>你确定要删除老师吗？删除了也会删除老师关联的信息。</span>
                         </div>
                         <div style="text-align: center; margin: 0">
                             <el-button type="primary" size="mini" @click="deleteItem(scope.row.id)">确定</el-button>
@@ -69,7 +70,6 @@
                             <el-button size="mini" type="danger">删除</el-button>
                         </template>
                     </el-popover>    
-                    
                 </template>
             </el-table-column>
         </el-table>
@@ -122,7 +122,7 @@ export default {
     methods: {
         async fetchData() {
             let res = await teacher.list({
-                name: this.searchName,
+                name: this.searchName.trim(),
                 pageSize: this.pageSize,
                 page: this.currentPage,
                 status: this.status_selected
@@ -164,7 +164,7 @@ export default {
         manage(id) {
             this.$router.push({
                 path: "/offline/teacher/detail/" + id
-            }) 
+            });
         },
         async deleteItem(id) {
             console.log(id)
@@ -174,19 +174,6 @@ export default {
                 this.reload();
             } else {
                 console.log(res);
-            }    
-        },
-        async toggleStatus(id, status) {
-            let res = await course.updateStatus({
-                id,
-                status
-            });
-            if (res.code == 200) {
-                this.tableData.forEach(item=>{
-                    if (item.id == id) {
-                        item.status = status;
-                    }
-                });
             }
         }
     }

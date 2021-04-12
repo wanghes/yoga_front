@@ -43,6 +43,15 @@ export function query(params) {
     })
 }
 
+
+export function queryPrice(params) {
+    return request({
+        url: '/admin/classcourse/price',
+        method: 'get',
+        params
+    })
+}
+
 export function uploadBankeCover(formData) {
     return axios.post(`${UPLOADBASEURL}/upload/upload_banke_cover`, formData, {
         headers: { "Content-Type": "multipart/form-data" }

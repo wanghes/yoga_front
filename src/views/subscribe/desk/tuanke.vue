@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="top_box">
-            <el-button type="primary" @click="showPaike">添加团课</el-button>
+            <el-button type="primary" @click="showPaike">添加团课排课</el-button>
         </div>
         <el-divider></el-divider>
         <div class="main_box">
@@ -43,27 +43,41 @@
                         <th v-for="item,idx in rankWeeks" :key="idx">{{item}}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="list.length">
                     <tr v-for="item,index in list" :key="index">
                         <td v-for="it,idx in item" :key="idx">
                             <div v-if="typeof it == 'string'">{{it}}</div>
                             <div v-else v-for="one,i in it" :key="i">
-                                <div class="inner_box">
+                                <div class="inner_box" :style="{'background-color':one.color,'border-color':one.color }">
                                     <span class="time_show">{{one.start_time}}-{{one.end_time}}</span>
                                     <span>课程：{{one.course_name}}</span>
                                     <span>老师：{{one.teacher_name}}</span>
                                     <span>人数限制：{{one.p_num}}</span>
-                                    <el-button style="width:100px; margin-top:10px" type="primary" size='mini'>管理</el-button>
+                                    <span>{{one.status == 2 ?"(停课中)":""}}</span>
+                                    <div class="operate">
+                                        <el-button style="width:60px;" type="info" @click="managePaike(one.schedule_id)" size='mini'>管理</el-button>
+                                        <el-button style="width:60px;" type="primary" @click="showEditPaike(one.schedule_id)" size='mini'>编辑</el-button>
+                                    </div>
                                 </div>
                             </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else>
+                    <tr>
+                        <td colspan="8" style='height: 300px'>    
+                            <span>目前还没有数据</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <el-dialog title="添加团课排课" width="60%" :visible.sync="addVisible">
+        <el-dialog title="添加团课排课" width="40%" :visible.sync="addVisible">
             <addTuanke :teachers="teachers" :courses="courses" @refreshData="refreshData"></addTuanke>
+        </el-dialog>
+        <el-dialog title="编辑课程" width="40%" :visible.sync="editVisible">
+            <editTuanke :id="edit_schedule_id" :teachers="teachers" :courses="courses" @refreshData="refreshData"></editTuanke>
         </el-dialog>
     </div>
 </template>
@@ -74,14 +88,18 @@ const course = require('@/api/agreeCourse');
 const schedule = require('@/api/schedule');
 import { dateFormatYMD } from '@/utils/index';
 import addTuanke from "./addTuanke";
+import editTuanke from "./editTuanke";
+
 export default {
     components:{
-        addTuanke
+        addTuanke,
+        editTuanke
     },
     data() {
         return {
             dateValue: new Date(),
             addVisible: false,
+            editVisible: false,
             rankWeeks: [],
             teachers:[],
             courses:[],
@@ -100,19 +118,20 @@ export default {
                 start: "",
                 end:""
             },
-            list:[]
+            list:[],
+            edit_schedule_id: ""
         };
     },
-    mounted() {
-        this.fetchTeachers();
-        this.fetchDesks();
-        this.rankWeeks = this.getWeekTime();
-
-        setTimeout(() => {
-            this.fetchData();
-        },100);
-    },
     methods: {
+        getData() {
+            this.fetchTeachers();
+            this.fetchDesks();
+            this.rankWeeks = this.getWeekTime();
+
+            setTimeout(() => {
+                this.fetchData();
+            },100);
+        },
         async fetchData(){
             let start_date = dateFormatYMD(new Date(this.date.start)) + ' 00:00:00'
             let end_date = dateFormatYMD(new Date(this.date.end)) + ' 23:59:59'
@@ -173,6 +192,7 @@ export default {
         },
         refreshData() {
             this.addVisible = false;
+            this.editVisible = false;
             this.fetchData();
         },
         changeDate() {
@@ -273,6 +293,15 @@ export default {
         },
         showPaike() {
             this.addVisible = true;
+        },
+        managePaike(schedule_id) {
+            this.$router.push({
+                path: "/book/tuanke/index/" + schedule_id
+            });
+        },
+        showEditPaike(schedule_id) {
+            this.editVisible = true;
+            this.edit_schedule_id = schedule_id;
         }
     },
 };
@@ -313,7 +342,7 @@ export default {
         display: flex;
         flex-direction: column;
         text-align: left;
-        border:1px solid #eb5f28;
+        border:1px solid #f5f5f5;
         padding: 15px;
         box-sizing: border-box;
         margin-bottom: 15px;
@@ -329,5 +358,16 @@ export default {
     .inner_box:hover{
         background: #fefefe;
         cursor: pointer;
+    }
+    .operate{
+        padding-top: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .el-button+.el-button{
+            margin-top: 5px;
+            margin-left: 0;
+        }
     }
 </style>

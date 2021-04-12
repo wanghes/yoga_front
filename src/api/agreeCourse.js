@@ -10,6 +10,15 @@ export function list(params) {
     });
 }
 
+export function allList(params) {
+    return request({
+        url: '/admin/agreecourse/alllist',
+        method: 'get',
+        params
+    });
+}
+
+
 export function add(data) {
 	return request({
 		url: '/admin/agreecourse/add',
@@ -17,6 +26,8 @@ export function add(data) {
 		data
 	})
 }
+
+
 
 export function update(data) {
 	return request({

@@ -6,7 +6,7 @@
             </el-button-group>
             <div class="right_search">
                 <label class="label">选择课程状态：</label>
-                <el-select v-model="status_selected" placeholder="请选择" @change="statusChange" clearable>
+                <el-select v-model="status_selected" placeholder="请选择" @change="statusChange">
                     <el-option
                         v-for="item in status"
                         :key="item.value"
@@ -31,12 +31,12 @@
             element-loading-background = "rgba(255, 255, 255, 0.8)"
             element-loading-text = "加载中，请稍后..."
             element-loading-spinner = "el-icon-loading"
-            :header-cell-style="{'background-color': '#f9fbff', 'height': '80px','color': 'rgba(43,57,64,.85)','border-bottom': '1px #f0f0f0 solid', 'border-top': '1px #f0f0f0 solid'}">   
+            :header-cell-style="{'background-color': '#f9fbff', 'height': '60px','color': 'rgba(43,57,64,.85)'}">   
             <el-table-column label="课程名称" fit prop="name"></el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status==1">启用中</span>
-                    <span v-else>禁用中</span>
+                    <el-tag type="success" v-if="scope.row.status==1">启用中</el-tag>
+                    <el-tag type="danger" v-else>禁用中</el-tag>
                 </template>
             </el-table-column>
              <el-table-column width="300" label="课程价格">
@@ -123,21 +123,18 @@ export default {
         toAddCourse() {
             this.$router.push({
                 path: "/offline/banke/add"
-            })
+            });
         },
         intoEdit(id) {
-             this.$router.push({
+            this.$router.push({
                 path: "/offline/banke/edit/" + id
-
-            })
+            });
         },
         handleCurrentChange(currentPage){
             this.currentPage = currentPage;
-            console.log(currentPage)
             this.fetchData();
         },
         async toggleStatus(id, status) {
-            console.log(status)
             let res = await course.updateStatus({
                 id,
                 status
@@ -148,7 +145,7 @@ export default {
                         item.status = status;
                     }
                 });
-                this.fetchData()
+                this.fetchData();
             }
         }
     }

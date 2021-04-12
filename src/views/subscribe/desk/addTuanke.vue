@@ -2,12 +2,22 @@
     <el-form :model="form" label-position="top">
         <el-form-item required label="选择上课日期">
             <el-date-picker
-                v-model="form.start_date"
-                type="date"
-                placeholder="请选择上课日期">
+                v-model="form.date"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
             </el-date-picker>
+            <div style="margin: 10px 0 0;"></div>
+            <div class="weeks">
+                <el-checkbox v-model="open_week_status" @change="handleCheckAllChange">开启星期周几排课</el-checkbox>
+                <el-checkbox-group v-show="open_week_status" v-model="checkedWeeks" @change="handleCheckedWeeksChange">
+                    <el-checkbox v-for="day in weeks" :label="day" :key="day">{{days[day]}}</el-checkbox>
+                </el-checkbox-group>
+            </div>
         </el-form-item>
-            <el-form-item required label="开始和结束时间点设置">
+
+        <el-form-item required label="开始和结束时间点设置">
             <el-time-select
                 placeholder="起始时间"
                 v-model="form.start_time"
@@ -61,6 +71,18 @@
         <el-form-item required label="设置最大参与人数">
             <el-input-number v-model="form.p_num" :min="1" :max="100"></el-input-number>
         </el-form-item>
+        <el-form-item required label="课程颜色">
+            <el-color-picker v-model="form.color"></el-color-picker>
+        </el-form-item>
+        <el-form-item required label="备注说明">
+            <el-input
+                type="textarea"
+                placeholder="请输备注说明"
+                v-model="form.des"
+                maxlength="150"
+                show-word-limit>
+            </el-input>
+        </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="saveData">保 存 数 据</el-button>
         </el-form-item>
@@ -77,6 +99,11 @@ export default {
     data() {
         return {
             rooms: [],
+            open_week_status: false,
+            isIndeterminate: true,
+            checkedWeeks: [],
+            weeks:[1,2,3,4,5,6,0],
+            days:["周日", "周一","周二","周三","周四","周五","周六"],
             form: {
                 start_date: '',
                 start_time: "",
@@ -84,32 +111,60 @@ export default {
                 p_num: 0,
                 ground_id: "",
                 agree_id:"",
-                teacher_id: ""
+                teacher_id: "",
+                color: '#f5f5f5',
+                des:''
             }
         }  
     },
     mounted() {
-        this.fetchRooms()
+        this.fetchRooms();
+        this.checkedWeeks = this.open_week_status ? this.weeks: [];
     },
     methods: {
         async fetchRooms() {
             let res = await room.getRooms();
-            console.log(res)
             this.rooms = res.data;
+        },
+        filterWeekDate(date, weeks) {
+            let newWeeks = JSON.parse(JSON.stringify(weeks));
+            let addedweeks = [];
+            let [start, end] = date;
+            let start_time = new Date(start);
+            let end_time = new Date(end);
+            let temp = newWeeks.pop();
+
+            while(temp>=0) {
+                while(start_time <= end_time) {
+                    let addDate = dateFormatYMD(start_time);
+                    
+                    if (temp == start_time.getDay()) {
+                        addedweeks.push(addDate);
+                    }
+                    start_time.setDate(start_time.getDate() + 1);
+                }
+                start_time = new Date(start);
+                temp = newWeeks.pop();
+            }
+           
+            return addedweeks;
         },
         async saveData() {
             let {
-                start_date,
+                date,
                 start_time,
                 end_time,
                 ground_id,
                 p_num,
                 agree_id,
-                teacher_id
+                teacher_id,
+                color,
+                des
             } = this.form;
 
-            if (!start_date) {
-                
+            let addedWeeks = this.filterWeekDate(date, this.checkedWeeks);
+      
+            if (!date.length) {
                 this.$message.error("请选择上课日期")
                 return;
             }
@@ -138,22 +193,48 @@ export default {
                 return;
             }
 
-    
-            start_date = dateFormatYMD(new Date(start_date));
+            let start_date = dateFormatYMD(new Date(date[0]));
+            let end_date = dateFormatYMD(new Date(date[1]));
+            let open_week = this.open_week_status?1:0;
+ 
             let res = await schedule.add({
                 start_date,
+                end_date,
                 start_time,
                 end_time,
                 ground_id,
                 p_num,
                 agree_id,
-                teacher_id
+                teacher_id,
+                open_week,
+                color,
+                des,
+                weeks: addedWeeks
             });
            
             if (res.code) {
                 this.$emit('refreshData');
             }
-            
+            this.form = {
+                start_date: '',
+                start_time: "",
+                end_time: "",
+                p_num: 0,
+                ground_id: "",
+                agree_id:"",
+                color: "",
+                teacher_id: "",
+                des: ""
+            }
+        },
+        handleCheckAllChange(val) {
+            this.checkedWeeks = val ? this.weeks : [];
+            this.isIndeterminate = false;
+        },
+        handleCheckedWeeksChange(value) {
+            let checkedCount = value.length;
+           // this.open_week_status = checkedCount === this.weeks.length;
+            // this.isIndeterminate = checkedCount > 0 && checkedCount < this.weeks.length;
         }
     }
 }

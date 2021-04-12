@@ -12,7 +12,7 @@
                     :auto-upload="true"
                     :http-request="uploadSectionFile">
                     <el-button type="danger">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸800*500px，JPG、PNG、webp格式，图片小于5M。</div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸200*200px，JPG、PNG、webp格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item required label="姓名">
@@ -47,8 +47,18 @@
                     <el-radio :label="1">支持</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item required label="教学经验">
+                <el-input v-model="form.jingyan"
+                    type="textarea"
+                    placeholder="填写教学经验" 
+                    maxlength="255">
+                </el-input>
+            </el-form-item>
             <el-form-item required label="一句话描述">
-                <el-input v-model="form.des"></el-input>
+                <el-input v-model="form.des"
+                    type="textarea"
+                    placeholder="填写一句话描述" 
+                    maxlength="100"></el-input>
             </el-form-item>
             <el-form-item label="身份证照">
                 <img v-if="form.id_card" :src="form.id_card" />
@@ -109,10 +119,11 @@ export default {
                 jingyan: "",
                 join_date: "",
                 birthday: "",
-                order: "",
+                order: 0,
                 sijiao: 0,
                 id_card: "",
                 des: "",
+                jinyan: "",
                 content: ''
             }
         }
@@ -160,10 +171,6 @@ export default {
                 this.$message.error("老师姓名不能为空");
             } else if (!phone) {
                 this.$message.error("老师手机号不能为空");
-            } else if (order && order < 0) {
-                this.$message.error("正确填写显示顺序");
-            } else if (!des) {
-                this.$message.error("请填写一句话描述");
             } else {
                 if (join_date) {
                     join_date = dateFormat("YYYY-mm-dd HH:MM:SS",new Date(join_date));

@@ -132,17 +132,23 @@ export default {
         }
     },
     mounted() {
-
+        this.fetchData();
     },
     methods: {
-         async fetData() {
+         async fetchData() {
             const id = this.$route.params.id;
             let result = await classCourse.query({
                 id
             });
-            
+
             this.form = result.data;
+            
+            let prices = await classCourse.queryPrice({
+                class_id: this.form.id
+            });
+            this.prices = prices.data;
         },
+       
         async uploadSectionFile(param) {
             var fileObj = param.file;
             var form = new FormData();
@@ -158,12 +164,15 @@ export default {
                 num,
                 id
             } = this.bundle;
+            
             if (id) {
                 hasId = true
             } else {
                 id = getUUID();
             }
+
             
+
             if (!num) {
                 this.$message.error("请填写课时数");
             } else if (!price) {
@@ -197,6 +206,8 @@ export default {
             }
         },
         async saveData() {
+            const class_id = this.$route.params.id;
+            
             let {
                 cover,
                 name,
@@ -207,6 +218,11 @@ export default {
 
             let prices = this.prices;
 
+            if (!class_id) {
+                this.$message.error("class_id参数错误");
+                return;
+            }
+
             if (!name) {
                 this.$message.error("班课名称不能为空");
             } else if (!cover) {
@@ -214,14 +230,18 @@ export default {
             } else if (!prices.length) {
                 this.$message.error("请填写售价信息");
             } else {
-                let res = await classCourse.update({
+                const config = {
+                    id: class_id,
                     cover,
                     name,
                     if_online,
                     des,
                     content,
                     prices
-                });
+                }
+                
+        
+                let res = await classCourse.update(config);
 
 
                 if (res.code == 200) {

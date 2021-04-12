@@ -1,11 +1,11 @@
 <template>
     <section class="app-main">
         <div class="wrapper">
-            <transition name="fade-transform" mode="out-in"> 
+            <!-- <transition name="fade-transform" mode="out-in">  -->
                 <keep-alive :include="cachedViews">
                     <router-view :key="key" />
                 </keep-alive>
-            </transition> 
+            <!-- </transition>  -->
         </div>
         <div class="bot_f">瑜老师后台管理1.0系统</div>
     </section>
@@ -21,6 +21,9 @@
             key() {
                 return this.$route.path
             }
+        },
+        mounted() {
+            // console.log(this.cachedViews)
         }
     }
 </script>

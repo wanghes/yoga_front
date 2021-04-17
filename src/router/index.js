@@ -129,7 +129,7 @@ export const constantRoutes = [
                 name: "offline_course_index",
                 meta: {
                     title: '课程管理',
-                    icon: 'list'
+                    icon: 'tree-table'
                 }
             },
             {
@@ -239,6 +239,16 @@ export const constantRoutes = [
                     noCache: true
                 },
                 hidden: true
+            },
+            {
+                path: 'room',
+                component: () => import('@/views/room/index'),
+                name: '教室',
+                meta: {
+                    title: '教室管理',
+                    icon: 'chart',
+                    noCache: true
+                }
             }
         ]
     },
@@ -257,16 +267,7 @@ export const constantRoutes = [
             name: '排课管理首页',
             meta: {
                 title: '排课管理',
-                icon: 'list',
-                noCache: true
-            }
-        },{
-            path: 'room',
-            component: () => import('@/views/room/index'),
-            name: '教室',
-            meta: {
-                title: '教室管理',
-                icon: 'list',
+                icon: 'tree',
                 noCache: true
             }
         }]
@@ -364,7 +365,7 @@ export const constantRoutes = [
                 meta: {
                     title: '会员卡操作',
                     icon: 'example',
-                    noCache: false
+                    noCache: true
                 },
                 hidden: true
             },
@@ -425,10 +426,10 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
-    /*
     {
         path: '/icon',
         component: Layout,
+        hidden: true,
         meta: {
             title: '图标信息',
             icon: 'example'
@@ -453,7 +454,6 @@ export const asyncRoutes = [
             }
         }]
     }
-    */
 ]
 
 

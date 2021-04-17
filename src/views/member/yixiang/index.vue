@@ -48,9 +48,23 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="editItem(scope.row.id)">编辑</el-button>
-                    <el-button type="danger" size="mini"  @click="deleteItem(scope.row.id)">删除</el-button>
-                    <el-button type="success" size="mini" @click="deleteItem(scope.row.id)">办卡</el-button>
+                    <el-button type="primary" size="mini" @click="editItem(scope.row)">查看会员信息</el-button>
+                    <el-popover
+                        placement="top"
+                        trigger="click"
+                        :width="160">
+                        <div style="margin-bottom: 10px;">
+                            <span>你确定要删除该卡种吗？</span>
+                        </div>
+                        <div style="text-align: center; margin: 0">
+                            <el-button type="primary" size="mini"  @click="deleteItem(scope.row.id)">确定</el-button>
+                        </div>
+                        <template slot="reference">
+                            <el-button size="mini" type="danger">删除</el-button>
+                        </template>
+                    </el-popover>   
+                    
+                    <el-button type="success" size="mini" @click="addCard(scope.row.id)">办卡</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -149,14 +163,27 @@
                 this.currentPage = 1;
                 this.fetchData();
             },
+            editItem(row) {
+                this.$router.push({
+                    path: "/member/detail/" + row.id,
+                    query:{
+                        edit: true
+                    }
+                })
+            },
             async deleteItem(id) {
                 let res = await api.deleteItem({
                     id: id
                 });
                 if (res.code == 200) {
                     this.$message.success("操作成功");
-                    this.reload();
+                    this.fetchData();
                 }
+            },
+            addCard(member_id) {
+                this.$router.push({
+                    path: "/membercard/add/" + member_id
+                })
             }
         }
     };

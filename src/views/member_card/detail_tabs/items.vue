@@ -35,9 +35,7 @@ export default {
                 card_no: this.card
             });
             if (res.code == 200) {
-                
                 this.card_type_id = res.data[0].card_type_id;
-                console.log(this.card_type_id)
                 this.fetchItems(this.card_type_id);
             }
         },

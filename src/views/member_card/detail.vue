@@ -26,11 +26,14 @@
             <el-tab-pane label="可消费的项目" name="second"> 
                 <items :card="cardNo" ref="items"></items>
             </el-tab-pane>
-            <el-tab-pane label="卡消费" name="third"> 
-                <cost :card="cardNo" ref="cost"></cost>
-            </el-tab-pane>
-            <el-tab-pane label="卡预约" name="fourth"> 
+             <el-tab-pane label="卡预约" name="third"> 
                 <yuyue :card="cardNo" ref="yuyue"></yuyue>
+            </el-tab-pane>
+            <el-tab-pane label="卡消费" name="fourth"> 
+                <cost @refreshData="fetchDetail" :card_style="card_style" :card="cardNo" ref="cost"></cost>
+            </el-tab-pane>
+            <el-tab-pane label="取消" name="five"> 
+                <cancel :card="cardNo" ref="cancel"></cancel>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -44,13 +47,15 @@ import info from "./detail_tabs/info";
 import cost from "./detail_tabs/cost";
 import yuyue from "./detail_tabs/yuyue";
 import items from "./detail_tabs/items";
+import cancel from "./detail_tabs/cancel";
 
 export default {
     components:{
         info,
         items,
         cost,
-        yuyue
+        yuyue,
+        cancel
     },
     data() {
         return {
@@ -90,6 +95,22 @@ export default {
 
             if (card_style == 7) {
                 return surplus + '小时';
+            }
+
+            if (card_style == 2) {
+                return "年卡，请查看有效期";
+            }
+
+            if (card_style == 3) {
+                return "季卡，请查看有效期";
+            }
+
+            if (card_style == 2) {
+                return "月卡，请查看有效期";
+            }
+
+            if (card_style == 2) {
+                return "周卡，请查看有效期";
             }
 
             return ""
@@ -150,16 +171,19 @@ export default {
                 this.surplus = this.detail.surplus
             }
             this.$refs.info.fetchDetail();
-        },
+        }, 
+        
         handleClick(tab, event) {
             if (tab.name == 'first') {
                 this.$refs.info.fetchDetail();
             } else if (tab.name == 'second') {
                 this.$refs.items.fetchData();
             } else if (tab.name == 'third') {
-
+                this.$refs.yuyue.fetchBooks();
             } else if (tab.name == 'fourth') {
-
+                this.$refs.cost.fetchSpents();
+            } else if (tab.name == 'five') {
+                this.$refs.cancel.fetchData();
             }
         }
     }

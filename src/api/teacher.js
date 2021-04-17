@@ -36,8 +36,6 @@ export function set_alone_price(data) {
 	})
 }
 
-
-
 export function update(data) {
 	return request({
 		url: '/admin/teacher/update',
@@ -54,7 +52,6 @@ export function updateStatus(data) {
 	})
 }
 
-
 export function deleteTeacher(params) {
     return request({
         url: '/admin/teacher/delete',
@@ -62,6 +59,7 @@ export function deleteTeacher(params) {
         params
     })
 }
+
 export function query(params) {
     return request({
         url: '/admin/teacher/query',
@@ -69,7 +67,6 @@ export function query(params) {
         params
     })
 }
-
 
 export function sijiao_cardinfo(params) {
     return request({

@@ -41,8 +41,6 @@ export function teacher_courses(params) {
 }
 
 
-
-
 export function updateStatus(data) {
 	return request({
 		url: '/admin/schedule/status',
@@ -50,8 +48,6 @@ export function updateStatus(data) {
 		data
 	})
 }
-
-
 
 export function deleteClass(params) {
     return request({

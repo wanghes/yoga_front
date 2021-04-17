@@ -11,6 +11,14 @@
                     <span>{{detail.card_name}}</span>
                 </div>
                 <div class="item">
+                    <label>会员名字：</label>
+                    <span>{{detail.name}}</span>
+                </div>
+                <div class="item">
+                    <label>会员手机：</label>
+                    <span>{{detail.phone}}</span>
+                </div>
+                <div class="item">
                     <label>卡种类：</label>
                     <span>{{card_style_name}}</span>
                 </div>
@@ -30,6 +38,8 @@
                     <label>有效期：</label>
                     <span>{{limit_date}}</span>
                 </div>
+            </div>
+            <div class="right">
                 <div class="item">
                     <label>预约次数：</label>
                     <span></span>
@@ -45,16 +55,6 @@
                 <div class="item">
                     <label>折算已消费/剩余：</label>
                     <span></span>
-                </div>
-            </div>
-            <div class="right">
-                <div class="item">
-                    <label>会员名字：</label>
-                    <span>{{detail.name}}</span>
-                </div>
-                <div class="item">
-                    <label>会员手机：</label>
-                    <span>{{detail.phone}}</span>
                 </div>
                 <div class="item">
                     <label>备注：</label>
@@ -102,6 +102,19 @@ export default {
                 return surplus + '小时';
             }
 
+            if (card_style == 2) {
+                return "年卡，查看有效期";
+            }
+            if (card_style == 3) {
+                return "季卡，查看有效期";
+            }
+            if (card_style == 4) {
+                return "月卡，查看有效期";
+            }
+            if (card_style == 5) {
+                return "周卡，查看有效期";
+            }
+            
             return ""
         },
         card_status_name() {

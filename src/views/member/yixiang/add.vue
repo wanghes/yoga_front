@@ -104,6 +104,16 @@ export default {
             });
             if (res.code == 200) {
                 this.$emit('refreshData');
+                this.form = {
+                    name: "",
+                    phone: "",
+                    sex: "",
+                    excutor: "",
+                    weixin: "",
+                    birthday: "",
+                    address: "",
+                    remark: ""
+                };
             } else {
                 console.log(res);
             }

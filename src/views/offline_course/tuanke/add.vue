@@ -250,11 +250,10 @@ export default {
                     cancle_limit_hour,
                     order_limit_hour,
                     order_limit_type
-                 });
+                });
 
                 if (res.code == 200) {
-                    this.$store.dispatch('tagsView/delView', this.$route)
-                   
+                    this.$store.dispatch('tagsView/delView', this.$route);
                     this.$router.replace({
                         path: "/offline/index"
                     });

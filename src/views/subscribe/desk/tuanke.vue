@@ -53,6 +53,7 @@
                                     <span>课程：{{one.course_name}}</span>
                                     <span>老师：{{one.teacher_name}}</span>
                                     <span>人数限制：{{one.p_num}}</span>
+                                    <span>{{one.count}}人预约，{{one.qiandao}}人上课</span>
                                     <span>{{one.status == 2 ?"(停课中)":""}}</span>
                                     <div class="operate">
                                         <el-button style="width:60px;" type="info" @click="managePaike(one.schedule_id)" size='mini'>管理</el-button>
@@ -235,6 +236,7 @@ export default {
 
             let setDate = function (date) {
                 var week = date.getDay() - 1;
+                week = week == -1 ? 6 :week;
                 date = addDate(date, week * -1);
                 currentFirstDate = new Date(date);
 
@@ -262,6 +264,7 @@ export default {
                 let time = this.dateValue.setDate(this.dateValue.getDate() - 7)
                 this.dateValue = new Date(time);
             } 
+            
             setDate(new Date(this.dateValue.valueOf()));
             return setDate(addDate(currentFirstDate,7*num));
         },

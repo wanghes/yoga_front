@@ -121,9 +121,7 @@ export default {
             this.isLoading = false
             let {list, total} = res.data;
             list.forEach(item => {
-                console.log(item)
                 if (item.date_time_limit) {
-                    
                     item['date_time_limit_arr'] = item.date_time_limit.split(':');
                 }
             })

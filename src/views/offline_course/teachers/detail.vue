@@ -459,6 +459,7 @@ export default {
         async saveAllBinds() {
             const id = this.$route.params.id;
             let data = this.multipleSelection;
+           
             if (!data.length) {
                 this.$message.error('选择要设置的卡');
                 return;
@@ -466,7 +467,7 @@ export default {
             let status = true;
             for (let i = 0; i < data.length; i++) {
                 let item = data[i];
-                if (!item.setted) {
+                if (!item.setted && (item.card_type == 1 || item.card_type == 6 || item.card_type == 7)) {
                     status = false;
                     break;
                 }

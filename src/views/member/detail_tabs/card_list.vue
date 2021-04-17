@@ -24,7 +24,7 @@
                     <span v-if="scope.row.type == 1">{{scope.row.surplus}}次</span>
                     <span v-else-if="scope.row.type == 6">{{parseFloat(scope.row.surplus).toFixed(2)}}元</span>
                     <span v-else-if="scope.row.type == 7">{{scope.row.surplus}}小时</span>
-                    <span v-else></span>
+                    <span v-else>请查看有效期</span>
                 </template>
             </el-table-column>  
             <el-table-column  width="100" label="状态">
@@ -46,7 +46,7 @@
             </el-table-column>   
             <el-table-column width="100" label="默认会员卡">
                 <template slot-scope="scope">
-                    <el-switch v-model="scope.row.defaultStatus" @change="toggleDefault(scope.row)"></el-switch>
+                    <el-switch :disabled="scope.row.status == 0" v-model="scope.row.defaultStatus" @change="toggleDefault(scope.row)"></el-switch>
                 </template>
             </el-table-column>   
             <el-table-column  width="200" fixed="right" label="操作">
@@ -93,7 +93,6 @@ export default {
             });
             if (res.code == 200) {
                 res.data.list.forEach(item => {
-                    console.log(item.default)
                     item.defaultStatus = item.default == 0 ? false : true;
                 })
                 this.list = res.data.list

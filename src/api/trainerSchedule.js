@@ -31,9 +31,6 @@ export function query(params) {
     })
 }
 
-
-
-
 export function updateStatus(data) {
 	return request({
 		url: '/admin/trainerschedule/status',
@@ -41,8 +38,6 @@ export function updateStatus(data) {
 		data
 	})
 }
-
-
 
 export function deleteClass(params) {
     return request({

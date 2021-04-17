@@ -37,8 +37,8 @@
             <el-table-column prop="adviser_name" width="150" label="会籍顾问"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="editItem(scope.row.id)">编辑</el-button>
-                    <el-button type="success" size="mini" @click="deleteItem(scope.row.id)">办卡</el-button>
+                    <el-button type="primary" size="mini" @click="editItem(scope.row)">查看会员信息</el-button>
+                    <el-button type="success" size="mini" @click="addCard(scope.row.id)">办卡</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -135,6 +135,19 @@
                     this.$message.success("操作成功");
                     this.reload();
                 }
+            },
+            editItem(row) {
+                this.$router.push({
+                    path: "/member/detail/" + row.id,
+                    query:{
+                        edit: true
+                    }
+                })
+            },
+            addCard(member_id) {
+                this.$router.push({
+                    path: "/membercard/add/" + member_id
+                })
             }
         }
     };

@@ -31,22 +31,22 @@
         <el-divider></el-divider>
         <el-tabs v-model="activeName" type="card" v-on:tab-click="handleClick">
             <el-tab-pane label="会员基本信息" name="1"> 
-                <info ref="info" :id="id" :edit="edit"></info>
+                <info ref="info" @refreshData="refreshData" :id="id" :edit="edit"></info>
             </el-tab-pane>
             <el-tab-pane label="会员卡列表" name="2"> 
                 <cardList :id="id" ref="card_list"></cardList>
             </el-tab-pane>
             <el-tab-pane label="预约" name="3"> 
-                <yuyue ref="yuyue"></yuyue>
+                <yuyue :id="id" ref="yuyue"></yuyue>
             </el-tab-pane>
             <el-tab-pane label="消费" name="4"> 
-                <cost ref="cost"></cost>
+                <cost :id="id" ref="cost"></cost>
             </el-tab-pane>
             <el-tab-pane label="交易汇总" name="5"> 
-                <order ref="jiaoyi"></order>
+                <order :id="id" ref="order"></order>
             </el-tab-pane>
             <el-tab-pane label="体验课记录" name="6"> 
-                <experience ref="experience"></experience>
+                <experience :name="detail.name" ref="experience"></experience>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -108,6 +108,9 @@ export default {
             }
             this.loading = false;
         },
+        refreshData() {
+            this.fetchData();
+        },
         handleClick(tab, action) {  
              switch(tab.name) {
                 case "1":
@@ -117,16 +120,16 @@ export default {
                     this.$refs.card_list.fetchData();
                 break; 
                 case "3":
-                    
+                    this.$refs.yuyue.fetchBooks();
                 break; 
                 case "4":
-                    
+                    this.$refs.cost.fetchSpents();
                 break; 
                 case "5":
-                    
+                    this.$refs.order.fetchData();
                 break; 
                 case "6":
-                    
+                    this.$refs.experience.fetchData();
                 break; 
                 default:
                 break;  

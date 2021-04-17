@@ -53,9 +53,10 @@
                                     <span>课程：私教课</span>
                                     <span>老师：{{one.t_name}}</span>
                                     <span>教室：{{one.g_name}}</span>
+                                    <span>{{one.count}}人预约，{{one.qiandao}}人上课</span>
                                     <span>{{one.status == 2 ?"(停课中)":""}}</span>
                                     <div class="operate">
-                                        <el-button style="width:60px;" type="info" @click="showEditPaike(one.id)" size='mini'>管理</el-button>
+                                        <el-button style="width:60px;" type="info" @click="manageCourse(one.id)" size='mini'>管理</el-button>
                                         <el-button style="width:60px;" type="primary" @click="showEditPaike(one.id)" size='mini'>编辑</el-button>
                                     </div>
                                 </div>
@@ -146,6 +147,7 @@ export default {
                 teacher: this.teacher,
                 end_date
             });
+         
             let weeks = this.getWeeks(start_date);
             let tempData = [];
             let list = [];
@@ -240,6 +242,7 @@ export default {
 
             let setDate = function (date) {
                 var week = date.getDay() - 1;
+                week = week == -1 ? 6 :week;
                 date = addDate(date, week * -1);
                 currentFirstDate = new Date(date);
 
@@ -273,6 +276,7 @@ export default {
         async fetchTeachers() {
             let res = await teacher.list({
                 pageSize: 10000,
+                can_alone: 1,
                 page: 1,
             });
         
@@ -287,6 +291,11 @@ export default {
         },
         showPaike() {
             this.addVisible = true;
+        },
+        manageCourse(schedule_id) {
+            this.$router.push({
+                path: "/book/sijiao/index/" + schedule_id
+            });
         },
         showEditPaike(schedule_id) {
             this.editVisible = true;

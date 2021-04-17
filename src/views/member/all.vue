@@ -64,9 +64,9 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @click="editItem(scope.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" @click="editItem(scope.row)">查看会员信息</el-button>
                     <el-popover
-                        v-if="scope.row.type==1"
+                        v-if="scope.row.member_card_count==0"
                         placement="top"
                         trigger="click"
                         :width="160">
@@ -79,8 +79,7 @@
                         <template slot="reference">
                             <el-button size="mini" type="danger">删除</el-button>
                         </template>
-                    </el-popover>   
-                    
+                    </el-popover>
                     <el-button type="success" size="mini" @click="addCard(scope.row.id)">办卡</el-button>
                 </template>
             </el-table-column>

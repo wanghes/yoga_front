@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        
+        <h3>欢迎登录</h3>
     </div>
 </template>
 
@@ -12,11 +12,10 @@
             return {
             
             };
-        },
-        
+        }, 
         mounted() {
         
-        },
+        }
     };
 
 </script>

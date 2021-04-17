@@ -58,10 +58,10 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item required label="课程颜色">
+        <el-form-item label="课程颜色">
             <el-color-picker v-model="addForm.color"></el-color-picker>
         </el-form-item>
-        <el-form-item required label="备注说明">
+        <el-form-item label="备注说明">
             <el-input
                 type="textarea"
                 placeholder="请输备注说明"
@@ -79,6 +79,7 @@
 
 <script>
 const schedule = require('@/api/trainerSchedule');
+const teacher = require('@/api/teacher');
 const room = require('@/api/room');
 import { dateFormatYMD } from '@/utils/index';
 export default {
@@ -167,21 +168,23 @@ export default {
                 des
             });
            
-            if (res.code) {
+            if (res.code == 200) {
                 this.$emit('refreshData');
+                this.addForm = {
+                    date: '',
+                    start_time: "",
+                    end_time: "",
+                    minutes: "",
+                    color: '#409EFF',
+                    room: "",
+                    teacher: "",
+                    des: ""
+                }
+            } else {
+                console.log(res)
             }
 
-            this.addForm = {
-                date: '',
-                start_time: "",
-                end_time: "",
-                minutes: "",
-                color: '#409EFF',
-                room: "",
-                teacher: "",
-                des: ""
-            }
-            
+    
         }
     }
 }

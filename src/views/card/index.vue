@@ -104,7 +104,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[5, 10, 20, 30, 40, 50]"
+                :page-sizes="[15, 30, 50]"
                 :page-size="pageSize"
                 :total="total">
             </el-pagination>

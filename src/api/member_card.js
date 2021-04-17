@@ -35,6 +35,15 @@ export function queryCard(params) {
 }
 
 
+
+export function query_by_member(params) {
+    return request({
+        url: '/admin/membercard/query_by_member',
+        method: 'get',
+        params
+    })
+}
+
 export function openCard(data) {
 	return request({
 		url: '/admin/membercard/open_card',

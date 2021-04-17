@@ -50,8 +50,7 @@
                 </div>
             </div>
         </div>
-        <el-button type="primary" @click="visible = true">编辑</el-button>
-
+        <el-button type="primary" @click="editInfo">编辑</el-button>
         <el-dialog title="会员编辑" width="30%" :visible.sync="visible">
             <el-form :model="form" label-position="top">
                 <el-form-item required label="会员姓名">
@@ -148,6 +147,14 @@ import { dateFormatYMD } from '@/utils/index';
                 this.detail = data;
                 this.form = data;
             },
+            editInfo() {
+                this.visible = true;
+                this.advisers.forEach(item => {
+                    if (item.id == this.form.excutor) {
+                        this.form.excutor = item.name
+                    }
+                });
+            },
             async saveData() {
                 let {
                     name,
@@ -184,7 +191,13 @@ import { dateFormatYMD } from '@/utils/index';
                 });
                 if (res.code == 200) {
                     this.visible = false;
-                    this.fetchData();
+                    this.$emit('refreshData');
+
+                    this.advisers.forEach(item => {
+                        if (item.id == this.form.excutor) {
+                            this.detail.adviser_name = item.name
+                        }
+                    });
                 } else {
                     console.log(res);
                 }

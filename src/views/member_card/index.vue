@@ -28,7 +28,7 @@
                     <span v-else-if="scope.row.type == 1">{{scope.row.surplus}} 次</span>
                     <span v-else-if="scope.row.type == 6">{{scope.row.surplus.toFixed(2)}} 元</span>
                     <span v-else-if="scope.row.type == 7">{{scope.row.surplus}} 小时</span>
-                    <span v-else>{{scope.row.surplus}} 天</span>
+                    <span v-else>请查看有效期</span>
                 </template>
             </el-table-column>  
            
@@ -38,9 +38,10 @@
                 </template>
             </el-table-column> 
             <el-table-column prop="order" width="150" label="会籍顾问">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.status==0">未开卡</span>
-                    <span v-else>--</span>
+                <template>
+                    <!-- <span v-if="scope.row.status==0">未开卡</span>
+                    <span v-else>--</span> -->
+                    <span>--</span>
                 </template>
             </el-table-column>
             <el-table-column prop="cost_time" width="120" label="上次消费">
@@ -66,7 +67,6 @@
                             <el-button size="mini" type="danger">删除</el-button>
                         </template>
                     </el-popover>   
-                    
                 </template>
             </el-table-column>
         </el-table>
@@ -77,7 +77,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[5, 10, 20, 30, 40, 50]"
+                :page-sizes="[15, 30, 50]"
                 :page-size="pageSize"
                 :total="total">
             </el-pagination>

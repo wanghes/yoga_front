@@ -6,7 +6,7 @@
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item required label="卡类别">
-                <el-radio-group v-model="form.type">
+                <el-radio-group v-model="form.type" @change="changeType">
                     <el-radio-button :label="1">次卡</el-radio-button>
                     <el-radio-button :label="2">年卡</el-radio-button>
                     <el-radio-button :label="3">季卡</el-radio-button>
@@ -38,6 +38,9 @@
             </el-form-item>
             <el-form-item label="单次可约最大人数">
                 <el-input-number placeholder="单次可约最大人数" v-model="form.limit_people"></el-input-number> 人
+                <el-tooltip style="color:red" effect="dark" content="用来限制该类型卡预约时，最多可以带多少人一起上课。" placement="top">
+                    <i class="el-icon-warning"></i>
+                </el-tooltip>
             </el-form-item>
             <el-form-item label="显示顺序">
                 <el-input-number placeholder="填写显示顺序" v-model="form.order"></el-input-number> 
@@ -67,7 +70,7 @@ export default {
                 name: '',
                 type: 1,
                 price: "",
-                expire_date_on: 1,
+                expire_date_on: 2,
                 expire_date: "",
                 times:"",
                 limit_people:"",
@@ -82,7 +85,26 @@ export default {
     }, 
     methods: {
         changeRadio(value) {
-            console.log(value)
+            // console.log(value)
+        },
+        changeType(value) {
+            if (value == 2) {
+                this.form.expire_date = 365
+            }
+            if (value == 3) {
+                this.form.expire_date = 93
+            }
+            if (value == 4) {
+                this.form.expire_date = 31
+            }
+            if (value == 5) {
+                this.form.expire_date = 7
+            } 
+            this.form.expire_date_on = 1
+            if (value == 6 || value == 1 || value == 7) {
+                this.form.expire_date = 0
+                this.form.expire_date_on = 2
+            }
         },
         async saveData() {
             let {
@@ -111,6 +133,13 @@ export default {
                 this.$message.error("请填写售价")
                 return;
             }
+
+            if (type == 2 || type == 3 || type == 4 || type == 5) {
+                if (expire_date_on != 1) {
+                    this.$message.error("必须限制有效期")
+                    return;
+                }
+            } 
             
             if (expire_date_on == 1) {
                 if (!expire_date) {
@@ -133,6 +162,7 @@ export default {
                 }
             }
 
+        
             if (!limit_people) {
                 this.$message.error("请填写单次可约最大人数")
                 return;

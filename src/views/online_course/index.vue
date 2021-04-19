@@ -32,38 +32,39 @@
                     <img class="cover" v-else :src="scope.row.course_cover" />
                 </template>
             </el-table-column>
-            <el-table-column prop="course_name" label="课程主题" width="300">
+            <el-table-column prop="course_name" label="课程主题" width="250">
                 <template slot-scope="scope">
                     <span class="course_name">{{scope.row.course_name}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="course_style_all_name" width="200" label="课程形式"></el-table-column>
+            <el-table-column prop="course_type_name" width="200" label="课程形式"></el-table-column>
             <el-table-column label="课程状态"  width="150">
                 <template slot-scope="scope">
-                    <el-tag type="danger" effect="dark" v-if="!scope.row.status">{{scope.row.status_label}}</el-tag>
-                    <el-tag type="warning" effect="dark" v-if="scope.row.status==1">{{scope.row.status_label}}</el-tag>
-                    <el-tag type="success" effect="dark" v-if="scope.row.status==2">{{scope.row.status_label}}</el-tag>
-                    <!-- 先隐藏直播结束状态 -->
-                    <!-- <el-tag type="info" v-if="scope.row.status==3">{{scope.row.status_label}}</el-tag> -->
+                    <el-tag type="danger" effect="dark" v-if="!scope.row.status">已下线</el-tag>
+                    <el-tag type="success" effect="dark" v-if="scope.row.status==1">正常</el-tag>
+                    <el-tag type="info" effect="dark" v-if="scope.row.status==2">未上传资源</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="付费类型"  fit>
+            <el-table-column label="付费类型" width="100">
                 <template slot-scope="scope">
                     <span v-if="scope.row.pay_type==1">付费</span>
                     <span v-else>免费</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="pay_money" width="100" label="价格">
+            <el-table-column prop="pay_money" width="120" label="价格">
                 <template slot-scope="scope">
                     <strong class="price_td">￥{{scope.row.pay_money}}</strong>
                 </template>
             </el-table-column>
-            <el-table-column prop="play_time" label="开播时间" width="200"></el-table-column>
+            <el-table-column prop="play_time" label="编辑状态切换" fit>
+                <template slot-scope="scope">
+                    <el-switch :disabled="scope.row.status_no" v-model="scope.row.status" @change="changeSwitchStatus(scope.row)"></el-switch>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="200" fixed="right">
                 <template slot-scope="scope">
-                    
-                    <el-link type="success" style="margin-right: 10px;" @click="intoEdit(scope.row)">编辑课程</el-link>
-                    <el-button type="success" @click="intoPlay(scope.row)">进入直播</el-button>
+                    <el-link type="success" style="margin-right: 10px;" @click="toEdit(scope.row)">编辑课程</el-link>
+                    <el-button type="success" @click="toLive(scope.row)">进入课程</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -97,36 +98,28 @@
                 total: 0,
                 courseStyles: [],
                 course_cover,
-                status_selected: 10,
+                status_selected: '',
                 status: [
                     {
-                        value: 10,
+                        value: '',
                         label: "全部"
                     },
                     {
-                        value: 0,
+                        value: 2,
                         label: "未上传音视频"
                     },
                     {
                         value: 1,
-                        label: "直播即将开始"
+                        label: "正常"
                     },
                     {
-                        value: 2,
-                        label: "直播中"
-                    },
-                    /*
-                    {
-                        value: 3,
-                        label: "直播结束"
+                        value: 0,
+                        label: "已下线"
                     }
-                    */
                 ]
             }
         },
         async mounted() {
-            let styles = await course.getAllCourseStyle();
-            this.courseStyles = styles.data;
             this.fetData();
         },
         methods: {
@@ -139,7 +132,7 @@
                 });
                 
                 let {list, total} = result.data;
-                this.setStyleCheck(list);
+                this.setCourseType(list);
                 this.tableData = list;
                 this.total = total;
             },
@@ -163,34 +156,56 @@
                     path: "/course/add"
                 })
             },
-            setStyleCheck(list) {
-                let courseStyles = this.courseStyles;
-
-                list.map((item) => {
-                    courseStyles.forEach((it) => {
-                        if (it.id == item.course_style) {
-                            item.course_style_name = it.name
-                        }
-                        if (it.id == item.course_style_check) {
-                            item.course_style_check_name = it.name
-                        }
-                    })
-                    item.course_style_all_name=item.course_style_name+"-"+item.course_style_check_name;
+            async changeSwitchStatus(row) {
+                let res = await course.updateStatus({
+                    id: row.id,
+                    status: row.status ? 1 : 0
                 });
-                
+                if (res.code) {
+                    this.$message.success("修改成功")
+                }
             },
-            intoPlay(row) {
-                let { course_id } = row;
-                // console.log(row);
+            setCourseType(list) {
+                list.map((item) => {
+                    let label = '';
+                    switch(item.course_type) {
+                        case 1:
+                            label = "视频录播-无互动模式"
+                            break;
+                        case 2:
+                            label = "视频录播-互动模式"
+                            break;
+                        case 3:
+                            label = "音频录播-无互动模式"
+                            break;
+                        case 4:
+                            label = "音频录播-互动模式"
+                            break;
+                        default:
+                            break;
+                    }
+                    item.course_type_name = label;
+            
+                    item.status_no = false;
+                    if (item.status == 1) {
+                        item.status = true
+                    } else if(item.status == 0) {
+                        item.status = false
+                    } else {
+                        item.status_no = true;
+                    }
+                });
+            },
+            toLive(row) {
+                let { id } = row;
                 this.$router.push({
-                    path: '/course/detail/' + course_id
+                    path: '/course/detail/' + id
                 })
             },
-            intoEdit(row) {
-                let { course_id } = row;
-                // console.log(row);
+            toEdit(row) {
+                let { id } = row;
                 this.$router.push({
-                    path: '/course/detail/' + course_id
+                    path: '/course/detail/' + id
                 })
             },
         }

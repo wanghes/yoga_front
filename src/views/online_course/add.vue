@@ -1,7 +1,6 @@
 <template>
     <div class="wrap" style="height: 600px;">
-        <el-tabs v-model="activeName" tab-position="top" type="card" style="height: 100%"   @tab-click="handleClick">
-            <!-- <el-tab-pane v-for="(item, i) in main_course_styles" :key="i" :label="item.name"></el-tab-pane> -->
+        <el-tabs v-model="activeName" tab-position="top" type="card" style="height: 100%" v-on:tab-click="handleClick">
             <el-tab-pane label="视频录播" name="2">
                 <el-card class="box-card" shadow="never">
                     <div slot="header" class="clearfix">
@@ -13,8 +12,9 @@
                     <div class="text item">4、课程重复利用率高</div>
                     <div class="text item">5、支持单课、系列课、打卡</div>
                 </el-card>
-                <el-radio-group class="group" v-model="sub_course_style" @change="changeRadio">
-                    <el-radio v-for="(item, index) in sub_course_styles" :key="index" :label="item.name" :disabled="item.name=='互动模式'" border></el-radio>
+                <el-radio-group class="group" v-model="course_type" @change="changeRadio">
+                    <el-radio :label="1" border>无互动模式</el-radio>
+                    <el-radio :label="2" border disabled>互动模式</el-radio>
                 </el-radio-group>
                 <div class="btn_wrap">
                     <el-button type="primary" @click="openCreateBox">创建课程</el-button>
@@ -30,8 +30,9 @@
                     <div class="text item">3、知识直达效率更高</div>
                     <div class="text item">4、支持单课、系列课、打卡课程</div>
                 </el-card>
-                <el-radio-group class="group" v-model="sub_course_style" @change="changeRadio">
-                    <el-radio v-for="(item, index) in sub_course_styles" :key="index" :label="item.name" :disabled="item.name=='互动模式'" border></el-radio>
+                <el-radio-group class="group" v-model="course_type" @change="changeRadio">
+                    <el-radio :label="3" border>无互动模式</el-radio>
+                    <el-radio :label="4" border disabled>互动模式</el-radio>
                 </el-radio-group>
                 <div class="btn_wrap">
                     <el-button type="primary" @click="openCreateBox">创建课程</el-button>
@@ -41,7 +42,7 @@
 
         <el-dialog title="一步创建课程" :visible.sync="visible">
             <el-form :model="form">
-                <el-form-item required label="课程主题" :label-width="formLabelWidth">
+                <el-form-item required label="课程名称" :label-width="formLabelWidth">
                     <el-input v-model="form.course_name" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item required label="收费类型" :label-width="formLabelWidth">
@@ -58,9 +59,9 @@
                     <el-select :disabled="pid != 0" v-model="form.pid" placeholder="请选择系列课">
                         <el-option
                             v-for="item in seriesCourses"
-                            :key="item.course_id"
+                            :key="item.id"
                             :label="item.course_name"
-                            :value="item.course_id">
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -75,26 +76,18 @@
 
 <script>
     const course = require('@/api/course');
-    import {
-        Message
-    } from 'element-ui';
     export default {
         name: "CourseAdd",
         data() {
             return {
                 activeName: "2",
-                main_course_styles: [],
-                sub_course_styles: [],
-                main_course_style: null,
-                sub_course_style: null,
-                main_course_style_id: "",
-                sub_course_style_id: "",
                 visible: false,
                 formLabelWidth: '120px',
                 showMoney: false,
                 pid: 0,
                 showXilie: false,
                 seriesCourses:[],
+                course_type:'',
                 form: {
                     course_name: "",
                     pay_type: "0",
@@ -104,7 +97,6 @@
             }
         },
         mounted() {
-            this.getMCStyle();
             if (this.$route.query.pid) {
                 this.pid = this.$route.query.pid;
                 this.form.pid = parseInt(this.pid);
@@ -114,37 +106,20 @@
             }
         },
         methods:{
-            async getMCStyle() {
-                let res = await course.getMainCourseStyle();
-                this.main_course_styles = res.data;
-                this.main_course_style_id = this.activeName;
-                this.getSCStyle();
-            },
-            async getSCStyle() {
-                let res = await course.getSubCourseStyle({
-                    id: this.activeName
-                });
-                
-                this.sub_course_styles = res.data;
-                this.sub_course_style = null;
-            },
             async getSeriesCourses() {
-                let res = await course.getSeriesCourses({});
+                let res = await course.getSeriesCourses();
                 this.seriesCourses = res.data;
             },
-            handleClick(tab, event){
-                this.main_course_style_id = this.activeName;
-                this.getSCStyle();
-            },
             openCreateBox() {
-                if (!this.sub_course_style_id) {
-                    Message.error("请选择课程模式");
+                if (!this.course_type) {
+                    this.$message.error("请选择课程类型")
                     return;
-                }
+                };
                 this.visible = true;
             },
             async createCourse() {
                 this.visible = false;
+                let course_type = this.course_type;
                 let {
                     pay_type,
                     course_name,
@@ -153,12 +128,10 @@
                 } = this.form;
 
                 let config = {
+                    course_type,
                     course_name,
                     pay_type: parseInt(pay_type),
                     pay_money,
-                    course_type: 1,
-                    course_style: parseInt(this.main_course_style_id),
-                    course_style_check: parseInt(this.sub_course_style_id),
                     pid
                 }
 
@@ -182,16 +155,12 @@
                        });
                     }
                 });
-
             },
             changeRadio(val) {
-                let childId = null;
-                this.sub_course_styles.forEach((item) => {
-                    if (item.name == val) {
-                        childId = item.id;
-                    }
-                });
-                this.sub_course_style_id = childId;
+                this.course_type = val
+            },
+            handleClick() {
+                this.course_type = "";
             },
             changePayType(val) {
                 var val = parseInt(val)
@@ -202,24 +171,7 @@
                 } else if (val == 2) {
                     this.showXilie = true;
                     this.getSeriesCourses();
-                }
-              
-            },
-            changePayTypeByTime(val) {
-                 
-                switch(val) {
-                    case "1":
-                        console.log(val)
-                        break;
-                    case "2":
-                        break;
-                    case "3":
-                        break;
-                    case "4":
-                        break;
-                    default: 
-                        break;
-                }
+                } 
             }
         }
     };

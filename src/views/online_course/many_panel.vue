@@ -31,10 +31,11 @@
             </div>    
             <div class="d_right">
                   <el-button type="success" @click="goLook">课程预览</el-button>  
-                  <el-button type="success" @click="editCourse(detail.course_id)">编辑课程</el-button>  
+                  <el-button type="success" @click="editCourse(detail.id)">编辑课程</el-button>  
                   <el-button type="success">报名管理</el-button>  
             </div>
         </div>
+
         <div class="top_info">
             <el-button-group class="btn_wrap">
                 <el-button type="primary" @click="toAddCourse">新建单课</el-button>
@@ -81,30 +82,29 @@
             </el-table-column>
             <el-table-column prop="open" label="课程排序" width="100">
                 <template slot-scope="scope">
-                    <!-- <div style="width: 150px"></div> -->
                         <el-popover
-                                placement="top"
-                                trigger="click"
-                                :width="160">
-                                <div style="margin-bottom: 10px;">
-                                    <el-input width="100" size="mini" v-model="scope.row.order"></el-input>
+                            placement="top"
+                            trigger="click"
+                            :width="160">
+                            <div style="margin-bottom: 10px;">
+                                <el-input width="100" size="mini" v-model="scope.row.order"></el-input>
+                            </div>
+                            <div style="text-align: right; margin: 0">
+                                <el-button type="primary" size="mini" @click="repairOrder(scope.row.id, scope.row.order)">确定</el-button>
+                            </div>
+                            <template slot="reference">
+                                <div class="edit_order">
+                                    <span>{{scope.row.order}}</span>
+                                    <svg-icon icon-class="edit" />
                                 </div>
-                                <div style="text-align: right; margin: 0">
-                                    <el-button type="primary" size="mini" @click="repairOrder(scope.row.course_id, scope.row.order)">确定</el-button>
-                                </div>
-                                <template slot="reference">
-                                    <div class="edit_order">
-                                        <span>{{scope.row.order}}</span>
-                                        <svg-icon icon-class="edit" />
-                                    </div>
-                                </template>
+                            </template>
                         </el-popover>                          
                 </template>
             </el-table-column>
-            <el-table-column prop="course_style_all_name" label="课程形式" width="200"></el-table-column>
+            <el-table-column prop="course_type_name" label="课程类型" width="200"></el-table-column>
             <el-table-column label="课程状态" width="150">
                 <template slot-scope="scope">
-                    <el-tag type="danger" effect="dark" v-if="!scope.row.course_video">还未上传视音频</el-tag>
+                    <el-tag type="danger" effect="dark" v-if="!scope.row.course_video">还未上传资源</el-tag>
                     <el-tag type="success" effect="dark" v-else>正常</el-tag>
                 </template>
             </el-table-column>
@@ -117,9 +117,9 @@
                         <span class="el-dropdown-link">更多操作</span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item v-if="scope.row.open" :command="'a|'+ scope.row.course_id">取消免费试听</el-dropdown-item>
-                                <el-dropdown-item v-else :command="'c|'+ scope.row.course_id">开启免费试听</el-dropdown-item>
-                                <el-dropdown-item :command="'b|'+ scope.row.course_id">移除系列课</el-dropdown-item>
+                                <el-dropdown-item v-if="scope.row.open" :command="'a|'+ scope.row.id">取消免费试听</el-dropdown-item>
+                                <el-dropdown-item v-else :command="'c|'+ scope.row.id">开启免费试听</el-dropdown-item>
+                                <el-dropdown-item :command="'b|'+ scope.row.id">移除系列课</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
@@ -158,7 +158,7 @@
                         <span>{{scope.row.course_name.length>20 ? scope.row.course_name.slice(0, 20)+'...': scope.row.course_name.slice(0, 20)}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column property="course_style_all_name" label="课程形式" width="200"></el-table-column>
+                <el-table-column property="course_type_name" label="课程类型" width="200"></el-table-column>
                 <el-table-column property="create_time" width="180" label="创建时间"></el-table-column>
             </el-table>
             <div style="text-align: center; margin: 20px 0 0;">
@@ -186,13 +186,12 @@
             return {
                 tableData: [],
                 searchName: "",
-                currentPage:1,
-                pageSize:5,
+                currentPage: 1,
+                pageSize: 5,
                 total: 0,
                 aloneCurrentPage: 1,
                 alonePageSize: 5,
                 allCoursesTotal: 0,
-                courseStyles: [],
                 course_cover,
                 dialogVisible: false,
                 pid:"",
@@ -200,14 +199,29 @@
                 cates:[],
                 allCourses:[],
                 multipleSelection: [],
-                payTypes:[]
+                payTypes:[
+                    {
+                        id: 1,
+                        name: "固定收费"
+                    },
+                    {
+                        id: 2,
+                        name: "按天收费"
+                    },
+                    {
+                        id: 3,
+                        name: "按月收费"
+                    },
+                    {
+                        id: 4,
+                        name: "按年收费"
+                    }
+                ]
             }
         },
         async mounted() {
             let pid = this.$route.query.id;
             this.pid = pid;
-            let styles = await course.getAllCourseStyle();
-            this.courseStyles = styles.data;
             this.fetdetail();
             this.fetData();
         },
@@ -221,36 +235,32 @@
                 let res = await course.getCates();
                 this.cates = res.data;
                 
-                let payTypes = await course.getPayTypes();
-                this.payTypes = payTypes.data;
-    
                 this.payTypes.forEach(item => {
                     if (data.pay_type == item.id) {
                         data['pay_type_name'] = item.name;
                     }
                 });
+
                 this.cates.forEach(item => {
                     if (data.course_cate == item.id) {
                         data['course_cate_name'] = item.name;
                     }
-                })
-
+                });
                 this.detail = data; 
             },
             async fetData() {
                 let result = await course.listByPid({
                     page: this.currentPage,
                     pageSize: this.pageSize,
-                    course_name: this.searchName,
+                    course_name: this.searchName.trim(),
                     id: this.pid
                 });
                 
                 let {list, total} = result.data;
-                // console.log(list);
                 list.forEach(item => {
                     item.orderVisible = false;
                 })
-                this.setStyleCheck(list);
+                this.setCourseType(list);
                 this.tableData = list;
                 this.total = total;
             },
@@ -277,40 +287,43 @@
                     }
                 })
             },
-            setStyleCheck(list) {
-                if (!list.length) {
-                    return;
-                }
-                let courseStyles = this.courseStyles;
-
+            setCourseType(list) {
                 list.map((item) => {
-                    courseStyles.forEach((it) => {
-                        if (it.id == item.course_style) {
-                            item.course_style_name = it.name
-                        }
-                        if (it.id == item.course_style_check) {
-                            item.course_style_check_name = it.name
-                        }
-                    })
-                    item.course_style_all_name=item.course_style_name+"-"+item.course_style_check_name;
+                    let label = '';
+                    switch(item.course_type) {
+                        case 1:
+                            label = "视频录播-无互动模式"
+                            break;
+                        case 2:
+                            label = "视频录播-互动模式"
+                            break;
+                        case 3:
+                            label = "音频录播-无互动模式"
+                            break;
+                        case 4:
+                            label = "音频录播-互动模式"
+                            break;
+                        default:
+                            break;
+                    }
+                    item.course_type_name = label;
                 });
-                
             },
             intoPlay(row) {
-                let { course_id } = row;
+                let { id } = row;
                 this.$router.push({
-                    path: '/course/detail/' + course_id
+                    path: '/course/detail/' + id
                 })
             },
             intoEdit(row) {
-                let { course_id } = row;
+                let { id } = row;
                 this.$router.push({
-                    path: '/course/detail/' + course_id
+                    path: '/course/detail/' + id
                 })
             },
-            editCourse(course_id) {
+            editCourse(id) {
                 this.$router.push({
-                    path: '/course/many_detail/' + course_id
+                    path: '/course/many_detail/' + id
                 })
             },
             goLook() {
@@ -324,11 +337,11 @@
                 let result = await course.list({
                     page: this.aloneCurrentPage,
                     pageSize: this.alonePageSize,
-                    status: 10
+                    status: ""
                 });
                 
                 let {list, total} = result.data;
-                this.setStyleCheck(list);
+                this.setCourseType(list);
                 this.allCourses = list;
                 this.allCoursesTotal = total;
             },
@@ -336,7 +349,6 @@
                 this.aloneCurrentPage = currentPage;
                 this.getAllAloneCourses();
             },
-
             handleSelectionChange(val){
                 this.multipleSelection = val;
             },
@@ -344,7 +356,7 @@
                 let temp = this.multipleSelection;
                 let ids = [];
                 temp.forEach(item => {
-                    ids.push(item.course_id)
+                    ids.push(item.id)
                 });
                 
                 if (!ids.length) {
@@ -363,7 +375,7 @@
             },
             repairOrder(id, order) {
                 course.updateOrder({
-                    course_id: id, 
+                    id: id, 
                     order: parseInt(order)
                 }).then(res => {
                     if (res.code == 200) {
@@ -376,7 +388,7 @@
                 switch(mand) {
                     case "a":
                         course.closeListen({
-                            course_id: id
+                            id: id
                         }).then((res) => {
                             if (res.code == 200) {
                                 this.reload();
@@ -385,7 +397,7 @@
                         break;
                     case "b":
                         course.removeCourseFromSeries({
-                            course_id: id
+                            id: id
                         }).then((res) => {
                             if (res.code == 200) {
                                 this.reload();
@@ -394,7 +406,7 @@
                         break;
                     case "c":
                         course.openListen({
-                            course_id: id
+                            id: id
                         }).then((res) => {
                             if (res.code == 200) {
                                 this.reload();

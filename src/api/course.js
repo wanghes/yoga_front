@@ -44,14 +44,6 @@ export function getSeriesCourses(params) {
     })
 }
 
-export function getPayTypes(params) {
-    return request({
-        url: '/admin/manycourse/get_pay_types',
-        method: 'get',
-        params
-    })
-}
-
 export function removeCourseFromSeries(data) {
     return request({
         url: '/admin/manycourse/remove_course_from_series',
@@ -86,11 +78,6 @@ export function updateOrder(data) {
         data
     })
 }
-
-
-
-
-
 
 
 export function list(params) {
@@ -136,7 +123,6 @@ export function get_course(params) {
 }
 
 
-
 export function uploadAloneCover(formData) {
     return axios.post(`${UPLOADBASEURL}/course/upload_cover`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
@@ -151,30 +137,14 @@ export function done(data) {
     })
 }
 
-export function getMainCourseStyle(params={}) {
-    return request({
-        url: '/admin/course/main_course_style',
-        method: 'get',
-        params
-    })
-}
 
-export function getSubCourseStyle(params={}) {
-    return request({
-        url: '/admin/course/sub_course_style',
-        method: 'get',
-        params
-    })
+export function updateStatus(data) {
+	return request({
+		url: '/admin/course/status',
+		method: 'put',
+		data
+	})
 }
-
-export function getAllCourseStyle(params={}) {
-    return request({
-        url: '/admin/course/course_styles',
-        method: 'get',
-        params
-    })
-}
-
 
 export function getCates(params={}) {
     return request({

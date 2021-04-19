@@ -7,9 +7,11 @@
                     <el-form-item required label="课程主题" :label-width="formLabelWidth">
                         <el-input v-model="form.course_name" autocomplete="off"></el-input>
                     </el-form-item>
+                    <!-- 
                     <el-form-item required label="可播放时间" :label-width="formLabelWidth">
                         <el-date-picker v-model="form.play_time" type="datetime" placeholder="选择开播时间" :picker-options="pickerOptions"></el-date-picker>
                     </el-form-item>
+                    -->
                     <!--  课程封面 -->
                     <el-form-item required label="课程封面" :label-width="formLabelWidth">
                         <img v-if="form.course_cover" :src="form.course_cover" />
@@ -26,7 +28,7 @@
                     </el-form-item>
                     <!--  课程形式 -->
                     <el-form-item required label="课程形式" :label-width="formLabelWidth">
-                        <el-tag type="info">{{all_course_style}}</el-tag>
+                        <el-tag type="info">{{course_type_label}}</el-tag>
                     </el-form-item>
                     <!--  收费类型 -->
                     <el-form-item required label="收费类型" :label-width="formLabelWidth">
@@ -83,7 +85,6 @@
                                 <el-link type="success">已完成</el-link>
                             </div>
                         </div>
-
                     </el-form-item>
                     <!--  主讲人 -->
                     <el-form-item label="主讲人" :label-width="formLabelWidth">
@@ -99,8 +100,8 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="saveData">保 存 数 据</el-button>
+                        <el-button type="info" @click="cancel">取 消</el-button>
                     </el-form-item>
-
                 </el-form>
                 
             </el-tab-pane>
@@ -141,8 +142,7 @@
                 formLabelWidth: "130",
                 course_cover,
                 imageUrl: "",
-                courseStyles:[],
-                all_course_style:"",
+                course_type_label:"",
                 videoUploadPercent: 0,
                 videoList:[],
                 videoFlag: false,
@@ -173,11 +173,8 @@
                     pay_type:"",
                     pay_money: "",
                     course_type:"",
-                    course_style: "",
-                    course_style_check:"",
                     course_video: "",
-                    course_content: "",
-                    play_time: ""
+                    course_content: ""
                 },
                 pickerOptions: {
                    disabledDate(time) {
@@ -195,16 +192,12 @@
                 let result = await course.get_course({
                     id
                 });
-                let styles = await course.getAllCourseStyle();
-                let courseStyles = styles.data;
-            
                 this.form = result.data;
-               
                 if (this.form.course_video) {
                     let arr = this.form.course_video.split('/');
-                    this.videoName= arr[arr.length- 1];
+                    this.videoName= arr[arr.length - 1];
                 }
-                this.setStyleCheck(courseStyles);
+                this.setCourseType();
             },
             async saveData() {
                 const id = this.$route.params.id;
@@ -215,15 +208,12 @@
                     course_cover,
                     course_video,
                     course_content,
-                    play_time,
                     pay_type,
                     pay_money
                 } = this.form;
 
                 if (!course_name) {
                     Message.error("课程主题不能为空");
-                } else if (!play_time) {
-                    Message.error("选择开播时间");
                 } else if (!course_cover) {
                     Message.error("请上传课程封面");
                 } else if (!course_video) {
@@ -233,7 +223,7 @@
                 } else if (pay_type == 1 && !pay_money) {
                     Message.error("请填写付费金额");
                 } else {
-                    play_time = dateFormat("YYYY-mm-dd HH:MM:SS",new Date(play_time));
+                    // play_time = dateFormat("YYYY-mm-dd HH:MM:SS",new Date(play_time));
                     let res = await course.done({
                         id,
                         course_name,
@@ -242,7 +232,7 @@
                         course_cover,
                         course_video,
                         course_content,
-                        play_time,
+                        // play_time,
                         pay_type,
                         pay_money: parseFloat(pay_money)
                     });
@@ -257,7 +247,6 @@
                                 }
                             });
                         } else {
-                            
                             this.$router.replace({
                                 path: "/course/index"
                             });
@@ -268,19 +257,32 @@
                     }
                 }
             },
-            setStyleCheck(courseStyles) {
-                let course_style_name = '';
-                let course_style_check_name = '';
-                 
-                courseStyles.forEach((it) => {
-                    if (it.id == this.form.course_style) {
-                        course_style_name = it.name
-                    }
-                    if (it.id == this.form.course_style_check) {
-                        course_style_check_name = it.name
-                    }
-                }); 
-                this.all_course_style = course_style_name+"/"+course_style_check_name;
+            cancel() {
+                this.$store.dispatch('tagsView/delView', this.$route)
+                this.$router.replace({
+                    path: "/course/index"
+                });
+            },
+            setCourseType() {
+               let { course_type } = this.form;
+               let label = "";
+               switch(course_type) {
+                    case 1:
+                       label = "视频录播-无互动模式"
+                       break;
+                    case 2:
+                       label = "视频录播-互动模式"
+                       break;
+                    case 3:
+                       label = "音频录播-无互动模式"
+                       break;
+                    case 4:
+                       label = "音频录播-互动模式"
+                       break;
+                    default:
+                       break;
+                }
+                this.course_type_label = label;
             },
             async uploadSectionFile(param) {
                 var fileObj = param.file;
@@ -288,8 +290,7 @@
                 form.append("file", fileObj);
                 let res = await course.uploadAloneCover(form)
                 this.form.course_cover = res.data.data.imagePath;
-            },
-            
+            },  
             //上传前回调
             beforeUploadVideo(file) {
                 var fileSize = file.size / 1024 / 1024 < 2048;

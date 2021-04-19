@@ -155,7 +155,24 @@
                        return time.getTime() < Date.now() - 3600 * 1000 * 24;
                    }
                 },
-                payTypes:[]
+                payTypes:[
+                    {
+                        id: 1,
+                        name: "固定收费"
+                    },
+                    {
+                        id: 2,
+                        name: "按天收费"
+                    },
+                    {
+                        id: 3,
+                        name: "按月收费"
+                    },
+                    {
+                        id: 4,
+                        name: "按年收费"
+                    }
+                ]
             }
         },
         mounted() {
@@ -168,9 +185,7 @@
                     id
                 });
                 let res = await course.getCates();
-                let payTypes = await course.getPayTypes();
-                this.payTypes = payTypes.data;
-                
+               
                 this.cates = res.data;
                 result.data.course_cate = result.data.course_cate == 0 ? "" :result.data.course_cate;
                 this.form = result.data;
@@ -185,7 +200,6 @@
                     course_cover,
                     course_content,
                     pay_type,
-                    
                     pay_money_type
                 } = this.form;
 
@@ -211,7 +225,6 @@
                 } 
 
                 if (pay_type == 1) {
-                    
                     let status  = false;
                     pay_money_type.forEach(item => {
                         if (!item.price) {

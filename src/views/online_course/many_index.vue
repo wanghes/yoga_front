@@ -39,9 +39,15 @@
                 </template>
             </el-table-column>
            
-            <el-table-column label="付费类型" width="100" prop="money_type_name">
+            <el-table-column label="付费类型" width="100">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.pay_type == 1">固定收费</span>
+                    <span v-if="scope.row.pay_type == 2">按天收费</span>
+                    <span v-if="scope.row.pay_type == 3">按月收费</span>
+                    <span v-if="scope.row.pay_type == 4">按年收费</span>
+                </template>
             </el-table-column>
-            <el-table-column label="价格" fit>
+            <el-table-column label="价格" width="200">
                 <template slot-scope="scope">
                     <div class="money">
                         <div v-if="scope.row.pay_type==1" class="by_time">
@@ -60,7 +66,7 @@
                     
                 </template>
             </el-table-column>
-            <el-table-column prop="course_cate_name" label="课程分类" width="100"></el-table-column>
+            <el-table-column prop="course_cate_name" label="课程分类" width="120"></el-table-column>
             <el-table-column prop="update_time" width="240" label="更新时间"></el-table-column>
             <el-table-column label="操作" width="340" fixed="right">
                 <template slot-scope="scope">
@@ -70,9 +76,9 @@
                         <span class="el-dropdown-link">更多操作</span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item :command="'a|'+ scope.row.course_id">新建单课</el-dropdown-item>
-                                <el-dropdown-item :command="'b|'+ scope.row.course_id">选择已有单课</el-dropdown-item>
-                                <el-dropdown-item :command="'c|'+ scope.row.course_id">进入直播</el-dropdown-item>
+                                <el-dropdown-item :command="'a|'+ scope.row.id">新建单课</el-dropdown-item>
+                                <el-dropdown-item :command="'b|'+ scope.row.id">选择已有单课</el-dropdown-item>
+                                <el-dropdown-item :command="'c|'+ scope.row.id">进入直播</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
@@ -216,7 +222,24 @@
                         }
                     ]
                 },
-                payTypes:[],
+                payTypes:[
+                    {
+                        id: 1,
+                        name: "固定收费"
+                    },
+                    {
+                        id: 2,
+                        name: "按天收费"
+                    },
+                    {
+                        id: 3,
+                        name: "按月收费"
+                    },
+                    {
+                        id: 4,
+                        name: "按年收费"
+                    }
+                ],
                 batchPid: ""
             }
         },
@@ -236,10 +259,6 @@
                 
                 let {list, total} = result.data;
                 list = this.setListItemCateName(list);
-
-                let payTypes = await course.getPayTypes();
-                this.payTypes = payTypes.data;
-               
 
                 this.tableData = list;
                 this.total = total;
@@ -273,7 +292,6 @@
                 this.visible = true;
             },
             async createCourse() {
-                
                 let {
                     pay_type,
                     course_name,
@@ -282,7 +300,6 @@
 
                 let config = {
                     course_name,
-
                     pay_type: parseInt(pay_type),
                     pay_money_type:[]
                 }
@@ -334,16 +351,15 @@
 
             },
             intoPlay(row) {
-                let { course_id } = row;
-                // console.log(row);
+                let { id } = row;
                 this.$router.push({
-                    path: '/course/many_detail/' + course_id
+                    path: '/course/many_detail/' + id
                 })
             },
             intoEdit(row) {
-                let { course_id } = row;
+                let { id } = row;
                 this.$router.push({
-                    path: '/course/many_detail/' + course_id
+                    path: '/course/many_detail/' + id
                 })
             },
             changePayType(val) {
@@ -381,11 +397,11 @@
                 }
             },
             jumpPage(row) {
-                let { course_id } = row;
+                let { id } = row;
                 this.$router.push({
                     "path": "/course/many_panel",
                     "query": {
-                        id: course_id
+                        id: id
                     }
                 })
             },
@@ -408,7 +424,7 @@
                 let result = await course.list({
                     page: this.aloneCurrentPage,
                     pageSize: this.alonePageSize,
-                    status: 10
+                    status: ""
                 });
                 let {list, total} = result.data;
                 this.allCourses = list;
@@ -425,7 +441,7 @@
                 let temp = this.multipleSelection;
                 let ids = [];
                 temp.forEach(item => {
-                    ids.push(item.course_id)
+                    ids.push(item.id)
                 });
 
                 if (!ids.length) {

@@ -5,23 +5,18 @@
 </template>
 
 <script>
-    const user = require('@/api/user');
-    export default {
-        name: "dashboard",
-        data() {
-            return {
-            
-            };
-        }, 
-        mounted() {
-        
-        }
-    };
-
+const user = require("@/api/user");
+export default {
+	name: "dashboard",
+	data() {
+		return {};
+	},
+	mounted() {},
+};
 </script>
 
 <style scoped>
-    .wrap {
-        padding: 15px;
-    }
+.wrap {
+	padding: 15px;
+}
 </style>

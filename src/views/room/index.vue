@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
 
-         <el-dialog title="创建分类" :visible.sync="visible">
+        <el-dialog title="创建分类" :visible.sync="visible">
             <el-form :model="form">
                 <el-form-item required label="教室名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -32,122 +32,117 @@
 </template>
 
 <script>
-    const room = require('@/api/room');
-    export default {
-        name: "RoomIndex",
-        inject:['reload'],   
-        data() {
-            return {
-                formLabelWidth: '120px',
-                rooms: [],
-                visible: false,
-                form: {
-                    id: '',
-                    name:''
-                }
-            }
-        },
-        mounted() {
-            this.fetData();
-        },
-        methods: {
-            async fetData() {
-                let res = await room.getRooms();
-                this.rooms = res.data;
-            },
-            toAddRoom() {
-                this.visible = true;
-            },
-            async fixRoom(row) {
-                this.visible = true;
-                let res = await room.getRoom({
-                    id: row.id
-                });
-                let data = res.data;
-            
-                this.form = {
-                    id: data.id,
-                    name: data.name
-                }   
-            },
-            async operateRoom() {
-                let isEdit = false;
+const room = require("@/api/room")
+export default {
+	name: "RoomIndex",
+	inject: ["reload"],
+	data() {
+		return {
+			formLabelWidth: "120px",
+			rooms: [],
+			visible: false,
+			form: {
+				id: "",
+				name: "",
+			},
+		}
+	},
+	mounted() {
+		this.fetData()
+	},
+	methods: {
+		async fetData() {
+			let res = await room.getRooms()
+			this.rooms = res.data
+		},
+		toAddRoom() {
+			this.visible = true
+		},
+		async fixRoom(row) {
+			this.visible = true
+			let res = await room.getRoom({
+				id: row.id,
+			})
+			let data = res.data
 
-                if (!this.form.name) {
-                    this.$message.error("请填写教室名称");
-                    return;
-                }
+			this.form = {
+				id: data.id,
+				name: data.name,
+			}
+		},
+		async operateRoom() {
+			let isEdit = false
 
-                if (this.form.id) {
-                    isEdit = true;
-                }
+			if (!this.form.name) {
+				this.$message.error("请填写教室名称")
+				return
+			}
 
-                let res = null;
-                if (isEdit) {
-                    res = await room.renameRoom({
-                        id:this.form.id, 
-                        name:this.form.name
-                    });
-                } else {
-                    res = await room.addRoom({
-                        name:this.form.name
-                    });
-                }
+			if (this.form.id) {
+				isEdit = true
+			}
 
-                this.reload();
+			let res = null
+			if (isEdit) {
+				res = await room.renameRoom({
+					id: this.form.id,
+					name: this.form.name,
+				})
+			} else {
+				res = await room.addRoom({
+					name: this.form.name,
+				})
+			}
 
-                this.visible = false;
-                let id = res.data.insertId;
-                if (id) {
-                    this.$message.success("操作成功");
-                }
+			this.reload()
 
-            },
-            async deleteRoom(row) {
-                let res = await room.deleteRoom({
-                    id: row.id,
-                    name:this.form.name
-                });
-                if (res) {
-                    this.$message.success("操作成功");
-                    this.reload();
-                }
-            }
-        }
-    };
-
+			this.visible = false
+			let id = res.data.insertId
+			if (id) {
+				this.$message.success("操作成功")
+			}
+		},
+		async deleteRoom(row) {
+			let res = await room.deleteRoom({
+				id: row.id,
+				name: this.form.name,
+			})
+			if (res) {
+				this.$message.success("操作成功")
+				this.reload()
+			}
+		},
+	},
+}
 </script>
 
 <style scoped>
-    .btn_wrap{
-        padding-bottom: 20px;
-    }
-    .cover{
-        width: 120px;
-    }
-    .label{
-        color:#666;
-        font-weight: normal;
-    }
-    .top_info{
-        display: flex;
-        justify-content: space-between;
-    }
-    .right_search{
-        display: flex;
-        align-items: center;
-        position:relative;
-        top: -10px;
-    }
-    .input_search {
-        display: inline-block;
-        width: 230px;
-        margin-left:15px;
-    
-    }
-    .el-dropdown-link{
-        
-        margin-right: 10px;
-       
-    }
+.btn_wrap {
+	padding-bottom: 20px;
+}
+.cover {
+	width: 120px;
+}
+.label {
+	color: #666;
+	font-weight: normal;
+}
+.top_info {
+	display: flex;
+	justify-content: space-between;
+}
+.right_search {
+	display: flex;
+	align-items: center;
+	position: relative;
+	top: -10px;
+}
+.input_search {
+	display: inline-block;
+	width: 230px;
+	margin-left: 15px;
+}
+.el-dropdown-link {
+	margin-right: 10px;
+}
 </style>

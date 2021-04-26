@@ -118,7 +118,7 @@
                 this.visible = true;
             },
             async createCourse() {
-                this.visible = false;
+                
                 let course_type = this.course_type;
                 let {
                     pay_type,
@@ -140,11 +140,17 @@
                     config.pay_money = 0
                 }
 
+                if (pay_type == 2 && !pid) {
+                    this.$message.error("请选择系列课");
+                    return;
+                }
+
                 if (this.pid) {
                     config.pid = this.pid;
                 }
             
                 let res = await course.add(config);
+                this.visible = false;
                 let id = res.data.insertId;
                 this.$alert('新建单课成功', {
                     confirmButtonText: '去优化',

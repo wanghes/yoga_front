@@ -14,14 +14,14 @@ NProgress.configure({
     showSpinner: false
 });
 
-const whiteList = ['/login', '/auth-redirect'];
+const whiteList = ['/login', '/auth-redirect', '/404'];
 
 router.beforeEach(async (to, from, next) => {
     NProgress.start();
     document.title = getPageTitle(to.meta.title);
     const hasToken = getToken();
 
-    if (hasToken) {
+    if (hasToken && !!window.venues) {
         if (to.path === '/login') {
             // 如果登陆了过了，直接跳转到首页
             next({
@@ -30,8 +30,7 @@ router.beforeEach(async (to, from, next) => {
             NProgress.done();
         } else {
             // 通过获取用户的角色信息判断是否获得了权限
-            const hasRoles = store.getters.roles && store.getters.roles.length > 0;
-            
+            const hasRoles = store.getters.role;
             if (hasRoles) {
                 next();
             } else {
@@ -39,11 +38,11 @@ router.beforeEach(async (to, from, next) => {
                     // 获取用户的角色信息
                     // note: 角色必须是一个对象数组，诸如：['admin']或者['developer','editor','thirdUser']
                     const {
-                        roles
+                        role
                     } = await store.dispatch('user/getInfo');
-                    // console.log(roles);
+                    
                     // 创建基于角色信息映射的可访问路由
-                    const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
+                    const accessRoutes = await store.dispatch('permission/generateRoutes', role);
 
                     // 动态添加可访问路由
                     router.addRoutes(accessRoutes);
@@ -63,6 +62,10 @@ router.beforeEach(async (to, from, next) => {
                 }
             }
         }
+    } else if (hasToken && !window.venues) {
+        next(false);
+        Message.error("没有获取到场馆主信息，请查看网址是否输入有误")
+        NProgress.done()
     } else {
         /* token不存在的情况 */
         if (whiteList.indexOf(to.path) !== -1) {

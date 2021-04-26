@@ -88,7 +88,7 @@
 const teacher = require('@/api/teacher');
 const cover = require('@/assets/cover.png');
 import VueUeditorWrap from 'vue-ueditor-wrap';
-import {UEDITOR_DOMAIN} from "@/utils/config"
+import {UEDITOR_DOMAIN} from "@/config"
 import {dateFormat} from "@/utils/index"
 
 export default {

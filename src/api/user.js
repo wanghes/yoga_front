@@ -8,13 +8,11 @@ export function login(data) {
     })
 }
 
-export function getInfo(admin_user_id) {
+export function getInfo(data) {
     return request({
         url: '/admin/manager/info',
-        method: 'get',
-        params: {
-            admin_user_id
-        }
+        method: 'post',
+        data
     })
 }
 

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import axios from 'axios';
-import { UPLOADBASEURL } from "@/utils/config";
+import { UPLOADBASEURL } from "@/config";
 
 
 export function many_list(params) {
@@ -141,6 +141,14 @@ export function done(data) {
 export function updateStatus(data) {
 	return request({
 		url: '/admin/course/status',
+		method: 'put',
+		data
+	})
+}
+
+export function deleteCourse(data) {
+	return request({
+		url: '/admin/course/delete',
 		method: 'put',
 		data
 	})

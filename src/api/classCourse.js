@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import axios from 'axios';
-import { UPLOADBASEURL } from "@/utils/config";
+import { UPLOADBASEURL } from "@/config";
 
 export function list(params) {
     return request({

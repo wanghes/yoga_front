@@ -1,8 +1,9 @@
 import {
     asyncRoutes,
-    constantRoutes
+    constantRoutes,
+    offlineClass,
+    onlineClass
 } from '@/router'
-import Layout from "@/layout"
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -53,18 +54,20 @@ const mutations = {
 const actions = {
     generateRoutes({
         commit
-    }, roles) {
+    }, role) {
         return new Promise(resolve => {
             let accessedRoutes
-            // console.log(roles)
-            if (roles.includes('admin')) {
-                accessedRoutes = asyncRoutes || [];
-            } else {
-                accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+            console.log(role)
+            if (role == 'admin') {
+                accessedRoutes = asyncRoutes.concat(onlineClass).concat(offlineClass);
+            } else if (role == 'venues') {
+                accessedRoutes = asyncRoutes.concat(onlineClass).concat(offlineClass);
+            } else if (role == 'teacher') {
+                accessedRoutes = asyncRoutes.concat(offlineClass);
             }
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)
-        })
+        });
     }
 }
 

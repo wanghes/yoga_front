@@ -100,6 +100,7 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="saveData">保 存 数 据</el-button>
+                        <el-button type="danger" @click="deleteCourse">删 除</el-button>
                         <el-button type="info" @click="cancel">取 消</el-button>
                     </el-form-item>
                 </el-form>
@@ -122,8 +123,8 @@
     const course = require('@/api/course');
     const course_cover = require('@/assets/cover.png');
     import VueUeditorWrap from 'vue-ueditor-wrap';
-    import {UPLOADBASEURL, UEDITOR_DOMAIN} from "@/utils/config"
-    import {dateFormat} from "@/utils/index"
+    import {UPLOADBASEURL, UEDITOR_DOMAIN} from "@/config"
+    
     import {
         getToken
     } from '@/utils/auth'
@@ -349,6 +350,13 @@
                         return this._bkGetActionUrl.call(this, action);
                     }
                 }
+            },
+            async deleteCourse() {
+                const id = this.$route.params.id;
+                let res = await course.deleteCourse({
+                    id
+                });
+                console.log(res)
             }
         }
     };

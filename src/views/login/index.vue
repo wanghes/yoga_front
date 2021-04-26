@@ -8,6 +8,21 @@
 
             <el-form-item prop="username">
                 <span class="svg-container">
+                    <i class="el-icon-s-flag"></i>
+                    
+                </span>
+                <el-select v-model="login_type" placeholder="选择角色" @change="typeChange">
+                    <el-option
+                        v-for="item in types"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item prop="username">
+                <span class="svg-container">
                     <svg-icon icon-class="user" />
                 </span>
                 <el-input ref="username" v-model="loginForm.username" placeholder="Username" name="username" type="text"
@@ -45,7 +60,7 @@
         name: "Login",
         data() {
             const validateUsername = (rule, value, callback) => {
-                if (!validUsername(value)) {
+                if (!value) {
                     callback(new Error("请输入正确的用户名"));
                 } else {
                     callback();
@@ -59,6 +74,21 @@
                 }
             };
             return {
+                login_type: 1,
+                types:[
+                    {
+                        name: "管理员",
+                        id: 1
+                    },
+                    {
+                        name: "老师",
+                        id: 2
+                    },
+                    {
+                        name: "课代表",
+                        id: 3
+                    }
+                ],
                 loginForm: {
                     username: "admin",
                     password: "123456"
@@ -126,6 +156,9 @@
                     this.capsTooltip = false;
                 }
             },
+            typeChange(val) {
+                console.log(val)
+            },
             showPwd() {
                 if (this.passwordType === "password") {
                     this.passwordType = "";
@@ -138,10 +171,15 @@
             },
             handleLogin() {
                 this.$refs.loginForm.validate(valid => {
+                    console.log(window.venues)
                     if (valid) {
                         this.loading = true;
                         this.$store
-                            .dispatch("user/login", this.loginForm)
+                            .dispatch("user/login", {
+                                venues: window.venues,
+                                login_type:this.login_type,
+                                ...this.loginForm
+                            })
                             .then(() => {
                                 this.$router.push({
                                     path: this.redirect || "/",

@@ -10,7 +10,7 @@ import {
 } from '@/utils/auth';
 import {
     BASEURL
-} from "@/utils/config"
+} from "@/config"
 
 // 创建一个axios实例
 const service = axios.create({
@@ -80,6 +80,12 @@ service.interceptors.response.use(
                     store.dispatch('user/resetToken').then(() => {
                         location.reload();
                     });
+                });
+            } else {
+                Message({
+                    message: res.message || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
                 });
             }
         } else {

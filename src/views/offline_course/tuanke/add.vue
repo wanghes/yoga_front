@@ -101,8 +101,7 @@
 const course = require('@/api/agreeCourse');
 const cover = require('@/assets/cover.png');
 import VueUeditorWrap from 'vue-ueditor-wrap';
-import {UEDITOR_DOMAIN} from "@/utils/config"
-import {dateFormat} from "@/utils/index"
+import {UEDITOR_DOMAIN} from "@/config"
 
 export default {
      components: {

@@ -1,6 +1,6 @@
-const developmentUrl = "http://yadmin.com";
-const productionUrl = "http://api.yogaguanjia.com";
+const developmentUrl = "http://venues.yoga.com";
 const imgUploadUrl= "http://assets.yoga.com";
+const productionUrl = "http://api.yogaguanjia.com";
 const productionImgUploadUrl= "http://source.yogaguanjia.com";
 
 // 接口

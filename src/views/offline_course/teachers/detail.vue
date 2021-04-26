@@ -230,7 +230,7 @@ const headCover = require('@/assets/head.png');
 const idImg = require('@/assets/id.jpg');
 const card = require('@/api/card');
 import VueUeditorWrap from 'vue-ueditor-wrap';
-import {UEDITOR_DOMAIN} from "@/utils/config"
+import {UEDITOR_DOMAIN} from "@/config"
 import {dateFormat} from "@/utils/index";
 
 export default {

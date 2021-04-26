@@ -1,15 +1,13 @@
 <template>
     <el-form :model="form" label-position="top">
         <el-form-item required label="选择上课日期">
-            <el-date-picker v-model="form.date" type="daterange" range-separator="至"
-                start-placeholder="开始日期" end-placeholder="结束日期">
+            <el-date-picker v-model="form.date" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
             </el-date-picker>
             <div style="margin: 10px 0 0;"></div>
             <div class="weeks">
                 <el-checkbox v-model="open_week_status" @change="handleCheckAllChange">开启星期周几排课
                 </el-checkbox>
-                <el-checkbox-group v-show="open_week_status" v-model="checkedWeeks"
-                    @change="handleCheckedWeeksChange">
+                <el-checkbox-group v-show="open_week_status" v-model="checkedWeeks" @change="handleCheckedWeeksChange">
                     <el-checkbox v-for="day in weeks" :label="day" :key="day">{{days[day]}}
                     </el-checkbox>
                 </el-checkbox-group>
@@ -33,15 +31,13 @@
         </el-form-item>
         <el-form-item required label="选择课程">
             <el-select v-model="form.agree_id" placeholder="选择课程">
-                <el-option v-for="item in courses" :key="item.id" :label="item.name"
-                    :value="item.id">
+                <el-option v-for="item in courses" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
             </el-select>
         </el-form-item>
         <el-form-item required label="选择上课老师">
             <el-select v-model="form.teacher_id" placeholder="选择上课老师">
-                <el-option v-for="item in teachers" :key="item.id" :label="item.name"
-                    :value="item.id">
+                <el-option v-for="item in teachers" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -58,8 +54,7 @@
             <el-color-picker v-model="form.color"></el-color-picker>
         </el-form-item>
         <el-form-item required label="备注说明">
-            <el-input type="textarea" placeholder="请输备注说明" v-model="form.des" maxlength="150"
-                show-word-limit>
+            <el-input type="textarea" placeholder="请输备注说明" v-model="form.des" maxlength="150" show-word-limit>
             </el-input>
         </el-form-item>
         <el-form-item>

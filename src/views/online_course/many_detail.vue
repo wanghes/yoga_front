@@ -99,7 +99,7 @@
 const course = require("@/api/course");
 const course_cover = require("@/assets/xilie_cover.png");
 import VueUeditorWrap from "vue-ueditor-wrap";
-import { UEDITOR_DOMAIN } from "@/utils/config";
+import { UEDITOR_DOMAIN } from "@/config";
 
 import { Message } from "element-ui";
 export default {

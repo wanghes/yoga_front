@@ -105,15 +105,6 @@ export function add(data) {
     })
 }
 
-export function get_config(params) {
-    return request({
-        url: '/admin/upload/ue_config',
-        method: 'get',
-        params
-    })
-}
-
-
 export function get_course(params) {
     return request({
         url: '/admin/course/get_course',
@@ -201,8 +192,6 @@ export function batchPids(data) {
         data
     })
 }
-
-
 
 // export function uploadVideo(formData) {
 //     return request.post('/admin/course/upload_video', formData, {

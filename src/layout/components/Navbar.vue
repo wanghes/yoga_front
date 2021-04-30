@@ -9,6 +9,8 @@
             </template>
             <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
                 <div class="avatar-wrapper">
+					<img class="user-avatar" v-if="avatar" :src="avatar" alt="场馆主头像" >
+					<img class="user-avatar" v-else :src="head" alt="场馆主头像" >
                     <span v-html="name"></span>
                     <i class="el-icon-caret-bottom" />
                 </div>
@@ -32,6 +34,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import ErrorLog from "@/components/ErrorLog";
 import Screenfull from "@/components/Screenfull";
+const head = require("@/assets/head.png");
 
 export default {
 	components: {
@@ -39,6 +42,11 @@ export default {
 		ErrorLog,
 		Screenfull,
 		Breadcrumb,
+	},
+	data() {
+		return {
+			head
+		}
 	},
 	computed: {
 		...mapGetters(["sidebar", "avatar", "device", "name"]),
@@ -114,11 +122,14 @@ export default {
 			margin-right: 30px;
 			.avatar-wrapper {
 				position: relative;
+				display: flex;
+				align-items: center;
 				.user-avatar {
 					cursor: pointer;
 					width: 40px;
 					height: 40px;
 					border-radius: 10px;
+					margin-right: 10px;
 				}
 
 				.el-icon-caret-bottom {

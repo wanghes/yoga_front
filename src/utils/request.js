@@ -63,7 +63,7 @@ service.interceptors.response.use(
         }
     },
     error => {
-        console.log(error.response);
+        console.log(error);
         if (error.response.status == 500) {
             let res = error.response.data;
             /* 
@@ -83,7 +83,7 @@ service.interceptors.response.use(
                 });
             } else {
                 Message({
-                    message: res.message || 'Error',
+                    message: res.message || res.msg || 'Error',
                     type: 'error',
                     duration: 5 * 1000
                 });

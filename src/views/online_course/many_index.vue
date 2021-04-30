@@ -41,16 +41,16 @@
                 <template slot-scope="scope">
                     <div class="money">
                         <div v-if="scope.row.pay_type==1" class="by_time">
-                            <strong>￥{{scope.row.price}}</strong>
+                            <strong>￥{{scope.row.price.toFixed(2)}}</strong>
                         </div>
                         <div v-else-if="scope.row.pay_type==2" class="by_time">
-                            <strong>{{scope.row.time}}</strong>天收取<strong>{{scope.row.price}}</strong>元
+                            <strong>{{scope.row.time}}</strong> 天<strong> ￥{{scope.row.price.toFixed(2)}} </strong>
                         </div>
                         <div v-else-if="scope.row.pay_type==3" class="by_time">
-                            <strong>{{scope.row.time}}</strong>月收取<strong>{{scope.row.price}}</strong>元
+                            <strong>{{scope.row.time}}</strong> 月<strong> ￥{{scope.row.price.toFixed(2)}} </strong>
                         </div>
                         <div v-else-if="scope.row.pay_type==4" class="by_time">
-                            <strong>{{scope.row.time}}</strong>年收取<strong>{{scope.row.price}}</strong>元
+                            <strong>{{scope.row.time}}</strong> 年<strong> ￥{{scope.row.price.toFixed(2)}} </strong>
                         </div>
                     </div>
 

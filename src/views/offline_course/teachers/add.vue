@@ -3,7 +3,7 @@
         <el-form :model="form" label-position="top" style="max-width:1200px; padding-left:30px">
             <!--  老师头像 -->
             <el-form-item label="老师头像">
-                <img v-if="form.head" :src="form.head" />
+                <img v-if="form.avatar" :src="form.avatar" />
                 <img v-else :src="cover" />
                 <el-upload
                     class="upload_box"
@@ -112,7 +112,7 @@ export default {
                 UEDITOR_HOME_URL: '/static/UEditor/'
             },
             form: {
-                head: "",
+                avatar: "",
                 name: "",
                 nickname: "",
                 phone: "",
@@ -132,15 +132,12 @@ export default {
 
     },
     methods: {
-        add() {
-
-        },
         async uploadSectionFile(param) {
             var fileObj = param.file;
             var form = new FormData();
             form.append("file", fileObj);
             let res = await teacher.uploadHead(form);
-            this.form.head = res.data.data.imagePath;
+            this.form.avatar = res.data.data.imagePath;
         },
         async uploadIdSectionFile(param) {
             
@@ -153,7 +150,7 @@ export default {
         },
         async saveData() {
             let {
-                head,
+                avatar,
                 name,
                 nickname,
                 phone,
@@ -180,7 +177,7 @@ export default {
                 }
                 
                 let res = await teacher.add({
-                    head,
+                    avatar,
                     name,
                     nickname,
                     phone,

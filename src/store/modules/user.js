@@ -96,13 +96,8 @@ const actions = {
     // 获取用户信息
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
-            let admin_user_id = getAdminUserId();
             let role = getRole();
-            getInfo({
-                role,
-                venues_id: window.venues,
-                admin_user_id
-            }).then(response => {
+            getInfo().then(response => {
                 const { data } = response
 
                 if (!data) {
@@ -111,11 +106,12 @@ const actions = {
 
                 const {
                     nickname,
+                    username,
                     avatar,
                     introduction
                 } = data
                 commit('SET_ROLE', role);
-                commit('SET_NAME', nickname)
+                commit('SET_NAME', nickname || username)
                 commit('SET_AVATAR', avatar)
                 commit('SET_INTRODUCTION', introduction)
                 data.role = role;

@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column prop="play_time" label="编辑状态切换" fit>
                 <template slot-scope="scope">
-                    <el-switch :disabled="scope.row.status_no" v-model="scope.row.status" @change="changeSwitchStatus(scope.row)"></el-switch>
+                    <el-switch :disabled="scope.row.status_no_upload" v-model="scope.row.edit_status" @change="changeSwitchStatus(scope.row)"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="200" fixed="right">
@@ -141,9 +141,9 @@ export default {
 		async changeSwitchStatus(row) {
 			let res = await course.updateStatus({
 				id: row.id,
-				status: row.status ? 1 : 0,
+				status: row.edit_status ? 1 : 0,
 			});
-			if (res.code) {
+			if (res.code == 200) {
 				this.$message.success("修改成功");
 			}
 		},
@@ -168,13 +168,13 @@ export default {
 				}
 				item.course_type_name = label;
 
-				item.status_no = false;
+				item.status_no_upload = false;
 				if (item.status == 1) {
-					item.status = true;
+					item.edit_status = true;
 				} else if (item.status == 0) {
-					item.status = false;
+					item.edit_status = false;
 				} else {
-					item.status_no = true;
+					item.status_no_upload = true;
 				}
 			});
 		},

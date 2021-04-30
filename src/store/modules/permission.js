@@ -1,5 +1,4 @@
 import {
-    asyncRoutes,
     constantRoutes,
     offlineClass,
     onlineClass
@@ -57,13 +56,10 @@ const actions = {
     }, role) {
         return new Promise(resolve => {
             let accessedRoutes
-            console.log(role)
-            if (role == 'admin') {
-                accessedRoutes = asyncRoutes.concat(onlineClass).concat(offlineClass);
-            } else if (role == 'venues') {
-                accessedRoutes = asyncRoutes.concat(onlineClass).concat(offlineClass);
+            if (role == 'venues') {
+                accessedRoutes = onlineClass.concat(offlineClass);
             } else if (role == 'teacher') {
-                accessedRoutes = asyncRoutes.concat(offlineClass);
+                accessedRoutes = offlineClass;
             }
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)

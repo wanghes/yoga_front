@@ -1,8 +1,10 @@
 import request from '@/utils/request'
+import axios from 'axios';
+import { UPLOADBASEURL } from "@/config";
 
-export function list(params) {
+export function query(params) {
     return request({
-        url: '/admin/venues/list',
+        url: '/admin/venues/query',
         method: 'get',
         params
     });
@@ -14,4 +16,18 @@ export function add(data) {
 		method: 'post',
 		data
 	})
+}
+
+export function update(data) {
+	return request({
+		url: '/admin/venues/edit',
+		method: 'put',
+		data
+	})
+}
+
+export function uploadAloneCover(formData) {
+    return axios.post(`${UPLOADBASEURL}/upload/venues`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    })
 }

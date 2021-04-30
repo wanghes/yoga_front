@@ -10,20 +10,24 @@
                         <strong>分类：</strong><span>{{detail.course_cate_name ? detail.course_cate_name : '暂时还没有分类'}}</span>
                     </div>
                     <div class="money">
-                        <div v-if="detail.pay_type==1">￥{{detail.pay_money}}</div>
+                        <div v-if="detail.pay_type==1">
+							<span v-for="item in detail.pay_money_type" :key="item.id">
+                                ￥{{item.price.toFixed(2)}}
+                            </span>
+						</div>
                         <div v-else-if="detail.pay_type==2" class="by_time">
-                            <span v-for="item in detail.pay_money_type" c :key="item.id">
-                                <strong>{{item.time}}</strong>天收取<strong>{{item.price}}</strong>元
+                            <span v-for="item in detail.pay_money_type" :key="item.id">
+                                <strong>{{item.time}}</strong>天收取<strong>{{item.price.toFixed(2)}}</strong>元
                             </span>
                         </div>
                         <div v-else-if="detail.pay_type==3" class="by_time">
-                            <span v-for="item in detail.pay_money_type" c :key="item.id">
-                                <strong>{{item.time}}</strong>月收取<strong>{{item.price}}</strong>元
+                            <span v-for="item in detail.pay_money_type" :key="item.id">
+                                <strong>{{item.time}}</strong>月收取<strong>{{item.price.toFixed(2)}}</strong>元
                             </span>
                         </div>
                         <div v-else-if="detail.pay_type==4" class="by_time">
-                            <span v-for="item in detail.pay_money_type" c :key="item.id">
-                                <strong>{{item.time}}</strong>年收取<strong>{{item.price}}</strong>元
+                            <span v-for="item in detail.pay_money_type" :key="item.id">
+                                <strong>{{item.time}}</strong>年收取<strong>{{item.price.toFixed(2)}}</strong>元
                             </span>
                         </div>
                     </div>

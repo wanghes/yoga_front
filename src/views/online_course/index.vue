@@ -28,6 +28,14 @@
                 </template>
             </el-table-column>
             <el-table-column prop="course_type_name" width="200" label="课程形式"></el-table-column>
+			<el-table-column label="是否设置为精品课" width="200">
+                <template slot-scope="scope">
+					<div v-if="scope.row.pid == 0">
+						<el-link v-if="scope.row.jingpin == 0" type="primary" @click="setJingpin(scope.row)">设置为精品课</el-link>
+						<el-link v-else type="danger" @click="cancelJingpin(scope.row)">取消精品课</el-link>
+					</div>
+                </template>
+            </el-table-column>
             <el-table-column label="课程状态" width="150">
                 <template slot-scope="scope">
                     <el-tag type="danger" effect="dark" v-if="!scope.row.status">已下线</el-tag>
@@ -190,6 +198,27 @@ export default {
 				path: "/course/detail/" + id,
 			});
 		},
+		async setJingpin(row) {
+			let res = await course.updateJingpin({
+				id: row.id,
+				jingpin: 1
+			});
+			if (res.code == 200) {
+				this.$message.success(res.msg)
+				this.fetData();
+			}
+		},
+		async cancelJingpin(row) {
+			let res = await course.updateJingpin({
+				id: row.id,
+				jingpin: 0
+			});
+
+			if (res.code == 200) {
+				this.$message.success(res.msg)
+				this.fetData();
+			}
+		}
 	},
 };
 </script>

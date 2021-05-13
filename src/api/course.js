@@ -70,7 +70,6 @@ export function closeListen(data) {
 }
 
 
-
 export function updateOrder(data) {
     return request({
         url: '/admin/manycourse/update_order',
@@ -101,6 +100,14 @@ export function add(data) {
     return request({
         url: '/admin/course/add',
         method: 'post',
+        data
+    })
+}
+
+export function updateJingpin(data) {
+    return request({
+        url: '/admin/course/jingpin',
+        method: 'put',
         data
     })
 }

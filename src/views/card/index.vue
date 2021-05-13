@@ -127,7 +127,6 @@ export default {
                 type: "",
                 name: ""
             },
-            status_selected: "",
             status: [
                 {
                     value: 1,

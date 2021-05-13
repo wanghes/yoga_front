@@ -5,24 +5,16 @@ import { UPLOADBASEURL } from "@/config";
 
 export function list(params) {
     return request({
-        url: '/admin/adviser/list',
+        url: '/admin/focus/alllist',
         method: 'get',
         params
     });
 }
 
-
-export function allList(params) {
-    return request({
-        url: '/admin/adviser/alllist',
-        method: 'get',
-        params
-    });
-}
 
 export function query(params) {
     return request({
-        url: '/admin/adviser/query',
+        url: '/admin/focus/query',
         method: 'get',
         params
     })
@@ -31,7 +23,7 @@ export function query(params) {
 
 export function add(data) {
 	return request({
-		url: '/admin/adviser/add',
+		url: '/admin/focus/add',
 		method: 'post',
 		data
 	})
@@ -39,7 +31,7 @@ export function add(data) {
 
 export function update(data) {
 	return request({
-		url: '/admin/adviser/update',
+		url: '/admin/focus/update',
 		method: 'put',
 		data
 	})
@@ -47,7 +39,7 @@ export function update(data) {
 
 export function deleteItem(params) {
     return request({
-        url: '/admin/adviser/delete',
+        url: '/admin/focus/delete',
         method: 'delete',
         params
     })
@@ -55,14 +47,14 @@ export function deleteItem(params) {
 
 export function updateStatus(data) {
 	return request({
-		url: '/admin/adviser/status',
+		url: '/admin/focus/status',
 		method: 'put',
 		data
 	})
 }
 
-export function uploadHead(formData) {
-    return axios.post(`${UPLOADBASEURL}/upload/teacher_head`, formData, {
+export function uploadCover(formData) {
+    return axios.post(`${UPLOADBASEURL}/upload/focus`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
     })
 }

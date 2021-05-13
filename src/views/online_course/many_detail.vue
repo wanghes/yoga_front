@@ -342,8 +342,8 @@ export default {
 	position: relative;
 	top: -2px;
 }
-.empty_pic{
-	color:#666;
+.empty_pic {
+	color: #666;
 	background: #ddd;
 	width: 280px;
 	height: 180px;

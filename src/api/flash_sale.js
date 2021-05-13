@@ -2,52 +2,44 @@ import request from '@/utils/request'
 import axios from 'axios';
 import { UPLOADBASEURL } from "@/config";
 
-
 export function list(params) {
     return request({
-        url: '/admin/adviser/list',
+        url: '/admin/flash_sale/list',
         method: 'get',
         params
     });
 }
-
-
-export function allList(params) {
-    return request({
-        url: '/admin/adviser/alllist',
-        method: 'get',
-        params
-    });
-}
-
-export function query(params) {
-    return request({
-        url: '/admin/adviser/query',
-        method: 'get',
-        params
-    })
-}
-
 
 export function add(data) {
 	return request({
-		url: '/admin/adviser/add',
+		url: '/admin/flash_sale/add',
 		method: 'post',
 		data
 	})
 }
 
-export function update(data) {
+
+export function edit(data) {
 	return request({
-		url: '/admin/adviser/update',
+		url: '/admin/flash_sale/edit',
 		method: 'put',
 		data
 	})
 }
 
+
+
+export function query(params) {
+    return request({
+        url: '/admin/flash_sale/query',
+        method: 'get',
+        params
+    })
+}
+
 export function deleteItem(params) {
     return request({
-        url: '/admin/adviser/delete',
+        url: '/admin/flash_sale/delete',
         method: 'delete',
         params
     })
@@ -55,14 +47,14 @@ export function deleteItem(params) {
 
 export function updateStatus(data) {
 	return request({
-		url: '/admin/adviser/status',
+		url: '/admin/flash_sale/status',
 		method: 'put',
 		data
 	})
 }
 
-export function uploadHead(formData) {
-    return axios.post(`${UPLOADBASEURL}/upload/teacher_head`, formData, {
+export function uploadCover(formData) {
+    return axios.post(`${UPLOADBASEURL}/upload/upload_flash_sale_cover`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
     })
 }

@@ -131,12 +131,8 @@
                 this.fetchAdvisers();
             },
             async fetchAdvisers() {
-                let res = await adviser.list({
-                    pageSize: 1000,
-                    page: 1,
-                });
-        
-                let {list, total} = res.data;
+                let res = await adviser.allList();
+                let list = res.data;        
                 this.advisers = list;
             },
             toAddMember() {
@@ -154,7 +150,7 @@
                 this.currentPage = 1;
                 this.fetchData();
             },
-            handleCurrentChange() {
+            handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
                 this.fetchData();
             },

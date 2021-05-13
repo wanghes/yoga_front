@@ -49,14 +49,14 @@
         <el-table :data="list">
             <el-table-column prop="name" width="150" label="姓名"></el-table-column>
             <el-table-column prop="phone" width="150" label="电话"></el-table-column>
-            <el-table-column prop="sex" width="150" label="性别">
+            <el-table-column width="150" label="性别">
                 <template slot-scope="scope">
                     <span v-if="scope.row.sex == 1">男</span>
                     <span v-else>女</span>
                 </template>
             </el-table-column>
             <el-table-column prop="adviser_name" width="150" label="会籍顾问"></el-table-column>
-            <el-table-column prop="adviser_name" width="150" label="会员状态">
+            <el-table-column width="150" label="会员状态">
                 <template slot-scope="scope">
                     <span v-if="scope.row.member_card_count > 0">持卡会员</span>
                     <span v-else>意向会员</span>
@@ -165,12 +165,8 @@
                 this.total = total;
             },
             async fetchAdvisers() {
-                let res = await adviser.list({
-                    pageSize: 1000,
-                    page: 1,
-                });
-        
-                let {list, total} = res.data;
+                let res = await adviser.allList();
+                let list = res.data;
                 this.advisers = list;
             },
             excutorChange() {
@@ -185,7 +181,7 @@
                 this.currentPage = 1;
                 this.fetchData();
             },
-            handleCurrentChange() {
+            handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
                 this.fetchData();
             },

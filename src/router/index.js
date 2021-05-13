@@ -50,6 +50,57 @@ export const constantRoutes = [
         ]
     },
     {
+        path: '/actives',
+        name: 'actives',
+        redirect: '/actives/flash_sale',
+        component: Layout,
+        alwaysShow: true,
+        meta: {
+            title: '活动中心',
+            icon: 'example'
+        },
+        children: [
+            {
+                path: 'flash_sale',
+                component: () => import('@/views/actives/flash_sale'),
+                name: "flash_sale",
+                meta: {
+                    title: '限时秒杀',
+                    icon: 'tree-table'
+                }
+            },
+            {
+                path: 'flash_sale/operate',
+                component: () => import('@/views/actives/flash_add_edit'),
+                name: "flash_sale_operate",
+                meta: {
+                    title: '限时秒杀操作',
+                    noCache: true
+                },
+                hidden: true
+            },
+            {
+                path: 'group_purchase',
+                component: () => import('@/views/actives/pintuan'),
+                name: "group_purchase",
+                meta: {
+                    title: '拼团活动',
+                    icon: 'tree-table'
+                }
+            },
+            {
+                path: 'group_purchase/operate',
+                component: () => import('@/views/actives/pintuan_add_edit'),
+                name: "group_purchase_operate",
+                meta: {
+                    title: '拼团活动操作',
+                    noCache: true
+                },
+                hidden: true
+            }
+        ] 
+    },
+    {
         path: '/404',
         name: '404',
         component: () => import('@/views/404.vue')
@@ -448,6 +499,23 @@ export const onlineClass = [
                     icon: 'component'
                 },
                 hidden: true
+            }
+        ]
+    },
+    {
+        path: '/focus',
+        component: Layout,
+        redirect: '/focus/index',
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/focus/index'),
+                name: 'focus_index',
+                meta: {
+                    title: '焦点图管理',
+                    icon: 'component',
+                    noCache: true
+                }
             }
         ]
     }

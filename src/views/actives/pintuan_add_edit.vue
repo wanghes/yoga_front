@@ -13,8 +13,14 @@
                     <div slot="tip" class="el-upload__tip">建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item required label="团购一次人数限制">
+            <el-form-item required label="活动简单描述（50字）">
+                <el-input type="textarea" placeholder="填写活动简单描述（50字）" v-model="form.intro" maxlength="50" show-word-limit></el-input>
+            </el-form-item>
+            <el-form-item required label="团购活动每人限制次数">
                 <el-input-number v-model="form.limit"></el-input-number>
+            </el-form-item>
+            <el-form-item required label="团购价格">
+                <el-input-number v-model="form.price"></el-input-number>
             </el-form-item>
             <el-form-item required label="选择活动卡">
                 <el-select style="width:100%" v-model="form.bind_card_id" placeholder="选择活动卡" @change="cardChange">
@@ -49,8 +55,10 @@ export default {
 				des: "",
 				cover: "",
 				over_time: "",
-                limit: 0,
+                limit: 1,
 				bind_card_id: "",
+                intro: "",
+                price: 0
 			},
 			cards: [],
             editStatus: false
@@ -97,23 +105,33 @@ export default {
                 limit,
                 bind_card_id,
                 over_time,
-                des
+                des,
+                intro,
+                price
             } = this.form;
 
             if (!name) {
-                this.$message.error("请填写秒杀活动名称");
+                this.$message.error("请填写拼团活动名称");
                 return;
             }
             if (!cover) {
-                this.$message.error("请上传秒杀封面");
+                this.$message.error("请上传拼团封面");
                 return;
             }
 
+            if (!intro) {
+                this.$message.error("请填写拼团活动简单描述");
+                return;
+            }
             if (limit == 0) {
-                this.$message.error("请填写秒杀活动旧价格");
+                this.$message.error("请填写拼团活动每人限制次数");
                 return;
             }
 
+            if (price == 0) {
+                this.$message.error("请填写拼团活动价格");
+                return;
+            }
             
             if (!bind_card_id) {
                 this.$message.error("请选择活动卡");
@@ -129,8 +147,7 @@ export default {
                 this.$message.error("请填写活动卡使用说明");
                 return;
             }
-
-        
+            
             let res = {};
 
             if (this.editStatus) {
@@ -142,6 +159,8 @@ export default {
                     bind_card_id,
                     over_time,
                     des,
+                    price,
+                    intro
                 });
             } else {
                  res = await group_purchase.add({
@@ -150,7 +169,9 @@ export default {
                     limit,
                     bind_card_id,
                     over_time,
-                    des
+                    des,
+                    price,
+                    intro
                 });
             }
            

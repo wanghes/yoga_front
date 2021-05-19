@@ -3,7 +3,7 @@
         <div class="top">
             <div class="top_left">
                 <div class="head">
-                    <img v-if="form.head" :src="form.head" alt="头像">
+                    <img v-if="form.avatar" :src="form.avatar" alt="头像">
                     <img v-else :src="headDefault" alt="头像">
                 </div>
                 <div class="center">
@@ -12,7 +12,11 @@
                     <div class="item"><label>电话：</label><span>{{form.phone}}</span></div>
                 </div>
                 <div class="center_right">
-                    <div class="item"><label>经验：</label><span>{{form.jingyan}}</span></div>
+                    <div class="item">
+                        <label>从业经验：</label>
+                        <span v-if="!!form.jingyan" class="jingyan">{{form.jingyan}}</span>
+                        <span v-else class="jingyan">目前还没有设置老师的经验</span>
+                    </div>
                     <div class="item"><label>入职时间：</label><span>{{form.join_date.slice(0, 10)}}</span></div>
                     <div class="item"><label>显示顺序：</label><span>{{form.order}}</span></div>
                 </div>
@@ -26,7 +30,7 @@
             <el-tab-pane label="基本信息" name="first"> 
                 <el-form :model="form" label-position="top" style="max-width:1200px; padding-left:30px">
                     <el-form-item label="老师头像">
-                        <img class="head_cover" v-if="form.head" :src="form.head" />
+                        <img class="head_cover" v-if="form.avatar" :src="form.avatar" />
                         <img class="head_cover" v-else :src="headDefault" />
                         <el-upload
                             class="upload_box"
@@ -35,7 +39,7 @@
                             :auto-upload="true"
                             :http-request="uploadSectionFile">
                             <el-button type="danger">点击上传</el-button>
-                            <div slot="tip" class="el-upload__tip">建议尺寸100*100px，JPG、PNG、webp格式，图片小于5M。</div>
+                            <div slot="tip" class="el-upload__tip">建议尺寸100×100，JPG、PNG、webp格式，图片小于5M。</div>
                         </el-upload>
                     </el-form-item>
                     <el-form-item required label="姓名">
@@ -70,6 +74,12 @@
                             <el-radio :label="1">支持</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item required="" label="一句话描述">
+                        <el-input v-model="form.des"
+                            type="textarea"
+                            placeholder="填写一句话描述" 
+                            maxlength="100"></el-input>
+                    </el-form-item>
                     <el-form-item label="教学经验">
                         <el-input v-model="form.jingyan"
                             type="textarea"
@@ -77,15 +87,9 @@
                             maxlength="255">
                         </el-input> 
                     </el-form-item>
-                    <el-form-item label="一句话描述">
-                        <el-input v-model="form.des"
-                            type="textarea"
-                            placeholder="填写一句话描述" 
-                            maxlength="100"></el-input>
-                    </el-form-item>
                     <el-form-item label="身份证照">
                         <img class="id_img" v-if="form.id_card" :src="form.id_card" />
-                        <img class="id_img" v-else :src="idImg" />
+                        <div class="empty_pic" v-else>建议尺寸400×250，JPG、PNG、webp格式，图片小于5M。</div>
                         <el-upload
                             class="upload_box"
                             action="action"
@@ -93,7 +97,7 @@
                             :auto-upload="true"
                             :http-request="uploadIdSectionFile">
                             <el-button type="danger">点击上传</el-button>
-                            <div slot="tip" class="el-upload__tip">建议尺寸673*425，JPG、PNG图片小于5M。</div>
+                            <div slot="tip" class="el-upload__tip">建议尺寸400×250，JPG、PNG、webp格式，图片小于5M。</div>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="详细介绍">
@@ -105,6 +109,7 @@
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
+
             <el-tab-pane label="私教预约设置" name="second"> 
                 <div v-if="detail.can_alone==1" class="shezhi">
                     <el-table ref="multipleTable"
@@ -143,9 +148,10 @@
                         <el-button type="primary" @click="saveAllBinds">保 存</el-button>
                     </div>
                 </div>
-                <el-alert v-else title="目前该老师还不支持私教课" type="warning">
+                <el-alert v-else title="目前该老师还不支持私教课" :closable="false" type="error">
                 </el-alert>
             </el-tab-pane>
+
             <el-tab-pane label="设置课时费用" name="third">
                 <div class="inner_box">
                     <h3>团课课时费设置</h3>
@@ -194,7 +200,7 @@
                 <div v-else>
                     <el-alert
                         title="还没有给老师排课，快去排课吧"
-                        type="warning">
+                        type="error">
                     </el-alert>
                 </div>
                 <el-divider></el-divider>
@@ -209,7 +215,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <el-alert title="目前该老师还不支持私教课" type="warning">
+                    <el-alert title="目前该老师还不支持私教课" type="error">
                     </el-alert>
                 </div>
             </el-tab-pane>
@@ -259,7 +265,7 @@ export default {
             },
             detail: {},
             form: {
-                head: "",
+                avatar: "",
                 name: "",
                 nickname: "",
                 phone: "",
@@ -296,7 +302,7 @@ export default {
             var form = new FormData();
             form.append("file", fileObj);
             let res = await teacher.uploadHead(form);
-            this.form.head = res.data.data.imagePath;
+            this.form.avatar = res.data.data.imagePath;
         },
         async uploadIdSectionFile(param) {
             var fileObj = param.file;
@@ -393,7 +399,7 @@ export default {
         async saveData() {
             const id = this.$route.params.id;
             let {
-                head,
+                avatar,
                 name,
                 nickname,
                 phone,
@@ -425,7 +431,7 @@ export default {
                 
                 let res = await teacher.update({
                     id,
-                    head,
+                    avatar,
                     name,
                     nickname,
                     phone,
@@ -565,7 +571,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .UEditor{
     position: relative;
     z-index: 1;
@@ -574,6 +580,28 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .center_right {
+        margin-right: 20px;
+        .item{
+            display: flex;
+            align-items: center;
+            .jingyan{
+                width: 500px;
+                display: block;
+                padding: 10px;
+                font-size: 14px;
+                border-radius: 5px;
+                border: 1px solid #efefef;
+                background-color: #f5f5f5;
+                color:#454545;
+            }
+        }
+        label{
+            width: 100px;
+            display: inline-block;  
+            text-align: right;
+        }
+    }
 }
 .top_left{
     display: flex;
@@ -596,9 +624,7 @@ export default {
 .top .center {
     margin-right: 20px;
 }
-.top .center_right {
-    margin-right: 20px;
-}
+
 .id_img{
     max-width: 673px;
     max-height: 425px;
@@ -624,5 +650,20 @@ export default {
 }
 .content_box{
     padding-top: 15px;
+}
+.empty_pic{
+    color:#666;
+    background: #ddd;
+    width: 400px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 24px;
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 12px;
+    padding: 30px;
+    box-sizing: border-box;
 }
 </style>

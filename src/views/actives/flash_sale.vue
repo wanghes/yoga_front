@@ -16,12 +16,14 @@
             </el-button-group>
         </div>
          <el-table :data="list" :header-cell-style="{'color':'#333', 'background-color':'#f5f5f5'}">
-             <el-table-column label="秒杀图片" fit>
+            <el-table-column label="秒杀图片" width="200">
                  <template slot-scope="scope">
                     <img width="150" :src="scope.row.cover">
                 </template>
             </el-table-column>  
             <el-table-column prop="name" width="200" label="秒杀名称"></el-table-column>  
+            <el-table-column prop="people" width="120" label="已秒杀的人数"></el-table-column>  
+            <el-table-column prop="limit" width="180" label="总共限制秒杀的人数"></el-table-column>  
             <el-table-column prop="over_time" width="180" label="秒杀截止日期"></el-table-column>  
             <el-table-column prop="expire_date_on"  width="120" label="卡有效期(天)">
                 <template slot-scope="scope">

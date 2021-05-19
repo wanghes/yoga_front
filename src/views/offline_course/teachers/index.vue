@@ -29,13 +29,14 @@
         <el-table :data="tableData" :header-cell-style="{'background-color': '#f9fbff', 'height': '80px','color': 'rgba(43,57,64,.85)','border-bottom': '1px #f0f0f0 solid', 'border-top': '1px #f0f0f0 solid'}">   
             <el-table-column prop="head" width="150" label="头像">
                 <template slot-scope="scope">
-                    <img class="head" v-if="!scope.row.head" :src="head" />
-                    <img class="head" v-else :src="scope.row.head" />
+                    <img class="head" v-if="!scope.row.avatar" :src="head" />
+                    <img class="head" v-else :src="scope.row.avatar" />
                 </template>
             </el-table-column>
-            <el-table-column label="老师姓名" fit prop="name"></el-table-column>
-            <el-table-column label="老师昵称" fit prop="nickname"></el-table-column>
-            <el-table-column label="电话" fit prop="phone"></el-table-column>
+            <el-table-column label="老师姓名" width="150" prop="name"></el-table-column>
+            <el-table-column label="老师昵称" width="100" prop="nickname"></el-table-column>
+            <el-table-column label="电话" width="150" prop="phone"></el-table-column>
+            <el-table-column label="加入时间" width="180" prop="join_date"></el-table-column>
             <el-table-column label="生日" width="130" prop="birthday">
                 <template slot-scope="scope">
                     <span>{{scope.row.birthday.slice(0, 10)}}</span>

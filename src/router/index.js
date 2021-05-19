@@ -50,6 +50,23 @@ export const constantRoutes = [
         ]
     },
     {
+        path: '/focus',
+        component: Layout,
+        redirect: '/focus/index',
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/focus/index'),
+                name: 'focus_index',
+                meta: {
+                    title: '焦点图管理',
+                    icon: 'component',
+                    noCache: true
+                }
+            }
+        ]
+    },
+    {
         path: '/actives',
         name: 'actives',
         redirect: '/actives/flash_sale',
@@ -120,12 +137,72 @@ export const offlineClass = [
         },
         children: [
             {
+                path: '/card/index',
+                component: () => import('@/views/card/index'),
+                name: 'card_index',
+                meta: {
+                    title: '卡种类列表',
+                    icon: 'table',
+                    noCache: true
+                }
+            },
+            {
+                path: '/membercard/index',
+                component: () => import('@/views/member_card/index'),
+                name: 'member_card_index',
+                meta: {
+                    title: '会员卡管理',
+                    icon: 'example',
+                    noCache: true
+                }
+            },
+            {
                 path: 'index',
                 component: () => import('@/views/offline_course/index'),
                 name: "offline_course_index",
                 meta: {
                     title: '课程管理',
                     icon: 'tree-table'
+                }
+            },
+            {
+                path: '/subscribe/index',
+                component: () => import('@/views/subscribe/index'),
+                name: '排课管理首页',
+                meta: {
+                    title: '排课管理',
+                    icon: 'tree',
+                    noCache: true
+                }
+            },
+            {
+                path: 'adviser',
+                component: () => import('@/views/offline_course/adviser/index'),
+                name: "offline_course_adviser",
+                meta: {
+                    title: '会籍管理',
+                    icon: 'peoples',
+                    noCache: true
+                }
+            },
+            {
+                path: 'teacher',
+                component: () => import('@/views/offline_course/teachers/index'),
+                name: "offline_course_teacher",
+                meta: {
+                    title: '老师管理',
+                    icon: 'peoples',
+                    noCache: true
+                }
+            },
+            {
+                path: 'room',
+                component: () => import('@/views/room/index'),
+                name: '教室',
+                meta: {
+                    title: '教室管理',
+                    icon: 'chart',
+                    noCache: true
                 }
             },
             {
@@ -172,16 +249,7 @@ export const offlineClass = [
                 },
                 hidden: true
             },
-            {
-                path: 'adviser',
-                component: () => import('@/views/offline_course/adviser/index'),
-                name: "offline_course_adviser",
-                meta: {
-                    title: '会籍管理',
-                    icon: 'peoples',
-                    noCache: true
-                }
-            },
+            
             {
                 path: 'adviser/add',
                 component: () => import('@/views/offline_course/adviser/add'),
@@ -203,16 +271,6 @@ export const offlineClass = [
                     noCache: true
                 },
                 hidden: true
-            },
-            {
-                path: 'teacher',
-                component: () => import('@/views/offline_course/teachers/index'),
-                name: "offline_course_teacher",
-                meta: {
-                    title: '老师管理',
-                    icon: 'peoples',
-                    noCache: true
-                }
             },
             {
                 path: 'teacher/detail/:id',
@@ -237,59 +295,7 @@ export const offlineClass = [
                 hidden: true
             },
             {
-                path: 'room',
-                component: () => import('@/views/room/index'),
-                name: '教室',
-                meta: {
-                    title: '教室管理',
-                    icon: 'chart',
-                    noCache: true
-                }
-            }
-        ]
-    },
-    {
-        path: '/subscribe',
-        component: Layout,
-        redirect: '/subscribe/index',
-        meta: {
-            title: '课程预约管理',
-            icon: 'example'
-        },
-        alwaysShow: false,
-        children: [{
-            path: 'index',
-            component: () => import('@/views/subscribe/index'),
-            name: '排课管理首页',
-            meta: {
-                title: '排课管理',
-                icon: 'tree',
-                noCache: true
-            }
-        }]
-    },
-    {
-        path: '/card',
-        component: Layout,
-        redirect: '/card/index',
-        alwaysShow: false,
-        meta: {
-            title: '卡种类管理',
-            icon: 'example'
-        },  
-        children: [
-            {
-                path: 'index',
-                component: () => import('@/views/card/index'),
-                name: 'card_index',
-                meta: {
-                    title: '卡种类列表',
-                    icon: 'table',
-                    noCache: true
-                }
-            },
-            {
-                path: 'add',
+                path: '/card/add',
                 component: () => import('@/views/card/add'),
                 name: 'card_add',
                 meta: {
@@ -299,7 +305,7 @@ export const offlineClass = [
                 hidden: true
             },
             {
-                path: 'edit/:id',
+                path: '/card/edit/:id',
                 component: () => import('@/views/card/edit'),
                 name: 'card_edit',
                 meta: {
@@ -341,18 +347,7 @@ export const offlineClass = [
     {
         path: '/membercard',
         component: Layout,
-        redirect: '/membercard/index',
         children: [
-            {
-                path: 'index',
-                component: () => import('@/views/member_card/index'),
-                name: 'member_card_index',
-                meta: {
-                    title: '会员卡管理',
-                    icon: 'example',
-                    noCache: true
-                }
-            },
             {
                 path: 'operate/:card_no',
                 component: () => import('@/views/member_card/card_operate'),
@@ -376,7 +371,6 @@ export const offlineClass = [
                 hidden: true
             },
             {
-                
                 path: 'add/:member_id',
                 component: () => import('@/views/member_card/add'),
                 name: 'member_card_add',
@@ -499,23 +493,6 @@ export const onlineClass = [
                     icon: 'component'
                 },
                 hidden: true
-            }
-        ]
-    },
-    {
-        path: '/focus',
-        component: Layout,
-        redirect: '/focus/index',
-        children: [
-            {
-                path: 'index',
-                component: () => import('@/views/focus/index'),
-                name: 'focus_index',
-                meta: {
-                    title: '焦点图管理',
-                    icon: 'component',
-                    noCache: true
-                }
             }
         ]
     }

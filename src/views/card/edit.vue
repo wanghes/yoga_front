@@ -38,6 +38,14 @@
                     <el-form-item label="卡种类名称">
                         <el-input v-model="form.name"></el-input>
                     </el-form-item>
+                    <el-form-item required label="卡片封面">
+                        <img class="cover_img" v-if="form.cover" :src="form.cover" />
+                        <div class="empty_pic" v-else>建议尺寸385×215，JPG、PNG、webp格式，图片小于5M。</div>
+                        <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
+                            <el-button type="info">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">建议尺寸385×215，JPG、PNG、webp格式，图片小于5M。</div>
+                        </el-upload>
+                    </el-form-item>
                     <el-form-item label="售价">
                         <el-input-number v-model="form.price"></el-input-number> 元
                     </el-form-item>
@@ -124,7 +132,8 @@ export default {
                 order: 0,
                 remark: "",
                 balance_type: "",
-                type: ""
+                type: "",
+                cover: ""
             },
             multipleSelection: [],
             courses: [],
@@ -145,6 +154,13 @@ export default {
                 this.form = res.data;
             }
         },
+        async uploadSectionFile(param) {
+            var fileObj = param.file;
+            var form = new FormData();
+            form.append("file", fileObj);
+            let res = await api.uploadCardCover(form)
+            this.form.cover = res.data.data.imagePath;
+        }, 
         async fetchAllList() {
             let res = await course.allList();
             if (res.code) {
@@ -218,12 +234,18 @@ export default {
                 limit_people,
                 balance_type,
                 order,
-                remark
+                remark,
+                cover
             } = this.form;
 
             if (!name) {
                 this.$message.error("请填写卡种类名称")
                 return;
+            }
+
+            if (!cover) {
+                this.$message.error("请上传卡片封面");
+				return;
             }
            
             if (!price) {
@@ -243,7 +265,8 @@ export default {
                 limit_people,
                 balance_type,
                 order,
-                remark
+                remark,
+                cover
             });
 
             if (res.code == 200) {
@@ -322,5 +345,23 @@ export default {
 .b_btn{
     padding: 20px 0;
     text-align: center;
+}
+.empty_pic {
+	color: #666;
+	background: #ddd;
+	width: 280px;
+	height: 180px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	line-height: 24px;
+	text-align: left;
+	margin-bottom: 15px;
+	font-size: 12px;
+	padding: 30px;
+	box-sizing: border-box;
+}
+.cover_img{
+    width: 385px;
 }
 </style>

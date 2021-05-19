@@ -1,4 +1,6 @@
 import request from '@/utils/request'
+import axios from 'axios';
+import { UPLOADBASEURL } from "@/config";
 
 
 export function all(params) {
@@ -79,5 +81,14 @@ export function cardBindAdd(data) {
         data
     });
 }
+
+export function uploadCardCover(formData) {
+    return axios.post(`${UPLOADBASEURL}/upload/card_cover`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    })
+}
+
+
+
 
 

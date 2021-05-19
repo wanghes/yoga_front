@@ -6,7 +6,7 @@
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item required label="秒杀封面">
-                <img v-if="form.cover" :src="form.cover" />
+                <img class="cover" v-if="form.cover" :src="form.cover" />
                 <div class="empty_pic" v-else>建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
                 <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
                     <el-button type="info">点击上传</el-button>
@@ -18,6 +18,12 @@
             </el-form-item>
             <el-form-item required label="秒杀活动新价格">
                 <el-input-number v-model="form.now_price"></el-input-number>
+            </el-form-item>
+            <el-form-item required label="已秒杀活动人数">
+                <el-input-number v-model="form.people"></el-input-number>
+            </el-form-item>
+            <el-form-item required label="秒杀活动共限制人数">
+                <el-input-number v-model="form.limit"></el-input-number>
             </el-form-item>
             <el-form-item required label="选择活动卡">
                 <el-select style="width:100%" v-model="form.bind_card_id" placeholder="选择活动卡" @change="cardChange">
@@ -78,6 +84,8 @@ export default {
                 now_price: 0,
 				content: "",
 				bind_card_id: "",
+                people: 0,
+                limit: 10
 			},
 			cards: [],
             editStatus: false
@@ -128,7 +136,9 @@ export default {
                 bind_card_id,
                 over_time,
                 des,
-                content
+                content,
+                people,
+                limit
             } = this.form;
 
             if (!name) {
@@ -147,6 +157,11 @@ export default {
 
             if (!now_price) {
                 this.$message.error("请填写秒杀活动新价格");
+                return;
+            }
+
+            if (!limit) {
+                this.$message.error("请填写秒杀活动共限制人数");
                 return;
             }
 
@@ -182,7 +197,9 @@ export default {
                     bind_card_id,
                     over_time,
                     des,
-                    content
+                    content,
+                    limit,
+                    people
                 });
             } else {
                  res = await flash_sale.add({
@@ -193,6 +210,8 @@ export default {
                     bind_card_id,
                     over_time,
                     des,
+                    people,
+                    limit,
                     content
                 });
             }
@@ -229,5 +248,8 @@ export default {
 	font-size: 12px;
 	padding: 30px;
 	box-sizing: border-box;
+}
+.cover{
+    max-width: 385px;
 }
 </style>

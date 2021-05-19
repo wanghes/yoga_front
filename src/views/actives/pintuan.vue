@@ -17,15 +17,25 @@
         </div>
 
          <el-table :data="list" :header-cell-style="{'color':'#333', 'background-color':'#f5f5f5'}">
-             <el-table-column label="拼团图片" fit>
+             <el-table-column label="拼团图片" width="200">
                  <template slot-scope="scope">
                     <img width="150" :src="scope.row.cover">
                 </template>
             </el-table-column>  
             <el-table-column prop="name" width="200" label="拼团名称"></el-table-column>  
-            <el-table-column prop="over_time" width="180" label="拼团截止日期"></el-table-column>  
+            <el-table-column prop="price" width="150" label="拼团价格">
+                <template slot-scope="scope">
+                    <span>￥{{scope.row.price && scope.row.price.toFixed(2) }}</span>
+                </template>
+            </el-table-column>  
+            <el-table-column width="180" label="原始价格">
+                <template slot-scope="scope">
+                    <span>￥{{scope.row.old_price && scope.row.old_price.toFixed(2) }}</span>
+                </template>    
+            </el-table-column>  
             <el-table-column prop="expire_date_on"  width="120" label="卡有效期(天)">
                 <template slot-scope="scope">
+
                     <span v-if="scope.row.expire_date_on==1">{{scope.row.expire_date}}</span>
                     <span v-else>不限</span>
                 </template>
@@ -51,7 +61,7 @@
                         <template slot="reference">
                             <el-button size="mini" type="danger">删除</el-button>
                         </template>
-                    </el-popover>   
+                    </el-popover> 
                 </template>
             </el-table-column>
         </el-table>

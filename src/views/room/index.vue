@@ -7,7 +7,7 @@
         </div>
 
         <el-table :data="rooms">
-            <el-table-column prop="name" width="150" label="课程分类"></el-table-column>
+            <el-table-column prop="name" width="400" label="教室名称"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="success" size="small" @click="fixRoom(scope.row)">修改</el-button>
@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="创建分类" :visible.sync="visible">
+        <el-dialog title="创建教室" :visible.sync="visible">
             <el-form :model="form">
                 <el-form-item required label="教室名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" autocomplete="off"></el-input>

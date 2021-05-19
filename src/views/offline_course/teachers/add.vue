@@ -3,8 +3,8 @@
         <el-form :model="form" label-position="top" style="max-width:1200px; padding-left:30px">
             <!--  老师头像 -->
             <el-form-item label="老师头像">
-                <img v-if="form.avatar" :src="form.avatar" />
-                <img v-else :src="cover" />
+                <img class="avatar" v-if="form.avatar" :src="form.avatar" />
+                <img class="avatar" v-else :src="cover" />
                 <el-upload
                     class="upload_box"
                     action="fakeaction"
@@ -62,7 +62,7 @@
             </el-form-item>
             <el-form-item label="身份证照">
                 <img v-if="form.id_card" :src="form.id_card" />
-                <img v-else :src="cover" />
+                <div class="empty_pic" v-else>建议尺寸400×250，JPG、PNG、webp格式，图片小于5M。</div>
                 <el-upload
                     class="upload_box"
                     action="action"
@@ -70,7 +70,7 @@
                     :auto-upload="true"
                     :http-request="uploadIdSectionFile">
                     <el-button type="danger">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸673*425，JPG、PNG图片小于5M。</div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸400×250，JPG、PNG图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item required label="详细介绍">
@@ -86,7 +86,7 @@
 
 <script>
 const teacher = require('@/api/teacher');
-const cover = require('@/assets/cover.png');
+const cover = require('@/assets/member_head.png');
 import VueUeditorWrap from 'vue-ueditor-wrap';
 import {UEDITOR_DOMAIN} from "@/config"
 import {dateFormat} from "@/utils/index"
@@ -211,5 +211,24 @@ export default {
 .UEditor{
     position: relative;
     z-index: 1;
+}
+.avatar{
+    height: 200px;
+    width: 200px;
+}
+.empty_pic{
+    color:#666;
+    background: #ddd;
+    width: 400px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 24px;
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 12px;
+    padding: 30px;
+    box-sizing: border-box;
 }
 </style>

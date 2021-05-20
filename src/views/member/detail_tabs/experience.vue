@@ -5,8 +5,7 @@
         </div>
 
         <div class="main_box">
-    
-            <el-table :data="tableData" :header-cell-style="{'background-color': '#f9fbff', 'height': '80px'}">
+            <el-table :data="tableData" border :header-cell-style="{'color':'#333', 'background-color':'#f5f5f5'}">
                 <el-table-column prop="username" width="150" label="预约人">
                 </el-table-column>
                 <el-table-column prop="phone" label="联系电话" width="130">

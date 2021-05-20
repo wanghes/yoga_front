@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <el-table :data="list" :header-cell-style="{'color':'#333', 'background-color':'#f5f5f5'}">
-            <el-table-column prop="head" width="100" label="卡种类名称">
+            <el-table-column width="100" label="会员头像">
                 <template slot-scope="scope">
                     <div class="head">
                         <img v-if="scope.row.head" :src="scope.row.head" alt="头像">
@@ -13,16 +13,14 @@
             <el-table-column prop="card_name" width="150" label="卡类别"></el-table-column>  
             <el-table-column prop="member_name" width="100" label="姓名"></el-table-column>  
             <el-table-column prop="phone" width="150" label="手机号"></el-table-column>  
-           
-            <el-table-column prop="status"  width="120" label="状态">
+            <el-table-column width="120" label="状态">
                 <template slot-scope="scope">
                     <span v-if="scope.row.status==0">未开卡</span>
                     <span v-else-if="scope.row.status==1">正常</span>
                     <span v-else>已用完</span>
                 </template>
             </el-table-column>  
-
-            <el-table-column prop="surplus" width="150" label="剩余">
+            <el-table-column width="150" label="剩余">
                 <template slot-scope="scope">
                     <span v-if="scope.row.status==0">未开卡</span>
                     <span v-else-if="scope.row.type == 1">{{scope.row.surplus}} 次</span>
@@ -31,28 +29,27 @@
                     <span v-else>请查看有效期</span>
                 </template>
             </el-table-column>  
-           
-            <el-table-column prop="open_start_time" width="250" label="有效期">
+            <el-table-column width="250" label="有效期">
                 <template slot-scope="scope">
-                    <span>{{scope.row.open_start_time.slice(0, 11)}} 到 {{scope.row.open_end_time.slice(0, 11)}}</span>
+                    <span v-if="scope.row.expire_date_on == 1">{{scope.row.open_start_time.slice(0, 11)}} 到 {{scope.row.open_end_time.slice(0, 11)}}</span>
+                    <span v-else>不限</span>
                 </template>
             </el-table-column> 
-            <el-table-column prop="order" width="150" label="会籍顾问">
+            <el-table-column width="150" label="会籍顾问">
                 <template>
-                    <!-- <span v-if="scope.row.status==0">未开卡</span>
-                    <span v-else>--</span> -->
                     <span>--</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="cost_time" width="120" label="上次消费">
+            <el-table-column width="120" label="上次消费">
                 <template slot-scope="scope">
                      <span>{{scope.row.cost_time.slice(0, 11)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" fixed="right" width="260">
+            <el-table-column label="操作" fixed="right" width="360">
                 <template slot-scope="scope">
-                    <el-button type="success" size="mini" @click="editItem(scope.row)">卡操作</el-button>
-                    <el-button v-if="scope.row.status==0" type="info" size="mini" @click="openCard(scope.row)">开卡</el-button>
+                    <el-button type="success" size="mini" plain @click="editItem(scope.row)">卡操作</el-button>
+                    <el-button type="primary" size="mini" plain @click="linkToMember(scope.row.member_id)">查看该会员</el-button>
+                    <el-button v-if="scope.row.status==0" type="success" size="mini" @click="openCard(scope.row)">开卡</el-button>
                     <el-popover
                         placement="top"
                         trigger="click"
@@ -64,7 +61,7 @@
                             <el-button type="primary" size="mini" @click="deleteItem(scope.row.id)">确定</el-button>
                         </div>
                         <template slot="reference">
-                            <el-button size="mini" type="danger">删除</el-button>
+                            <el-button size="mini" style="margin-left: 10px;" type="danger">删除</el-button>
                         </template>
                     </el-popover>   
                 </template>
@@ -128,6 +125,11 @@ export default {
         editItem(row) {
             this.$router.push({
                 path: '/membercard/operate/' + row.card_no
+            });
+        },
+        linkToMember(member_id) {
+            this.$router.push({
+                path: '/member/detail/' + member_id
             });
         },
         async openCard(row) {

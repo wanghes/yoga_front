@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="top_info">
             <div class="left_search">
-                <el-select v-model="searchForm.status" placeholder="秒杀卡可售状态" @change="statusChange">
+                <el-select :clearable="true" v-model="searchForm.status" placeholder="秒杀卡可售状态" @change="statusChange">
                     <el-option
                         v-for="item in status"
                         :key="item.value"
@@ -16,7 +16,7 @@
             </el-button-group>
         </div>
          <el-table :data="list" :header-cell-style="{'color':'#333', 'background-color':'#f5f5f5'}">
-            <el-table-column label="秒杀图片" width="200">
+            <el-table-column label="秒杀图片" width="170">
                  <template slot-scope="scope">
                     <img width="150" :src="scope.row.cover">
                 </template>
@@ -24,24 +24,33 @@
             <el-table-column prop="name" width="200" label="秒杀名称"></el-table-column>  
             <el-table-column prop="people" width="120" label="已秒杀的人数"></el-table-column>  
             <el-table-column prop="limit" width="180" label="总共限制秒杀的人数"></el-table-column>  
-            <el-table-column prop="over_time" width="180" label="秒杀截止日期"></el-table-column>  
-            <el-table-column prop="expire_date_on"  width="120" label="卡有效期(天)">
+            <el-table-column width="150" label="旧价格(元)">
+                <template slot-scope="scope">
+                    <span>￥{{scope.row.old_price.toFixed(2)}}</span>
+                </template>
+            </el-table-column> 
+            <el-table-column width="150" label="新价格(元)">
+                <template slot-scope="scope">
+                    <span>￥{{scope.row.old_price.toFixed(2)}}</span>
+                </template>
+            </el-table-column> 
+            <el-table-column width="120" label="卡内余额">
+                 <template slot-scope="scope">
+                    <span v-if="scope.row.type == 1">{{scope.row.times}}次</span>
+                    <span v-else-if="scope.row.type == 6">{{scope.row.price}}元</span>
+                    <span v-else-if="scope.row.type == 7">{{scope.row.hours}}小时</span>
+                    <span v-else>{{scope.row.expire_date}}天</span>
+                </template>
+            </el-table-column>
+            <el-table-column width="120" label="卡有效期(天)">
                 <template slot-scope="scope">
                     <span v-if="scope.row.expire_date_on==1">{{scope.row.expire_date}}</span>
                     <span v-else>不限</span>
                 </template>
             </el-table-column>  
            
-            <el-table-column width="150" label="旧价格(元)">
-                <template slot-scope="scope">
-                    <span>{{scope.row.old_price.toFixed(2)}}</span>
-                </template>
-            </el-table-column> 
-            <el-table-column width="150" label="新价格(元)">
-                <template slot-scope="scope">
-                    <span>{{scope.row.old_price.toFixed(2)}}</span>
-                </template>
-            </el-table-column> 
+            
+            <el-table-column prop="over_time" width="180" label="秒杀截止日期"></el-table-column>  
             <el-table-column prop="status" fit label="秒杀可售状态">
                 <template slot-scope="scope">
                     <el-switch v-model="scope.row.status" @change="changeSwitchStatus(scope.row)"></el-switch>

@@ -16,8 +16,6 @@ export function cardno(params) {
     })
 }
 
-
-
 export function query(params) {
     return request({
         url: '/admin/membercard/query',
@@ -33,8 +31,6 @@ export function queryCard(params) {
         params
     })
 }
-
-
 
 export function query_by_member(params) {
     return request({

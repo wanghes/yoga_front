@@ -27,7 +27,7 @@
         </div>
 
         <el-table :data="tableData" :header-cell-style="{'background-color': '#f9fbff', 'height': '80px','color': 'rgba(43,57,64,.85)','border-bottom': '1px #f0f0f0 solid', 'border-top': '1px #f0f0f0 solid'}">   
-            <el-table-column prop="head" width="150" label="头像">
+            <el-table-column prop="head" width="100" label="头像">
                 <template slot-scope="scope">
                     <img class="head" v-if="!scope.row.avatar" :src="head" />
                     <img class="head" v-else :src="scope.row.avatar" />
@@ -42,18 +42,20 @@
                     <span>{{scope.row.birthday.slice(0, 10)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="私教">
+            <el-table-column width="140" label="是否支持私教">
                 <template slot-scope="scope">
                     <span v-if="scope.row.can_alone==1">支持</span>
                     <span v-else>不支持</span>
                 </template>
             </el-table-column>
-            <el-table-column label="状态">
+            <el-table-column prop="order" width="100" label="显示顺序"></el-table-column>
+            <el-table-column prop="des" width="250" label="一句话描述老师">
+            </el-table-column>
+            <el-table-column fit label="状态">
                 <template slot-scope="scope">
                     <el-switch v-model="scope.row.status" @change="changeSwitchStatus(scope.row)"></el-switch>  
                 </template>
             </el-table-column>
-            <el-table-column prop="order" width="100" label="显示顺序"></el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
                 <template slot-scope="scope">
                     <el-button class="editbtn" type="success" size="mini" @click="manage(scope.row.id)">管理</el-button>

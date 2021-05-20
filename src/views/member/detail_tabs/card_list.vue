@@ -41,7 +41,8 @@
             </el-table-column>   
             <el-table-column  width="300" label="有效期">
                 <template slot-scope="scope">
-                    <span>{{scope.row.open_start_time.slice(0, 11)}} 至 {{scope.row.open_end_time.slice(0, 11)}}</span>
+                    <span v-if="scope.row.expire_date_on == 1">{{scope.row.open_start_time.slice(0, 11)}} 至 {{scope.row.open_end_time.slice(0, 11)}}</span>
+                    <span v-else>不限</span>
                 </template>
             </el-table-column>   
             <el-table-column width="100" label="默认会员卡">

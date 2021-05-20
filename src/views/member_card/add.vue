@@ -49,6 +49,12 @@
             <el-form class="form2" label-position="left" label-width="100px">
                 <el-row :gutter="20">
                     <el-col :span="5">
+                        <el-form-item label="头像：">
+                            <div class="head">
+                                <img v-if="member.head" :src="member.head" alt="头像">
+                                <img v-else :src="head" alt="头像">
+                            </div>
+                        </el-form-item>
                         <el-form-item label="性别：">
                             <span>{{member.sex==1 ? '男':'女'}}</span>
                         </el-form-item>
@@ -58,18 +64,12 @@
                         <el-form-item label="会籍顾问：">
                             <span>{{member.adviser_name}}</span>
                         </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
                         <el-form-item label="微信号：">
                             <span>{{member.weixin}}</span>
                         </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="头像：">
-                            <div class="head">
-                                <img v-if="member.head" :src="member.head" alt="头像">
-                                <img v-else :src="head" alt="头像">
-                            </div>
-                        </el-form-item>
-                         <el-form-item label="来源：">
+                        <el-form-item label="来源：">
                             <span>{{member.orgin}}</span>
                         </el-form-item>
                         <el-form-item label="地址：">

@@ -20,7 +20,13 @@
                 <el-input-number v-model="form.limit"></el-input-number>
             </el-form-item>
             <el-form-item required label="团购价格">
-                <el-input-number v-model="form.price"></el-input-number>
+                <el-input-number v-model="form.now_price"></el-input-number>
+            </el-form-item>
+            <el-form-item required label="团购之前价格">
+                <el-input-number v-model="form.old_price"></el-input-number>
+            </el-form-item>
+            <el-form-item required label="已拼团数">
+                <el-input-number v-model="form.people"></el-input-number>
             </el-form-item>
             <el-form-item required label="选择活动卡">
                 <el-select style="width:100%" v-model="form.bind_card_id" placeholder="选择活动卡" @change="cardChange">
@@ -33,7 +39,7 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item required label="活动卡使用说明">
-                <el-input type="textarea" placeholder="填写活动卡使用说明" maxlength="255" show-word-limit v-model="form.des">
+                <el-input type="textarea" placeholder="填写活动卡使用说明" rows="8" maxlength="255" show-word-limit v-model="form.des">
                 </el-input>
             </el-form-item>
             <el-form-item>
@@ -57,8 +63,10 @@ export default {
 				over_time: "",
                 limit: 1,
 				bind_card_id: "",
+                now_price: 0,
+                old_price: 0,
                 intro: "",
-                price: 0
+                people:0
 			},
 			cards: [],
             editStatus: false
@@ -107,7 +115,9 @@ export default {
                 over_time,
                 des,
                 intro,
-                price
+                now_price,
+                old_price,
+                people
             } = this.form;
 
             if (!name) {
@@ -128,8 +138,13 @@ export default {
                 return;
             }
 
-            if (price == 0) {
+            if (now_price == 0) {
                 this.$message.error("请填写拼团活动价格");
+                return;
+            }
+
+            if (old_price == 0) {
+                this.$message.error("请填写拼团活动之前的价格");
                 return;
             }
             
@@ -159,8 +174,10 @@ export default {
                     bind_card_id,
                     over_time,
                     des,
-                    price,
-                    intro
+                    now_price,
+                    old_price,
+                    intro,
+                    people
                 });
             } else {
                  res = await group_purchase.add({
@@ -170,8 +187,10 @@ export default {
                     bind_card_id,
                     over_time,
                     des,
-                    price,
-                    intro
+                    now_price,
+                    old_price,
+                    intro,
+                    people
                 });
             }
            

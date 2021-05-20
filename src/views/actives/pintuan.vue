@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="top_info">
             <div class="left_search">
-                <el-select v-model="searchForm.status" placeholder="拼团卡可售状态" @change="statusChange">
+                <el-select :clearable="true" v-model="searchForm.status" placeholder="拼团卡可售状态" @change="statusChange">
                     <el-option
                         v-for="item in status"
                         :key="item.value"
@@ -23,19 +23,28 @@
                 </template>
             </el-table-column>  
             <el-table-column prop="name" width="200" label="拼团名称"></el-table-column>  
-            <el-table-column prop="price" width="150" label="拼团价格">
+            <el-table-column width="150" label="拼团价格">
                 <template slot-scope="scope">
-                    <span>￥{{scope.row.price && scope.row.price.toFixed(2) }}</span>
+                    <span>￥{{scope.row.now_price && scope.row.now_price.toFixed(2) }}</span>
                 </template>
             </el-table-column>  
-            <el-table-column width="180" label="原始价格">
+            <el-table-column width="150" label="原始价格">
                 <template slot-scope="scope">
                     <span>￥{{scope.row.old_price && scope.row.old_price.toFixed(2) }}</span>
                 </template>    
-            </el-table-column>  
+            </el-table-column>
+            <el-table-column prop="card_name" width="180" label="拼团会员卡"></el-table-column>
+            <el-table-column prop="people" width="100" label="已拼团数"></el-table-column>
+            <el-table-column width="180" label="拼团会员卡余额">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.type == 1">{{scope.row.times}}次</span>
+                    <span v-else-if="scope.row.type == 6">{{scope.row.price}}元</span>
+                    <span v-else-if="scope.row.type == 7">{{scope.row.hours}}小时</span>
+                    <span v-else>{{scope.row.expire_date}}天</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="expire_date_on"  width="120" label="卡有效期(天)">
                 <template slot-scope="scope">
-
                     <span v-if="scope.row.expire_date_on==1">{{scope.row.expire_date}}</span>
                     <span v-else>不限</span>
                 </template>

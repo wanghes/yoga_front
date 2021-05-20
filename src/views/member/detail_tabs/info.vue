@@ -4,49 +4,49 @@
             <div class="list">
                 <div class="item">
                     <label class="label">姓名：</label>
-                    <span>{{detail.name}}</span>
+                    <span class="item_box">{{detail.name}}</span>
                 </div>
                 <div class="item">
                     <label class="label">手机：</label>
-                    <span>{{detail.phone}}</span>
+                    <span class="item_box">{{detail.phone}}</span>
                 </div>
                 <div class="item">
                     <label class="label">是否持卡：</label>
-                    <span>{{detail.member_card_count > 0 ? "有卡": "无卡"}}</span>
+                    <span class="item_box">{{detail.member_card_count > 0 ? "有卡": "无卡"}}</span>
                 </div>
                 <div class="item">
                     <label class="label">会籍顾问：</label>
-                    <span>{{detail.adviser_name}}</span>
+                    <span class="item_box">{{detail.adviser_name}}</span>
                 </div>
                 <div class="item">
                     <label class="label">性别：</label>
-                    <span>{{detail.sex == 1 ? "男":"女"}}</span>
+                    <span class="item_box">{{detail.sex == 1 ? "男":"女"}}</span>
                 </div>
                 <div class="item">
                     <label class="label">微信号：</label>
-                    <span>{{detail.weixin}}</span>
+                    <span class="item_box">{{detail.weixin}}</span>
                 </div>
                 <div class="item">
                     <label class="label">积分：</label>
-                    <span>{{detail.point}}</span>
+                    <span class="item_box">{{detail.point}}</span>
                 </div>
                 <div class="item">
                     <label class="label">来源：</label>
-                    <span>{{detail.origin}}</span>
+                    <span class="item_box">{{detail.origin}}</span>
                 </div>
             </div>
             <div class="list">
                 <div class="item">
                     <label class="label">生日：</label>
-                    <span>{{detail.birthday}}</span>
+                    <span class="item_box">{{detail.birthday}}</span>
                 </div>
                 <div class="item">
                     <label class="label">地址：</label>
-                    <span>{{detail.address}}</span>
+                    <span class="item_box">{{detail.address}}</span>
                 </div>
                 <div class="item">
                     <label class="label">备注信息：</label>
-                    <span>{{detail.remark}}</span>
+                    <span class="item_box item_box_remark">{{detail.remark}}</span>
                 </div>
             </div>
         </div>
@@ -226,6 +226,7 @@ import { dateFormatYMD } from '@/utils/index';
         .item{
             margin-bottom: 10px;
             font-size: 14px;
+            display: flex;
         }
         .label{
             font-size: 14px;
@@ -233,6 +234,13 @@ import { dateFormatYMD } from '@/utils/index';
             width: 80px;
             text-align: right;
             display: inline-block;
+        }
+        .item_box{
+            display: inline-block;
+            width: 200px;
+        }
+        .item_box_remark{
+            color: #666;
         }
         padding-left: 15px;
     }

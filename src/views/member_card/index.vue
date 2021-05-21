@@ -103,16 +103,17 @@ export default {
                 pageSize: this.pageSize,
                 page: this.currentPage,
             });
-            let {
-                list, total
-            } = res.data; 
+            if (res.code == 200) {
+                let {
+                    list, total
+                } = res.data; 
 
-            // list.forEach(item => {
-            //     item.status = item.status == 1 ? true : false;
-            // })
-
-            this.list = list;
-            this.total = total;
+                // list.forEach(item => {
+                //     item.status = item.status == 1 ? true : false;
+                // })
+                this.list = list;
+                this.total = total;
+            }
         },
         handleSizeChange: function(val) {
             this.pageSize = val;

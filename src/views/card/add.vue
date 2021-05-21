@@ -5,7 +5,7 @@
             <el-form-item label="卡种类名称">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item required label="卡片封面" :label-width="formLabelWidth">
+            <el-form-item required label="卡片封面">
                 <img class="cover_img" v-if="form.cover" :src="form.cover" />
                 <div class="empty_pic" v-else>建议尺寸385×215，JPG、PNG、webp格式，图片小于5M。</div>
                 <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">

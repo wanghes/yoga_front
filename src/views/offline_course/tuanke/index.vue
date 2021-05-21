@@ -96,14 +96,16 @@ export default {
 				status: this.status_selected,
 			});
 			this.isLoading = false;
-			let { list, total } = res.data;
-			list.forEach(item => {
-				if (item.date_time_limit) {
-					item["date_time_limit_arr"] = item.date_time_limit.split(":");
-				}
-			});
-			this.tableData = list;
-			this.total = total;
+			if (res.code == 200) {
+				let { list, total } = res.data;
+				list.forEach(item => {
+					if (item.date_time_limit) {
+						item["date_time_limit_arr"] = item.date_time_limit.split(":");
+					}
+				});
+				this.tableData = list;
+				this.total = total;
+			}
 		},
 		statusChange() {
 			this.fetchData();

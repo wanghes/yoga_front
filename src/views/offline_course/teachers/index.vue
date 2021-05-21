@@ -130,14 +130,16 @@ export default {
                 page: this.currentPage,
                 status: this.status_selected
             });
-        
-            let {list, total} = res.data;
-            list.forEach(item => {
-                item.status = item.status == 1 ? true : false;
-            });
 
-            this.tableData = list;
-            this.total = total;
+            if (res.code == 200) {
+                let {list, total} = res.data;
+                list.forEach(item => {
+                    item.status = item.status == 1 ? true : false;
+                });
+
+                this.tableData = list;
+                this.total = total;
+            }
         },
         statusChange() {
             this.fetchData();

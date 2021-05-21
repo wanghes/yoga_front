@@ -22,6 +22,7 @@ const service = axios.create({
 // 请求拦截
 service.interceptors.request.use(
     config => {
+        
         const adminUserId = getAdminUserId();
         // 请求发送前处理一些事情
         if (store.getters.token) {
@@ -31,6 +32,7 @@ service.interceptors.request.use(
         if (adminUserId) {
             config.headers['AdminUserId'] = adminUserId;
         }
+        config.headers['Content-Type'] = 'application/json; charset=UTF-8'
         return config;
     },
     error => {
@@ -52,18 +54,29 @@ service.interceptors.response.use(
         const res = response.data;
         // 如果自定义状态不是20000，它会被判定为一个错误。
         if (res.code !== 200) {
-            Message({
-                message: res.msg || 'Error',
-                type: 'error',
-                duration: 5 * 1000
-            });
+            if (res.code == 401) {
+                MessageBox.confirm('你已经退出, 你不能停留在这个页面，或者再次登录', '确认退出', {
+                    confirmButtonText: '重新登录',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    store.dispatch('user/resetToken').then(() => {
+                        location.reload();
+                    });
+                });
+            } else {
+                Message({
+                    message: res.msg || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                });
+            }
             return res;
         } else {
             return res;
         }
     },
     error => {
-        console.log(error);
         if (error.response.status == 500) {
             let res = error.response.data;
             /* 

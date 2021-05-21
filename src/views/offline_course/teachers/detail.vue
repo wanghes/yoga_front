@@ -74,7 +74,7 @@
                             <el-radio :label="1">支持</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item required="" label="一句话描述">
+                    <el-form-item required label="一句话描述">
                         <el-input v-model="form.des"
                             type="textarea"
                             placeholder="填写一句话描述" 
@@ -290,12 +290,10 @@ export default {
         async fetchData() {
             const id = this.$route.params.id;
             const res = await teacher.query({id});
-            this.form  = this.detail = res.data;
-            this.sijiao_price = res.data.can_alone_price;
-
-        },
-        async getTypeCards() {
-            
+            if (res.code == 200) {
+                this.form  = this.detail = res.data;
+                this.sijiao_price = res.data.can_alone_price;
+            }
         },
         async uploadSectionFile(param) {
             var fileObj = param.file;
@@ -325,7 +323,6 @@ export default {
                         }
                     })
                 });
-               
             }
         },
         cancelSubmit() {
@@ -504,9 +501,6 @@ export default {
             if (res.code == 200) {
                 this.$message.success(res.msg);
                 this.fetchSijiaoCardinfo();
-            } else {
-                this.$message.error('设置失败');
-                console.log(res);
             }
         },
         async saveTeacherPricesAllBinds(){

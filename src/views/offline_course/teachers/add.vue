@@ -18,11 +18,11 @@
             <el-form-item required label="姓名">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="昵称">
-                <el-input v-model="form.nickname"></el-input>
-            </el-form-item>
             <el-form-item required label="手机">
                 <el-input v-model="form.phone"></el-input>
+            </el-form-item>
+            <el-form-item label="昵称">
+                <el-input v-model="form.nickname"></el-input>
             </el-form-item>
             <el-form-item label="入职时间">
                 <el-date-picker
@@ -47,14 +47,14 @@
                     <el-radio :label="1">支持</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item required label="教学经验">
+            <el-form-item label="教学经验">
                 <el-input v-model="form.jingyan"
                     type="textarea"
                     placeholder="填写教学经验" 
                     maxlength="255">
                 </el-input>
             </el-form-item>
-            <el-form-item required label="一句话描述">
+            <el-form-item label="一句话描述">
                 <el-input v-model="form.des"
                     type="textarea"
                     placeholder="填写一句话描述" 
@@ -73,7 +73,7 @@
                     <div slot="tip" class="el-upload__tip">建议尺寸400×250，JPG、PNG图片小于5M。</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item required label="详细介绍">
+            <el-form-item label="详细介绍">
                 <VueUeditorWrap class="UEditor" v-model="form.content" :config="ueConfig" />
             </el-form-item>
             <el-form-item>

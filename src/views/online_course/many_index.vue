@@ -1,11 +1,11 @@
 <template>
-    <div class="hello">
+    <div class="wrap">
         <div class="top_info">
             <el-button-group class="btn_wrap">
                 <el-button type="primary" @click="toAddCourse">新建系列课</el-button>
             </el-button-group>
             <div class="right_search">
-                <label class="label">选择收费类型：</label>
+                <label class="label">按课程分类搜索：</label>
                 <el-select v-model="cate_selected" placeholder="请选择" @change="cateChange" clearable>
                     <el-option v-for="item in cates" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
@@ -23,12 +23,17 @@
                     <img class="cover" v-else :src="scope.row.course_cover" />
                 </template>
             </el-table-column>
-            <el-table-column prop="course_name" label="课程名称" fit>
+            <el-table-column prop="course_name" label="课程名称" width="200">
                 <template slot-scope="scope">
                     <span class="course_name">{{scope.row.course_name}}</span>
                 </template>
             </el-table-column>
-
+			 <el-table-column label="上架状态" width="100">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.on == 1">已上架</span>
+                    <span v-else>未上架</span>
+                </template>
+            </el-table-column>
             <el-table-column label="付费类型" width="100">
                 <template slot-scope="scope">
                     <span v-if="scope.row.pay_type == 1">固定收费</span>
@@ -37,7 +42,7 @@
                     <span v-if="scope.row.pay_type == 4">按年收费</span>
                 </template>
             </el-table-column>
-            <el-table-column label="价格" width="200">
+            <el-table-column label="价格" width="180">
                 <template slot-scope="scope">
                     <div class="money">
                         <div v-if="scope.row.pay_type==1" class="by_time">
@@ -53,7 +58,16 @@
                             <strong>{{scope.row.time}}</strong> 年<strong> ￥{{scope.row.price.toFixed(2)}} </strong>
                         </div>
                     </div>
-
+                </template>
+            </el-table-column>
+			<el-table-column label="促销价格" width="180">
+                <template slot-scope="scope">
+                    <div class="money">
+                        <div v-if="scope.row.pay_type==1 && scope.row.cu_status" class="by_time by_time2">
+                            <strong>￥{{scope.row.cu_price.toFixed(2)}}</strong>
+                        </div>
+						<div v-else>--</div>
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column prop="course_cate_name" label="课程分类" width="120"></el-table-column>
@@ -61,12 +75,22 @@
             <el-table-column label="操作" width="340" fixed="right">
                 <template slot-scope="scope">
                     <el-link class="editbtn" type="success" @click="intoEdit(scope.row)">编辑课程</el-link>
-                    <el-link type="success" @click="jumpPage(scope.row)">管理单课</el-link>
-                    <el-dropdown @command="handleCommand" :split-button="true" type="info" style="margin-left: 10px;">
-                        <span class="el-dropdown-link">更多操作</span>
+                    <el-link class="editbtn" type="success" @click="jumpPage(scope.row)">管理单课</el-link>
+					<el-dropdown @command="handleSale" type="primary" style="margin-left: 15px;">
+                        <span class="el-dropdown-link">营销<i class="el-icon-arrow-down el-icon--right"></i></span>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+								<el-dropdown-item v-if="scope.row.pay_type==1 && scope.row.cu_status == 0" :command="'a|'+ scope.row.id">促销</el-dropdown-item>
+								<el-dropdown-item v-if="scope.row.pay_type==1 && scope.row.cu_status == 1" :command="'b|'+ scope.row.id">取消促销</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                    <el-dropdown @command="handleCommand" type="success" style="margin-left: 15px;">
+                        <span class="el-dropdown-link">更多<i class="el-icon-arrow-down el-icon--right"></i></span>
                         <template #dropdown>
                             <el-dropdown-menu>
                                 <el-dropdown-item :command="'a|'+ scope.row.id">新建单课</el-dropdown-item>
+                                <el-dropdown-item :command="'d|'+ scope.row.id">{{scope.row.on == 1 ? '下架':'上架'}}</el-dropdown-item>
                                 <el-dropdown-item :command="'b|'+ scope.row.id">选择已有单课</el-dropdown-item>
                                 <el-dropdown-item :command="'c|'+ scope.row.id">进入直播</el-dropdown-item>
                             </el-dropdown-menu>
@@ -86,6 +110,7 @@
                 <el-form-item required label="课程名称" :label-width="formLabelWidth">
                     <el-input v-model="form.course_name"></el-input>
                 </el-form-item>
+				
                 <el-form-item required label="收费类型" :label-width="formLabelWidth">
                     <el-radio-group v-model="form.pay_type" @change="changePayType">
                         <el-radio v-for="item in payTypes" :key="item.id" :label="item.id">{{item.name}}</el-radio>
@@ -96,36 +121,38 @@
                         <el-input class="short_input" v-model="item.price"></el-input><span> 元</span>
                     </div>
                 </el-form-item>
+				<!-- 
                 <el-form-item v-if="showMoneyByTime" required label="金额" :label-width="formLabelWidth">
                     <div v-if="form.pay_type==2">
                         <div class="pay_money_type_item" v-for="item,index in form.pay_money_type" :key="index">
-                            <el-input-number class="short_input" v-model="item.time"></el-input-number>
-                            <span> 天收取</span>
-                            <el-input class="short_input" v-model="item.price"></el-input>
-                            <span> 元</span>
+                            <el-input class="short_input" v-model="item.time" placeholder="请填写天数"></el-input>
+                            <span>天收取</span>
+                            <el-input class="short_input" v-model="item.price" placeholder="请填写金额"></el-input>
+                            <span>元</span>
                             <el-link class="del_btn" v-if="index != 0" @click="delPayMonnyItem(index)" type="danger">删除</el-link>
                         </div>
                     </div>
                     <div v-else-if="form.pay_type==3">
                         <div class="pay_money_type_item" v-for="item,index in form.pay_money_type" :key="index">
-                            <el-input-number class="short_input" v-model="item.time"></el-input-number>
-                            <span> 月收取</span>
-                            <el-input class="short_input" v-model="item.price"></el-input>
-                            <span> 元</span>
+                            <el-input class="short_input" v-model="item.time" placeholder="请填写月数"></el-input>
+                            <span>月收取</span>
+                            <el-input class="short_input" v-model="item.price" placeholder="请填写金额"></el-input>
+                            <span>元</span>
                             <el-link class="del_btn" v-if="index != 0" @click="delPayMonnyItem(index)" type="danger">删除</el-link>
                         </div>
                     </div>
                     <div v-else-if="form.pay_type==4">
                         <div class="pay_money_type_item" v-for="item,index in form.pay_money_type" :key="index">
-                            <el-input-number class="short_input" v-model="item.time"></el-input-number>
-                            <span> 年收取</span>
-                            <el-input class="short_input" v-model="item.price"></el-input>
-                            <span> 元</span>
+                            <el-input class="short_input" v-model="item.time" placeholder="请填写年数"></el-input>
+                            <span>年收取</span>
+                            <el-input class="short_input" v-model="item.price" placeholder="请填写金额"></el-input>
+                            <span>元</span>
                             <el-link class="del_btn" v-if="index != 0" @click="delPayMonnyItem(index)" type="danger">删除</el-link>
                         </div>
                     </div>
                     <el-button type="primary" @click="addTypeByTime">添加一个类型</el-button>
                 </el-form-item>
+				-->
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="visible = false">取 消</el-button>
@@ -156,6 +183,18 @@
             </div>
             <el-button type="primary" @click="okAdd">确定添加</el-button>
         </el-dialog>
+
+		<el-dialog title="设置促销价格" width="40%" :visible.sync="cuxiaoVisible">
+			<el-form :model="saleForm">
+				<el-form-item required label="促销价格" :label-width="formLabelWidth">
+                    <el-input v-model="saleForm.cu_price" placeholder="请填写促销价格"></el-input>
+                </el-form-item>
+			</el-form>
+			 <div slot="footer" class="dialog-footer">
+                <el-button @click="cuxiaoVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addCu">完 成</el-button>
+            </div>
+		</el-dialog>
     </div>
 </template>
 
@@ -176,7 +215,7 @@ export default {
 			total: 0,
 			course_cover,
 			cate_selected: "",
-			showMoney: false,
+			showMoney: true,
 			showMoneyByTime: false,
 			dialogVisible: false,
 			multipleSelection: [],
@@ -184,9 +223,10 @@ export default {
 			alonePageSize: 5,
 			allCoursesTotal: 0,
 			allCourses: [],
+			cuxiaoVisible: false,
 			form: {
 				course_name: "",
-				pay_type: "0",
+				pay_type: 1,
 				pay_money_type: [
 					{
 						price: "",
@@ -194,11 +234,16 @@ export default {
 					},
 				],
 			},
+			saleForm: {
+				cuxiao_id: "",
+				cu_price:''
+			},
 			payTypes: [
 				{
 					id: 1,
 					name: "固定收费",
 				},
+				/*
 				{
 					id: 2,
 					name: "按天收费",
@@ -211,6 +256,7 @@ export default {
 					id: 4,
 					name: "按年收费",
 				},
+				*/
 			],
 			batchPid: "",
 		};
@@ -272,7 +318,7 @@ export default {
 				pay_money_type: [],
 			};
 
-			// 1.固定类型收费 |2，3，4 是按时付费类型的
+			// 1.固定类型收费， 2、3、4 是按时付费类型的
 			if (!config.course_name) {
 				this.$message.error("请填写课程名称");
 				return;
@@ -293,13 +339,21 @@ export default {
 				config.pay_money_type = pay_money_type;
 			} else {
 				let status = false;
-				pay_money_type.forEach(item => {
-					if (item.time <= 0 || !item.price) {
+				for (let i = 0; i < pay_money_type.length; i++) {
+					let item = pay_money_type[i];
+
+					if (isNaN(item.time)) {
 						status = true;
+						break;
 					}
-				});
+ 					if (item.time <= 0 || !item.price) {
+						status = true;
+						break;
+					}
+				}
+			
 				if (status) {
-					this.$message.error("请正确填写金额相关输入框");
+					this.$message.error("请填写正确的时间或者金额相数据");
 					return;
 				}
 				config.pay_money_type = pay_money_type;
@@ -361,9 +415,81 @@ export default {
 					break;
 				case "c":
 					break;
+				case "d":
+					this.operateOnline(id);
+					break;
+				case "e":
+					this.cuxiao(id);
+					break;
 				default:
 					break;
 			}
+		},
+		handleSale(command) {
+			let [mand, id] = command.split("|");
+			switch (mand) {
+				case "a":
+					this.cuxiao(id);
+					break;
+				case "b":
+					this.cancelCuxiao(id);
+					break;
+				default:
+					break;
+			}
+		},
+		cuxiao(id) {
+			this.cuxiaoVisible = true;
+			this.saleForm.cuxiao_id = id;
+		},
+		async cancelCuxiao(id) {
+			let res = await course.updateCu({
+				id: id,
+				cu_price: 0,
+				cu_status: 0
+			});
+			if (res.code == 200) {
+				this.cuxiaoVisible = false;
+				this.$message.success(res.msg);
+				this.fetData()
+			}
+		},
+		async addCu() {
+			let {
+				cu_price,
+				cuxiao_id
+			} = this.saleForm;
+
+			let res = await course.updateCu({
+				id: cuxiao_id,
+				cu_price,
+				cu_status: 1
+			});
+			if (res.code == 200) {
+				this.cuxiaoVisible = false;
+				this.$message.success(res.msg);
+				this.fetData()
+			}
+		},
+		async operateOnline(id) {
+			let on = 0;
+		
+			this.tableData.forEach(item => {
+				if (item.id == id) {
+					on = item.on
+				}
+			});
+			
+			let res = await course.updateOnline({
+				id,
+				on: on == 0 ? 1 : 0
+			});
+			if (res.code == 200) {
+				this.$message.success(res.msg);
+				this.fetData();
+			}
+			
+
 		},
 		jumpPage(row) {
 			let { id } = row;
@@ -432,6 +558,10 @@ export default {
 </script>
 
 <style scoped>
+ .el-dropdown-link {
+    cursor: pointer;
+    color: #eb5f28;
+}
 .btn_wrap {
 	padding-bottom: 20px;
 }
@@ -481,5 +611,8 @@ export default {
 
 .by_time strong {
 	color: red;
+}
+.by_time2 strong{
+	color: green;
 }
 </style>

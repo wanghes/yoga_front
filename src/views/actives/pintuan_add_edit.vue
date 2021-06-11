@@ -6,13 +6,23 @@
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item required label="拼团封面">
-                <img v-if="form.cover" :src="form.cover" />
+                <img v-if="form.cover" class="img_cover" :src="form.cover" />
                 <div class="empty_pic" v-else>建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
                 <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
                     <el-button type="info">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
+
+            <el-form-item required label="分享的封面">
+                <img v-if="form.share_img" class="img_cover" :src="form.share_img" />
+                <div class="empty_pic" v-else>建议尺寸960×1700，JPG、PNG、webp格式，图片小于5M。</div>
+                <el-upload class="upload_box" action="fakeaction2" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile2">
+                    <el-button type="info">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">建议尺寸960×1700，JPG、PNG、webp格式，图片小于5M。</div>
+                </el-upload>
+            </el-form-item>
+
             <el-form-item required label="活动简单描述（50字）">
                 <el-input type="textarea" placeholder="填写活动简单描述（50字）" v-model="form.intro" maxlength="50" show-word-limit></el-input>
             </el-form-item>
@@ -66,6 +76,7 @@ export default {
                 now_price: 0,
                 old_price: 0,
                 intro: "",
+                share_img: "",
                 people:0
 			},
 			cards: [],
@@ -105,6 +116,14 @@ export default {
 			let res = await group_purchase.uploadCover(form);
 			this.form.cover = res.data.data.imagePath;
 		},
+        async uploadSectionFile2(param) {
+			var fileObj = param.file;
+			var form = new FormData();
+			form.append("file", fileObj);
+			let res = await group_purchase.uploadCover(form);
+            
+			this.form.share_img = res.data.data.imagePath;
+		},
         async saveData() {
             let id = this.$route.query.id;
             let {
@@ -117,7 +136,8 @@ export default {
                 intro,
                 now_price,
                 old_price,
-                people
+                people,
+                share_img
             } = this.form;
 
             if (!name) {
@@ -177,6 +197,7 @@ export default {
                     now_price,
                     old_price,
                     intro,
+                    share_img,
                     people
                 });
             } else {
@@ -187,6 +208,7 @@ export default {
                     bind_card_id,
                     over_time,
                     des,
+                    share_img,
                     now_price,
                     old_price,
                     intro,
@@ -226,5 +248,8 @@ export default {
 	font-size: 12px;
 	padding: 30px;
 	box-sizing: border-box;
+}
+.img_cover{
+    max-width: 400px;
 }
 </style>

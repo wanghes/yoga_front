@@ -451,7 +451,8 @@ export const onlineClass = [
                 component: () => import('@/views/online_course/add'),
                 name: 'courseAdd',
                 meta: {
-                    title: '新建单课'
+                    title: '新建单课',
+                    noCache: true
                 },
                 hidden: true
             }, 

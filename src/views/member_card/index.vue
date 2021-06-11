@@ -55,7 +55,7 @@
                         trigger="click"
                         :width="160">
                         <div style="margin-bottom: 10px;">
-                            <span>你确定要删除该卡种吗？</span>
+                            <span>你确定要删除该会员卡吗？</span>
                         </div>
                         <div style="text-align: center; margin: 0">
                             <el-button type="primary" size="mini" @click="deleteItem(scope.row.id)">确定</el-button>

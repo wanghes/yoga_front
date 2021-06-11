@@ -60,6 +60,23 @@ export function openListen(data) {
     })
 }
 
+export function updateCu(data) {
+    return request({
+        url: '/admin/manycourse/cu',
+        method: 'put',
+        data
+    });
+}
+
+
+export function updateOnline(data) {
+    return request({
+        url: '/admin/manycourse/update_online',
+        method: 'put',
+        data
+    })
+}
+
 
 export function closeListen(data) {
     return request({

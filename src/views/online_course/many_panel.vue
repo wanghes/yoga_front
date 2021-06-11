@@ -299,6 +299,7 @@ export default {
 			});
 		},
 		editCourse(id) {
+			if (!id) return;
 			this.$router.push({
 				path: "/course/many_detail/" + id,
 			});

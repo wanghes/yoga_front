@@ -31,7 +31,7 @@
             </el-table-column> 
             <el-table-column width="150" label="新价格(元)">
                 <template slot-scope="scope">
-                    <span>￥{{scope.row.old_price.toFixed(2)}}</span>
+                    <span>￥{{scope.row.now_price.toFixed(2)}}</span>
                 </template>
             </el-table-column> 
             <el-table-column width="120" label="卡内余额">

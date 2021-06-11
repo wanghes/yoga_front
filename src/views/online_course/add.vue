@@ -90,7 +90,7 @@
                 course_type:'',
                 form: {
                     course_name: "",
-                    pay_type: "0",
+                    pay_type: 0,
                     pay_money: "",
                     pid: ""
                 }
@@ -109,6 +109,13 @@
             async getSeriesCourses() {
                 let res = await course.getSeriesCourses();
                 this.seriesCourses = res.data;
+                if (this.pid != 0) {
+                    this.seriesCourses.forEach(item => {
+                        if (this.pid == item.id) {
+                            this.form.course_name = item.course_name;
+                        }
+                    })
+                }
             },
             openCreateBox() {
                 if (!this.course_type) {
@@ -202,6 +209,6 @@
     padding: 20px 0;
 }
 .money_box .inner_box{
-     width:300px;
+    width:300px;
 }
 </style>

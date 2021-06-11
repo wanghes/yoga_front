@@ -24,7 +24,6 @@
             </el-table-column>
         </el-table>
     </el-card>
-
 </template>
 <script>
 const order = require('@/api/order');

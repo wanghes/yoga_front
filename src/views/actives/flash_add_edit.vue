@@ -13,6 +13,15 @@
                     <div slot="tip" class="el-upload__tip">建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
+
+            <el-form-item label="秒杀分享封面">
+                <img class="cover" v-if="form.share_img" :src="form.share_img" />
+                <div class="empty_pic" v-else>建议尺寸960×1700，JPG、PNG、webp格式，图片小于5M。</div>
+                <el-upload class="upload_box" action="fakeaction2" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile2">
+                    <el-button type="info">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">建议尺寸960×1700，JPG、PNG、webp格式，图片小于5M。</div>
+                </el-upload>
+            </el-form-item>
             <el-form-item required label="秒杀活动旧价格">
                 <el-input-number v-model="form.old_price"></el-input-number>
             </el-form-item>
@@ -84,6 +93,7 @@ export default {
                 now_price: 0,
 				content: "",
 				bind_card_id: "",
+                share_img: "",
                 people: 0,
                 limit: 10
 			},
@@ -126,6 +136,13 @@ export default {
 			let res = await flash_sale.uploadCover(form);
 			this.form.cover = res.data.data.imagePath;
 		},
+        async uploadSectionFile2(param) {
+			var fileObj = param.file;
+			var form = new FormData();
+			form.append("file", fileObj);
+			let res = await flash_sale.uploadCover(form);
+			this.form.share_img = res.data.data.imagePath;
+		},
         async saveData() {
             let id = this.$route.query.id;
             let {
@@ -138,6 +155,7 @@ export default {
                 des,
                 content,
                 people,
+                share_img,
                 limit
             } = this.form;
 
@@ -199,6 +217,7 @@ export default {
                     des,
                     content,
                     limit,
+                    share_img,
                     people
                 });
             } else {
@@ -212,6 +231,7 @@ export default {
                     des,
                     people,
                     limit,
+                    share_img,
                     content
                 });
             }
@@ -250,6 +270,6 @@ export default {
 	box-sizing: border-box;
 }
 .cover{
-    max-width: 385px;
+    max-width: 400px;
 }
 </style>

@@ -43,10 +43,9 @@ router.beforeEach(async (to, from, next) => {
                     
                     // 创建基于角色信息映射的可访问路由
                     const accessRoutes = await store.dispatch('permission/generateRoutes', role);
-
                     // 动态添加可访问路由
                     router.addRoutes(accessRoutes);
-
+                        
                     // 确保addRoutes完成的hack方式, 之所以设置replace的值为true, 是让导航不留下历史记录
                     next({
                         ...to,

@@ -95,6 +95,15 @@ export function updateOrder(data) {
     })
 }
 
+export function updateManyJingpin(data) {
+    return request({
+        url: '/admin/manycourse/jingpin',
+        method: 'put',
+        data
+    })
+}
+
+
 
 export function list(params) {
     return request({

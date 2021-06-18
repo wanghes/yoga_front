@@ -34,6 +34,12 @@
                     <span v-else>未上架</span>
                 </template>
             </el-table-column>
+			<el-table-column label="是否设置为精品课" width="200">
+                <template slot-scope="scope">
+					<el-link v-if="scope.row.jingpin == 0" type="primary" @click="setJingpin(scope.row)">设置为精品课</el-link>
+					<el-link v-else type="danger" @click="cancelJingpin(scope.row)">取消精品课</el-link>
+                </template>
+            </el-table-column>
             <el-table-column label="付费类型" width="100">
                 <template slot-scope="scope">
                     <span v-if="scope.row.pay_type == 1">固定收费</span>
@@ -553,6 +559,27 @@ export default {
 				this.batchPid = "";
 			}
 		},
+		async setJingpin(row) {
+			let res = await course.updateManyJingpin({
+				id: row.id,
+				jingpin: 1
+			});
+			if (res.code == 200) {
+				this.$message.success(res.msg)
+				this.fetData();
+			}
+		},
+		async cancelJingpin(row) {
+			let res = await course.updateManyJingpin({
+				id: row.id,
+				jingpin: 0
+			});
+
+			if (res.code == 200) {
+				this.$message.success(res.msg)
+				this.fetData();
+			}
+		}
 	},
 };
 </script>

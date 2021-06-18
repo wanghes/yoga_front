@@ -1,8 +1,9 @@
-import {
-    constantRoutes,
-    offlineClass,
-    onlineClass
-} from '@/router'
+import venuesRoutes from '@/router/venues';
+import teacherRoutes from '@/router/teacher';
+import { constantRoutes } from '@/router';
+import classLeaderRoutes from '@/router/classLeader';
+
+console.log(constantRoutes)
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -43,6 +44,7 @@ const state = {
     addRoutes: []
 }
 
+
 const mutations = {
     SET_ROUTES: (state, routes) => {
         state.addRoutes = routes
@@ -57,9 +59,12 @@ const actions = {
         return new Promise(resolve => {
             let accessedRoutes
             if (role == 'venues') {
-                accessedRoutes = onlineClass.concat(offlineClass);
+                // accessedRoutes = onlineClass.concat(offlineClass);
+                accessedRoutes = venuesRoutes;
             } else if (role == 'teacher') {
-                accessedRoutes = offlineClass;
+                accessedRoutes = teacherRoutes;
+            } else {
+                accessedRoutes = classLeaderRoutes;
             }
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)

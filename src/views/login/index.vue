@@ -6,7 +6,7 @@
                 <h3 class="title">瑜老师后台管理</h3>
             </div>
 
-            <el-form-item prop="username">
+            <!-- <el-form-item prop="username">
                 <span class="svg-container">
                     <i class="el-icon-s-flag"></i>
                     
@@ -19,7 +19,7 @@
                         :value="item.id">
                     </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item prop="username">
                 <span class="svg-container">
@@ -90,8 +90,8 @@
                     }
                 ],
                 loginForm: {
-                    username: "admin",
-                    password: "123456"
+                    username: "",
+                    password: ""
                 },
                 loginRules: {
                     username: [{

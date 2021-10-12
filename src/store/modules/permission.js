@@ -3,8 +3,6 @@ import teacherRoutes from '@/router/teacher';
 import { constantRoutes } from '@/router';
 import classLeaderRoutes from '@/router/classLeader';
 
-console.log(constantRoutes)
-
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles

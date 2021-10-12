@@ -19,7 +19,6 @@ const Routes = [
     },
     {
         path: '/venues',
-        //name: 'venues',
         component: Layout,
         children: [
             {
@@ -112,7 +111,7 @@ const Routes = [
         },
         children: [
             {
-                path: 'cate', // 系列课添加
+                path: 'cate', // 线上课分类列表
                 component: () => import('@/views/online_course/cate'),
                 name: 'course_cate',
                 meta: {
@@ -121,7 +120,7 @@ const Routes = [
                 }
             }, 
             {
-                path: 'index',
+                path: 'index',  // 单课列表
                 component: () => import('@/views/online_course/index'),
                 name: 'alone',
                 meta: {
@@ -131,7 +130,7 @@ const Routes = [
                 }
             }, 
             {
-                path: 'add',
+                path: 'add', // 单课添加
                 component: () => import('@/views/online_course/add'),
                 name: 'courseAdd',
                 meta: {
@@ -281,30 +280,7 @@ const Routes = [
                     noCache: true
                 },
                 hidden: true
-            },
-            {
-                path: 'banke/add',
-                component: () => import('@/views/offline_course/banke/add'),
-                name: "offline_banke_add",
-                meta: {
-                    title: '新建班课',
-                    icon: 'form',
-                    noCache: true
-                },
-                hidden: true
-            },
-            {
-                path: 'banke/edit/:id',
-                component: () => import('@/views/offline_course/banke/edit'),
-                name: "offline_banke_edit",
-                meta: {
-                    title: '编辑班课',
-                    icon: 'edit',
-                    noCache: true
-                },
-                hidden: true
-            },
-            
+            }, 
             {
                 path: 'adviser/add',
                 component: () => import('@/views/offline_course/adviser/add'),

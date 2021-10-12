@@ -11,23 +11,20 @@ export function list(params) {
 }
 
 export function add(data) {
-	return request({
-		url: '/admin/flash_sale/add',
-		method: 'post',
-		data
-	})
+    return request({
+        url: '/admin/flash_sale/add',
+        method: 'post',
+        data
+    })
 }
-
 
 export function edit(data) {
-	return request({
-		url: '/admin/flash_sale/edit',
-		method: 'put',
-		data
-	})
+    return request({
+        url: '/admin/flash_sale/edit',
+        method: 'put',
+        data
+    })
 }
-
-
 
 export function query(params) {
     return request({
@@ -46,11 +43,11 @@ export function deleteItem(params) {
 }
 
 export function updateStatus(data) {
-	return request({
-		url: '/admin/flash_sale/status',
-		method: 'put',
-		data
-	})
+    return request({
+        url: '/admin/flash_sale/status',
+        method: 'put',
+        data
+    })
 }
 
 export function uploadCover(formData) {

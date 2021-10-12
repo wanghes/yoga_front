@@ -3,7 +3,7 @@
         <el-tabs v-model="activeName">
             <el-tab-pane label="课程编辑" name="first">
                 <el-form :model="form" label-position="top" style="max-width:1200px; padding-left:30px">
-                    <!--  课程主题 -->
+                    <!-- 课程主题 -->
                     <el-form-item required label="系列课名称" :label-width="formLabelWidth">
                         <el-input v-model="form.course_name" autocomplete="off"></el-input>
                     </el-form-item>
@@ -16,19 +16,19 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <!--  课程封面 -->
+                    <!-- 课程封面 -->
                     <el-form-item required label="课程封面" :label-width="formLabelWidth">
                         <div class="cover">
                             <img v-if="form.course_cover" :src="form.course_cover" />
-                            <div class="empty_pic" v-else>建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
+                            <div class="empty_pic" v-else>建议尺寸600×320，JPG、PNG、webp格式，图片小于5M。</div>
                         </div>
                         <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
                             <el-button type="danger">点击上传</el-button>
-                            <div slot="tip" class="el-upload__tip">建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
+                            <div slot="tip" class="el-upload__tip">建议尺寸600×320，JPG、PNG、webp格式，图片小于5M。</div>
                         </el-upload>
                     </el-form-item>
 
-                    <!--  收费类型 -->
+                    <!-- 收费类型 -->
                     <el-form-item required label="收费类型" :label-width="formLabelWidth">
                         <el-radio-group v-model="form.pay_type">
                             <el-radio v-for="item in payTypes" :key="item.id" :disabled="item.id!=form.pay_type" :label="item.id">{{item.name}}</el-radio>
@@ -40,6 +40,7 @@
                                 <span> 元</span>
                             </div>
                         </div>
+                        <!--
                         <div v-else class="pay_money_box">
                             <div v-if="form.pay_type==2">
                                 <div class="pay_money_type_item" v-for="item,index in form.pay_money_type" :key="index">
@@ -70,6 +71,7 @@
                             </div>
                             <el-button type="primary" @click="addTypeByTime">添加一个类型</el-button>
                         </div>
+						-->
                     </el-form-item>
 
                     <el-form-item class="UEditor" required label="课程内容" :label-width="formLabelWidth">
@@ -78,20 +80,9 @@
                     <el-form-item>
                         <el-button type="primary" @click="saveData">保 存 数 据</el-button>
                     </el-form-item>
-
                 </el-form>
-
             </el-tab-pane>
         </el-tabs>
-
-        <el-dialog title="播放视频" :visible.sync="visible" width="40%">
-            <video :src='form.course_video' controls width='100%' height='100%' autoPlay data-setup='{}'>
-                <source :src='form.course_video'>
-            </video>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="visible = false">关 闭</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -112,7 +103,6 @@ export default {
 			activeName: "first",
 			formLabelWidth: "130",
 			course_cover,
-			visible: false,
 			cate_selected: "",
 			cates: [],
 			ueConfig: {
@@ -147,6 +137,7 @@ export default {
 					id: 1,
 					name: "固定收费",
 				},
+				/*
 				{
 					id: 2,
 					name: "按天收费",
@@ -158,7 +149,8 @@ export default {
 				{
 					id: 4,
 					name: "按年收费",
-				},
+				}
+				*/
 			],
 		};
 	},
@@ -174,9 +166,11 @@ export default {
 			let res = await course.getCates();
 
 			this.cates = res.data;
-			result.data.course_cate =
-				result.data.course_cate == 0 ? "" : result.data.course_cate;
+			if (result.data.course_cate == 0) {
+				result.data.course_cate = "";
+			}
 			this.form = result.data;
+			console.log(result.data);
 		},
 		async saveData() {
 			const id = this.$route.params.id;

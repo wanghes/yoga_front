@@ -16,11 +16,9 @@
                                 <el-input placeholder="请输入卡号" v-model="form.card_no"></el-input>
                             </el-form-item>
                             <el-form-item label="姓名：">
-                                <!-- <el-input v-model="form.phone"></el-input> -->
                                 <span>{{detail.name}}</span>
                             </el-form-item>
                             <el-form-item label="手机：">
-                                <!-- <el-input v-model="form.name"></el-input> -->
                                 <span>{{detail.phone}}</span>
                             </el-form-item> 
                             <el-form-item v-if="queryCards.length" label="选择卡：">
@@ -77,7 +75,6 @@
                 <el-divider></el-divider>
                 <el-button-group>
                     <el-button type="primary" @click="addBook">预约</el-button>
-                    <!-- <el-button type="primary">上课</el-button> -->
                     <el-button type="info" @click="cancelAction">取消</el-button>
                 </el-button-group>
             </el-tab-pane>
@@ -118,12 +115,14 @@
                                 <span>取消预约</span>
                             </el-button>
                             <span v-if="scope.row.book_status == 2 && scope.row.qiandao_status == 0">预约被取消</span>
-                            <!-- <el-button size="mini" 
+                            <!-- 
+                            <el-button size="mini" 
                                 v-if="scope.row.book_status == 2 && scope.row.qiandao_status == 0" 
                                 class="editbtn" type="success" 
                                 @click="againBook(scope.row.id)">
                                 <span>重新预约</span>    
-                            </el-button> -->
+                            </el-button> 
+                            -->
                         </template>
                     </el-table-column> 
                 </el-table>
@@ -141,15 +140,19 @@
                     <el-table-column prop="order_time" width="200" label="确认时间"></el-table-column>
                     <el-table-column  width="180" label="消费">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.cost_type == 1">{{scope.row.order_cost}} 次</span>
-                            <span v-else-if="scope.row.cost_type == 6">{{scope.row.order_cost}} 元</span>
-                            <span v-else-if="scope.row.cost_type == 7">{{scope.row.order_cost}} 小时</span>
-                            <span v-else></span>
+                            <span v-if="scope.row.order_card_type == 1">{{scope.row.order_cost}} 次</span>
+                            <span v-else-if="scope.row.order_card_type == 6">{{scope.row.order_cost}} 元</span>
+                            <span v-else-if="scope.row.order_card_type == 7">{{scope.row.order_cost}} 小时</span>
+                            <span v-else-if="scope.row.order_card_type == 2">年卡</span>
+                            <span v-else-if="scope.row.order_card_type == 3">季卡</span>
+                            <span v-else-if="scope.row.order_card_type == 4">月卡</span>
+                            <span v-else-if="scope.row.order_card_type == 5">周卡</span>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="order_remark" width="200" label="备注说明"></el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button size="mini" v-if="scope.row.order_status==1" type="primary" @click="cancelOrder(scope.row.id)">撤销消费</el-button>
+                            <el-button size="mini" v-if="scope.row.order_status==1" type="primary" @click="cancelOrder(scope.row)">撤销消费</el-button>
                         </template>
                     </el-table-column> 
                 </el-table>
@@ -199,7 +202,7 @@ export default {
         async fetchOrders() {
             let res = await order.list({
                 order_course_type: 1,
-                order_course_id: this.schedule_id
+                order_schedule_id: this.schedule_id
             });
 
             if (res.code == 200) {
@@ -295,6 +298,7 @@ export default {
             this.$store.dispatch('tagsView/delView', this.$route)
             this.$router.back();
         },
+        // 用户签到就证明消费了
         async qiaodao(row) {
             let cost = "";
             if (row.type == 1 || row.type == 7) { // 次卡, 小时卡每次消费单位是1
@@ -306,12 +310,12 @@ export default {
             let res = await order.add({
                 book_id: row.id,
                 order_card_no: row.book_card_no,
-                order_course_id: row.book_course_id,
+                order_schedule_id: row.book_course_id,
                 order_course_type: row.book_course_type,
                 order_member_id: row.member_id,
                 order_remark: "",
                 order_cost: cost,
-                cost_type: row.type
+                order_card_type: row.type
             });
 
             if (res.code == 200) {
@@ -328,9 +332,12 @@ export default {
                 this.fetchBookList();
             }
         },
-        async cancelOrder(order_id) { // 取消订单
+        async cancelOrder(row) { // 取消订单
             let res = await order.cancel({
-                id: order_id
+                id: row.id,
+                order_cost: row.order_cost,
+                order_card_no: row.order_card_no,
+                order_remark: "团课订单撤销"
             });
             if (res.code == 200) {
                 this.$message.success(res.msg);

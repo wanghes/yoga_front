@@ -315,7 +315,7 @@ export default {
                 order_member_id: row.member_id,
                 order_remark: "",
                 order_cost: cost,
-                order_card_type: row.type
+                cost_type: row.type
             });
 
             if (res.code == 200) {

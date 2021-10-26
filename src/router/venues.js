@@ -18,6 +18,22 @@ const Routes = [
         ]
     },
     {
+        path: '/look',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                component: () => import('@/views/mainLook'),
+                name: 'mainLook',
+                meta: {
+                    title: '主页预览',
+                    icon: 'example',
+                    affix: true
+                }
+            }
+        ]
+    },
+    {
         path: '/venues',
         component: Layout,
         children: [

@@ -31,3 +31,21 @@ export function uploadAloneCover(formData) {
         headers: { "Content-Type": "multipart/form-data" }
     })
 }
+
+
+export function queryLook(params) {
+    return request({
+        url: '/admin/manager/getlook',
+        method: 'get',
+        params
+    });
+}
+
+export function updateLook(data) {
+	return request({
+		url: '/admin/manager/look',
+		method: 'put',
+		data
+	})
+}
+

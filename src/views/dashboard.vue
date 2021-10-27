@@ -16,7 +16,8 @@ export default {
 </script>
 
 <style scoped>
-.wrap {
-	padding: 15px;
+.wrap h3{
+    margin: 0;
+    margin-bottom: 15px;
 }
 </style>

@@ -1,19 +1,25 @@
 <template>
     <div class="wrap">
         <h3>切换预览模式</h3>
-          <el-alert
+        <el-alert
             title="查看手机端后台管理，请务必关闭预览模式"
-            type="warning">
+            type="error">
         </el-alert>
-        <el-divider></el-divider>
-        <el-switch v-model="value" @change="changeValue" active-text="开启预览" inactive-text="关闭预览">
-        </el-switch>
-        <el-divider></el-divider>
-        <img v-if="look==1" :src="src">
+        <div class="switch_wrap">
+            <el-switch v-model="value" @change="changeValue" active-text="开启预览" inactive-text="关闭预览">
+            </el-switch>
+            <div class="imgbox">
+            <img  v-if="value" :src="src">
+            </div>
+            <div>
+                <el-button v-if="value" type="primary" size="small" @click="handleClipboard">点击复制链接去微信访问</el-button>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import clipboard from '@/utils/clipboard'
 const venues = require("@/api/venues");
 import {
     BASEURL
@@ -44,6 +50,9 @@ export default {
                 }
             }
         },
+        handleClipboard(event) {
+            clipboard(`http://h5.yogaguanjia.com?aid=${window.venues}`, event)
+        },
         async changeValue(val) {
             let res = await venues.updateLook({
                 is_look: val ? 1 : 0
@@ -61,7 +70,17 @@ export default {
 </script>
 
 <style scoped>
-.wrap {
-	padding: 15px;
+.wrap h3{
+    margin: 0;
+    margin-bottom: 15px;
+}
+.switch_wrap{
+    padding: 15px 0;
+}
+.imgbox{
+    margin: 10px 0;
+}
+.imgbox img{
+    border:1px solid #efefef;
 }
 </style>

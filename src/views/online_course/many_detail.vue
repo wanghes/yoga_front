@@ -20,11 +20,11 @@
                     <el-form-item required label="课程封面" :label-width="formLabelWidth">
                         <div class="cover">
                             <img v-if="form.course_cover" :src="form.course_cover" />
-                            <div class="empty_pic" v-else>建议尺寸600×320，JPG、PNG、webp格式，图片小于5M。</div>
+                            <div class="empty_pic" v-else>建议尺寸800×500，JPG、PNG、webp格式，图片小于5M。</div>
                         </div>
                         <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
                             <el-button type="danger">点击上传</el-button>
-                            <div slot="tip" class="el-upload__tip">建议尺寸600×320，JPG、PNG、webp格式，图片小于5M。</div>
+                            <div slot="tip" class="el-upload__tip">建议尺寸800×500，JPG、PNG、webp格式，图片小于5M。</div>
                         </el-upload>
                     </el-form-item>
 

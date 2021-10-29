@@ -82,12 +82,12 @@
                 <template slot-scope="scope">
                     <el-link class="editbtn" type="success" @click="intoEdit(scope.row)">编辑课程</el-link>
                     <el-link class="editbtn" type="success" @click="jumpPage(scope.row)">管理单课</el-link>
-                    <el-dropdown @command="handleSale" type="primary" style="margin-left: 15px;">
+                    <el-dropdown v-if="scope.row.pay_type==1" @command="handleSale" type="primary" style="margin-left: 15px;">
                         <span class="el-dropdown-link">营销<i class="el-icon-arrow-down el-icon--right"></i></span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item v-if="scope.row.pay_type==1 && scope.row.cu_status == 0" :command="'a|'+ scope.row.id">促销</el-dropdown-item>
-                                <el-dropdown-item v-if="scope.row.pay_type==1 && scope.row.cu_status == 1" :command="'b|'+ scope.row.id">取消促销</el-dropdown-item>
+                                <el-dropdown-item v-if="scope.row.cu_status == 0" :command="'a|'+ scope.row.id">促销</el-dropdown-item>
+                                <el-dropdown-item v-if="scope.row.cu_status == 1" :command="'b|'+ scope.row.id">取消促销</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>

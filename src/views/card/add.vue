@@ -7,10 +7,10 @@
             </el-form-item>
             <el-form-item required label="卡片封面">
                 <img class="cover_img" v-if="form.cover" :src="form.cover" />
-                <div class="empty_pic" v-else>建议尺寸385×215，JPG、PNG、webp格式，图片小于5M。</div>
+                <div class="empty_pic" v-else>建议尺寸385×215，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
                     <el-button type="info">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸385×215，JPG、PNG、webp格式，图片小于5M。</div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸385×215，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
 

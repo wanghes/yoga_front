@@ -19,6 +19,14 @@ export function add(data) {
 	})
 }
 
+export function setStar(data) {
+    return request({
+        url: '/admin/teacher/star',
+        method: 'put',
+        data
+    });
+}
+
 export function teacher_courses_price(data) {
 	return request({
 		url: '/admin/teacher/teacher_courses_price',

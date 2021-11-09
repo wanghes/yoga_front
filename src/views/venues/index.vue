@@ -6,8 +6,8 @@
             </el-form-item>
             <!-- 场馆图片 -->
             <el-form-item required label="场馆主题图片">
-                <img class="cover" v-if="form.cover" :src="form.cover" />
-                <div class="empty_pic" v-else>建议尺寸300×120，JPG、PNG、webp格式，图片小于5M。</div>
+                <img  class="cover" v-if="form.cover" :src="form.cover" />
+                <div class="empty_pic" v-else>建议尺寸850×350，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 <el-upload
                     class="upload_box"
                     action="fakeaction"
@@ -15,7 +15,7 @@
                     :auto-upload="true"
                     :http-request="uploadSectionFile">
                     <el-button type="info">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip"></div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸850×350，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item required label="营业时间">
@@ -136,7 +136,13 @@ export default {
             var fileObj = param.file;
             var form = new FormData();
             form.append("file", fileObj);
-            let res = await venues.uploadAloneCover(form)
+            let res = await venues.uploadAloneCover(form);
+
+            if (res.status == 200 && res.data.code != 200) {
+                this.$message.error(res.data.msg)
+                return;
+            }
+
             this.form.cover = res.data.data.imagePath;
         },  
         async saveData() {
@@ -231,6 +237,7 @@ export default {
 }
 .cover{
     margin-bottom: 15px;
+    max-width: 600px;
 }
  .UEditor{
     position: relative;

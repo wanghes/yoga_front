@@ -24,11 +24,11 @@ export function query(params) {
     })
 }
 
-export function queryCard(params) {
+export function queryCard(data) {
     return request({
         url: '/admin/membercard/query_card',
-        method: 'get',
-        params
+        method: 'post',
+        data
     })
 }
 

@@ -123,8 +123,12 @@ export default {
             if (status == 1) {
                 return "正常"
             }
+            
             if (status == 2) {
                 return "已用完"
+            }
+            if (status == 3) {
+                return "已过期"
             }
         },
         card_style_name() {
@@ -165,9 +169,18 @@ export default {
                 card_no: this.cardNo
             });
             if (res.code == 200) {
-                this.detail = res.data[0]
+                let result = res.data[0];
+                if (result.open_end_time) {
+                    let now = new Date().getTime();
+                    let open_end_time = new Date(result.open_end_time).getTime();
+                    if (now > open_end_time) {
+                        result.status = 3;
+                    }
+                }
+                this.detail = result;
                 this.card_style = this.detail.type;
                 this.card_status = this.detail.status
+
                 this.surplus = this.detail.surplus
             }
             this.$refs.info.fetchDetail();

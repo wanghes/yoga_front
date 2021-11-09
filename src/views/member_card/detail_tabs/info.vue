@@ -7,6 +7,10 @@
         <div class="box">
             <div class="left">
                 <div class="item">
+                    <label>会员卡号：</label>
+                    <span>{{detail.card_no}}</span>
+                </div>
+                <div class="item">
                     <label>会员卡名称：</label>
                     <span>{{detail.card_name}}</span>
                 </div>
@@ -19,23 +23,19 @@
                     <span>{{detail.phone}}</span>
                 </div>
                 <div class="item">
-                    <label>卡种类：</label>
+                    <label>会员卡种类：</label>
                     <span>{{card_style_name}}</span>
                 </div>
                 <div class="item">
-                    <label>状态：</label>
+                    <label>会员卡状态：</label>
                     <span>{{card_status_name}}</span>
                 </div>
                 <div class="item">
-                    <label>卡号：</label>
-                    <span>{{detail.card_no}}</span>
-                </div>
-                <div class="item">
-                    <label>剩余：</label>
+                    <label>会员卡剩余：</label>
                     <span>{{surplus_name}}</span>
                 </div>
                 <div class="item">
-                    <label>有效期：</label>
+                    <label>会员卡有效期：</label>
                     <span>{{limit_date}}</span>
                 </div>
             </div>
@@ -128,6 +128,10 @@ export default {
             if (status == 2) {
                 return "已用完"
             }
+
+            if (status == 3) {
+                return "已过期"
+            }
         },
         card_style_name() {
             let type = this.card_style;
@@ -167,7 +171,17 @@ export default {
                 card_no: this.card
             });
             if (res.code == 200) {
-                this.detail = res.data[0]
+                
+
+                let result = res.data[0];
+                if (result.open_end_time) {
+                    let now = new Date().getTime();
+                    let open_end_time = new Date(result.open_end_time).getTime();
+                    if (now > open_end_time) {
+                        result.status = 3;
+                    }
+                }
+                this.detail = result;
                 this.card_style = this.detail.type;
                 this.card_status = this.detail.status
                 this.surplus = this.detail.surplus

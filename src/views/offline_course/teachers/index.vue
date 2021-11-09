@@ -36,6 +36,11 @@
             <el-table-column label="老师姓名" width="150" prop="name"></el-table-column>
             <el-table-column label="老师昵称" width="100" prop="nickname"></el-table-column>
             <el-table-column label="电话" width="150" prop="phone"></el-table-column>
+            <el-table-column width="140" label="是否设置为明星老师">
+                <template slot-scope="scope">
+                    <el-switch v-model="scope.row.is_star" @change="setStar(scope.row)"></el-switch>  
+                </template>
+            </el-table-column>
             <el-table-column label="加入时间" width="180" prop="join_date"></el-table-column>
             <el-table-column label="生日" width="130" prop="birthday">
                 <template slot-scope="scope">
@@ -135,6 +140,7 @@ export default {
                 let {list, total} = res.data;
                 list.forEach(item => {
                     item.status = item.status == 1 ? true : false;
+                    item.is_star = item.is_star == 1 ? true : false;
                 });
 
                 this.tableData = list;
@@ -161,7 +167,19 @@ export default {
                 path: "/offline/teacher/add"
             })
         },
-       
+        async setStar(row) {
+            let res = await teacher.setStar({
+                star: row.is_star,
+                id: row.id
+            });
+
+            if (res.code == 200) {
+                this.$message.success("修改成功");
+                this.reload();
+            } else {
+                console.log(res);
+            }
+        },
         handleCurrentChange(currentPage){
             this.currentPage = currentPage;
             this.fetData();
@@ -172,7 +190,7 @@ export default {
             });
         },
         async deleteItem(id) {
-            console.log(id)
+          
             let res = await teacher.deleteTeacher({id});
             if (res.code == 200) {
                 this.$message.success("删除成功");

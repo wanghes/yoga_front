@@ -52,8 +52,10 @@ service.interceptors.response.use(
      */
     response => {
         const res = response.data;
+        
         // 如果自定义状态不是20000，它会被判定为一个错误。
         if (res.code !== 200) {
+            
             if (res.code == 401) {
                 MessageBox.confirm('你已经退出, 你不能停留在这个页面，或者再次登录', '确认退出', {
                     confirmButtonText: '重新登录',
@@ -65,6 +67,7 @@ service.interceptors.response.use(
                     });
                 });
             } else {
+                
                 Message({
                     message: res.msg || 'Error',
                     type: 'error',

@@ -15,9 +15,10 @@
             <el-table-column prop="phone" width="150" label="手机号"></el-table-column>  
             <el-table-column width="120" label="状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status==0">未开卡</span>
-                    <span v-else-if="scope.row.status==1">正常</span>
-                    <span v-else>已用完</span>
+                    <el-tag type="info" effect="dark" v-if="scope.row.status==0">未开卡</el-tag>
+                    <el-tag type="success" effect="dark" v-else-if="scope.row.status==1">正常</el-tag>
+                    <el-tag type="danger" effect="dark" v-else-if="scope.row.status==3">已过期</el-tag>
+                    <el-tag type="warning" effect="dark" v-else>已用完</el-tag>
                 </template>
             </el-table-column>  
             <el-table-column width="150" label="剩余">
@@ -107,10 +108,16 @@ export default {
                 let {
                     list, total
                 } = res.data; 
-
-                // list.forEach(item => {
-                //     item.status = item.status == 1 ? true : false;
-                // })
+                let now = new Date().getTime();
+                list.forEach(item => {
+                    let open_end_time = item.open_end_time;
+                    if (open_end_time) {
+                        let time = new Date(open_end_time).getTime();
+                        if (now > time) {
+                            item.status = 3;
+                        }
+                    }
+                });
                 this.list = list;
                 this.total = total;
             }

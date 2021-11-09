@@ -8,7 +8,6 @@
                         <img v-if="form.head" :src="form.head" />
                         <img v-else :src="cover" />
                     </div>
-            
                     <el-upload
                         class="upload_box"
                         action="fakeaction"
@@ -16,7 +15,7 @@
                         :auto-upload="true"
                         :http-request="uploadSectionFile">
                         <el-button type="danger">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">建议尺寸200*200px，JPG、PNG、webp格式，图片小于5M。</div>
+                        <div slot="tip" class="el-upload__tip">建议尺寸200*200px，gif、jpg、jpeg、png格式，图片小于5M。</div>
                     </el-upload>
                 </div>
             </el-form-item>

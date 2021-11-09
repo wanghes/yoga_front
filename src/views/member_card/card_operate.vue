@@ -64,7 +64,6 @@
         </div>
           
         <div class="cost" v-show="visible">
-            <el-divider></el-divider> 
             <div class="box">
                 <h3 class="title">团课消费</h3>
                 <div class="inner">
@@ -83,11 +82,13 @@
                                 <el-table :data="tuankeList" border :header-cell-style="{'color':'#333', 'background-color':'#f5f5f5'}">
                                     <el-table-column prop="book_card_no" width="150" label="卡号">
                                     </el-table-column>  
-                                    <el-table-column prop="course_name" width="200" label="预约的项目">
+                                    <el-table-column prop="course_name" width="200" label="预约的课程">
                                     </el-table-column>  
-                                    <el-table-column prop="teacher_name"  width="120" label="老师">
+                                    <el-table-column prop="teacher_name"  width="130" label="老师">
                                     </el-table-column> 
-                                    <el-table-column  width="180" label="课程时间">
+                                    <el-table-column prop="book_time" width="180" label="预约时间">
+                                    </el-table-column>  
+                                    <el-table-column  width="180" label="上课时间">
                                         <template slot-scope="scope">
                                             <span>{{scope.row.start_date && scope.row.start_date.slice(0, 11)}} {{scope.row.start_time}}</span>
                                         </template>
@@ -97,9 +98,7 @@
                                             <span v-if="scope.row.book_status == 1">已预约</span>
                                             <span v-else>已取消</span>
                                         </template>
-                                    </el-table-column>  
-                                    <el-table-column prop="remark" fit label="操作员">
-                                    </el-table-column> 
+                                    </el-table-column>
                                     <el-table-column label="操作" fixed="right">
                                         <template slot-scope="scope">
                                             <el-button v-if="scope.row.book_status == 1 && !scope.row.order_status" size="mini" type="primary" @click="chexiao(scope.row)">撤销预约</el-button>

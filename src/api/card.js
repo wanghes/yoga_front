@@ -3,20 +3,20 @@ import axios from 'axios';
 import { UPLOADBASEURL } from "@/config";
 
 
-export function all(params) {
+export function all(data) {
     return request({
         url: '/admin/card/all',
-        method: 'get',
-        params
+        method: 'post',
+        data
     });
 }
 
 
-export function list(params) {
+export function list(data) {
     return request({
         url: '/admin/card/list',
-        method: 'get',
-        params
+        method: 'post',
+        data
     });
 }
 
@@ -28,11 +28,11 @@ export function add(data) {
     });
 }
 
-export function query(params) {
+export function query(data) {
     return request({
         url: '/admin/card/query',
-        method: 'get',
-        params
+        method: 'post',
+        data
     })
 }
 
@@ -65,11 +65,11 @@ export function deleteItem(params) {
 
 
 
-export function list_by_card_id(params) {
+export function list_by_card_id(data) {
     return request({
         url: '/admin/cardbind/list_by_card_id',
-        method: 'get',
-        params
+        method: 'post',
+        data
     });
 }
 

@@ -7,19 +7,19 @@
             </el-form-item>
             <el-form-item required label="秒杀封面">
                 <img class="cover" v-if="form.cover" :src="form.cover" />
-                <div class="empty_pic" v-else>建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
+                <div class="empty_pic" v-else>建议尺寸800×500，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 <el-upload class="upload_box" action="fakeaction" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile">
                     <el-button type="info">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸800×500，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
 
             <el-form-item label="秒杀分享封面">
                 <img class="cover" v-if="form.share_img" :src="form.share_img" />
-                <div class="empty_pic" v-else>建议尺寸960×1700，JPG、PNG、webp格式，图片小于5M。</div>
+                <div class="empty_pic" v-else>建议尺寸960×1700，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 <el-upload class="upload_box" action="fakeaction2" :show-file-list="false" :auto-upload="true" :http-request="uploadSectionFile2">
                     <el-button type="info">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸960×1700，JPG、PNG、webp格式，图片小于5M。</div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸960×1700，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item required label="秒杀活动旧价格">

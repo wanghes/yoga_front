@@ -21,7 +21,6 @@
                     <label class="label">会籍顾问：</label>
                     <el-link type="info">{{detail.adviser_name}}</el-link>
                 </div>
-                
                 <div class="item">
                     <label class="label">积分：</label>
                     <el-link type="info">{{detail.point}}</el-link>
@@ -54,7 +53,6 @@
 <script>
 const api = require('@/api/member');
 const member_card = require('@/api/member_card');
-const adviser = require('@/api/adviser'); // 会籍顾问
 const head = require('@/assets/member_head.png');
 import info from "./detail_tabs/info";
 import cardList from "./detail_tabs/card_list";

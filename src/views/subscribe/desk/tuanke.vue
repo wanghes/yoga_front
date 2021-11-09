@@ -41,7 +41,12 @@
                                     <span>老师：{{one.teacher_name}}</span>
                                     <span>人数限制：{{one.p_num}}</span>
                                     <span>{{one.count}}人预约，{{one.qiandao}}人上课</span>
-                                    <span>{{one.status == 2 ?"(停课中)":""}}</span>
+									<div>
+										<div v-if="one.status == 0"><span>课程状态：</span><el-tag type="info" effect="dark" size="mini">未开始</el-tag></div>
+										<div v-else-if="one.status == 1"><span>课程状态：</span><el-tag effect="dark" size="mini">复课</el-tag></div>
+										<div v-else-if="one.status == 2"><span>课程状态：</span><el-tag type="danger" effect="dark" size="mini">停课中</el-tag></div>
+										<div v-else><span>课程状态：</span><el-tag type="success" effect="dark" size="mini">已完课</el-tag></div>
+									</div> 
                                     <div class="operate">
                                         <el-button style="width:60px;" type="info" @click="managePaike(one.schedule_id)" size='mini'>管理</el-button>
                                         <el-button style="width:60px;" type="primary" @click="showEditPaike(one.schedule_id)" size='mini'>编辑</el-button>

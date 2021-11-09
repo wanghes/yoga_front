@@ -85,7 +85,7 @@
                     :auto-upload="true"
                     :http-request="uploadSectionFile">
                     <el-button type="danger">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸800*500px，JPG、PNG、webp格式，图片小于5M。</div>
+                    <div slot="tip" class="el-upload__tip">建议尺寸800*500px，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item required label="团课描述">

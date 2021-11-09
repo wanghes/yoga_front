@@ -43,7 +43,7 @@
             <el-form :model="form" label-position="top">
                 <el-form-item required label="图片">
                     <img v-if="form.pic" style="max-width:100%;" :src="form.pic" />
-                    <div class="empty_pic" v-else>建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
+                    <div class="empty_pic" v-else>建议尺寸720×300，gif、jpg、jpeg、png格式，图片小于5M。</div>
                     <el-upload
                         class="upload_box"
                         action="fakeaction"
@@ -51,7 +51,7 @@
                         :auto-upload="true"
                         :http-request="uploadSectionFile">
                         <el-button type="danger">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">建议尺寸280×180，JPG、PNG、webp格式，图片小于5M。</div>
+                        <div slot="tip" class="el-upload__tip">建议尺寸720×300，gif、jpg、jpeg、png格式，图片小于5M。</div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item required label="链接地址">

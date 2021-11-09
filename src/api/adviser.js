@@ -3,28 +3,28 @@ import axios from 'axios';
 import { UPLOADBASEURL } from "@/config";
 
 
-export function list(params) {
+export function list(data) {
     return request({
         url: '/admin/adviser/list',
-        method: 'get',
-        params
+        method: 'post',
+        data
     });
 }
 
 
-export function allList(params) {
+export function allList(data) {
     return request({
         url: '/admin/adviser/alllist',
-        method: 'get',
-        params
+        method: 'post',
+        data
     });
 }
 
-export function query(params) {
+export function query(data) {
     return request({
         url: '/admin/adviser/query',
-        method: 'get',
-        params
+        method: 'post',
+        data
     })
 }
 

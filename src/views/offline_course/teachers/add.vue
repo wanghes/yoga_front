@@ -11,8 +11,8 @@
                     :show-file-list="false"
                     :auto-upload="true"
                     :http-request="uploadSectionFile">
-                    <el-button type="danger">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸200*200px，JPG、PNG、webp格式，图片小于5M。</div>
+                    <el-button type="info">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">建议尺寸200*200px，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item required label="姓名">
@@ -62,15 +62,15 @@
             </el-form-item>
             <el-form-item label="身份证照">
                 <img v-if="form.id_card" :src="form.id_card" />
-                <div class="empty_pic" v-else>建议尺寸400×250，JPG、PNG、webp格式，图片小于5M。</div>
+                <div class="empty_pic" v-else>建议尺寸400×250，gif、jpg、jpeg、png格式，图片小于5M。</div>
                 <el-upload
                     class="upload_box"
                     action="action"
                     :show-file-list="false"
                     :auto-upload="true"
                     :http-request="uploadIdSectionFile">
-                    <el-button type="danger">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">建议尺寸400×250，JPG、PNG图片小于5M。</div>
+                    <el-button type="info">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">建议尺寸400×250，gif、jpg、jpeg、png图片小于5M。</div>
                 </el-upload>
             </el-form-item>
             <el-form-item label="详细介绍">
@@ -213,8 +213,7 @@ export default {
     z-index: 1;
 }
 .avatar{
-    height: 200px;
-    width: 200px;
+    max-width: 200px;
 }
 .empty_pic{
     color:#666;
